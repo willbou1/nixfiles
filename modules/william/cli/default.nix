@@ -2,15 +2,23 @@
 
 {
     imports = [
+        ./vifm.nix
+        ./nvim.nix
         ./lsd.nix
         ./fish.nix
         ./starship.nix
+        ./mail.nix
     ];
 
     programs = {
+        git = {
+            enable = true;
+            userName = "William Boulanger";
+            userEmail = "willbou2@gmail.com";
+        };
         btop = {
             enable = true;
-            settings.color_theme = "wpgtk";
+            settings.color_theme = "TTY";
         };
         bat = {
             enable = true;
@@ -28,12 +36,14 @@
     };
 
     home.packages = with pkgs; [
+        p7zip
         ncpamixer
-        vifm-full
         fastfetch
         lolcat
         progress
         fd
+        nvtop
+        ani-cli
 
         weechat
         aspell

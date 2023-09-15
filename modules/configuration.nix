@@ -4,15 +4,28 @@
 	imports =
 		[ 
 		./boot.nix
-		./virtualisation.nix
+		./virtualisation
 		./networking.nix
 		./pipewire.nix
 		./users.nix
         ./video.nix
+        ./power.nix
 		inputs.impermanence.nixosModules.impermanence
 		];
 
-	boot.kernelPackages = pkgs.linuxPackages_latest;
+    stylix = {
+        image = ../resources/wallpapers/space.jpg;
+        polarity = "dark";
+        homeManagerIntegration.followSystem = false;
+        targets.grub.useImage = true;
+        fonts.sizes = {
+            terminal = 48;
+            applications = 48;
+            desktop = 48;
+            popups = 48;
+        };
+    };
+
 	hardware.enableRedistributableFirmware = true;
 	hardware.enableAllFirmware = true;
 
@@ -20,25 +33,17 @@
 
 	time.timeZone = "America/Toronto";
 	i18n.defaultLocale = "en_CA.UTF-8";
-	console ={
-		keyMap = "ca";
-		earlySetup = true;
-		font = "ter-v32n";
-		packages = with pkgs; [
-			terminus_font
-		];
-	};
-
-    powerManagement = {
-        enable = true;
-        cpuFreqGovernor = "powersave";
-    };
+	console.keyMap = "ca";
+    console.earlySetup = true;
+    console.font = "ter-i32b";
+    console.packages = with pkgs; [ terminus_font ];
 
 	environment = {
 		systemPackages = with pkgs; [
+            file
+            unzip
+            lsof
             pulseaudio
-			virt-manager
-			libguestfs
 			lftp
             killall
 			tmux
@@ -47,18 +52,21 @@
 			nix-prefetch-github
 			miniupnpc
             acpi
-            expressvpn
+            config.nur.repos.xddxdd.svp
 		];
 		persistence."/persist" = {
 			hideMounts = true;
 			directories = [
 				"/etc/nixos"
 				"/var/log"
+                "/var/lib/libvirt"
 				"/var/lib/bluetooth"
+                "/var/lib/deluge"
+                "/srv/torrents"
 				"/var/lib/nixos"
-                "/var/lib/expressvpn"
 				"/etc/NetworkManager/system-connections"
                 "/cat_installer"
+                "/etc/openvpn/expressvpn"
 			];
 			files = [
 				"/etc/machine-id"
@@ -91,7 +99,8 @@
 			"vpn" = "expressvpn";
 			"vim" = "nvim";
 			"se" = "sudoedit";
-			"s" = "sudo ";
+			"s" = ''sudo SSH_AUTH_SOCK="$SSH_AUTH_SOCK" '';
+            "nr" = "sudo nixos-rebuild --flake /etc/nixos#haskell_slay_slay switch";
 		};
 		sessionVariables.NIXOS_OZONE_WL = "1";
 	};
@@ -115,6 +124,9 @@
 
 	services = {
 		printing.enable = true;
+        fprintd = {
+            enable = true;
+        };
 	};
 
 	nix = {
@@ -125,6 +137,7 @@
 			options = "--delete-older-than 1m";
 		};
 		settings ={
+            auto-optimise-store = true;
 			experimental-features = [ "nix-command" "flakes" ];
 			substituters = ["https://hyprland.cachix.org"];
 			trusted-public-keys = ["hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc="];
@@ -153,7 +166,11 @@
         extraBackends = [ pkgs.sane-airscan ];
     };
 
-  security.pam.services.swaylock.text = ''
-        auth include login
-  '';
+  security.pam = {
+      services.swaylock.text = ''
+              auth sufficient pam_unix.so try_first_pass likeauth nullok
+              auth sufficient pam_fprintd.so
+              '';
+  };
+  services.udisks2.enable = true;
 }

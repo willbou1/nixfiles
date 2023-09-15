@@ -1,6 +1,7 @@
 { lib, inputs, config, pkgs, ... }:
 
 {
+    services.xserver.videoDrivers = ["nvidia"];
     hardware = {
         brillo.enable = true;
         nvidia = {
@@ -12,7 +13,11 @@
             prime = {
                 intelBusId = "PCI:0:2:0";
                 nvidiaBusId = "PCI:1:0:0";
-                sync.enable = true;
+                #sync.enable = true;
+                offload = {
+                    enable = true;
+                    enableOffloadCmd = true;
+                };
             };
         };
         opengl = {

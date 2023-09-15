@@ -1,16 +1,47 @@
 { pkgs, lib, config, inputs, ... }: let
-INIT_WP = "space.jpg";
 hexOpacity =  lib.toHexString ((((builtins.ceil (config.stylix.opacity.desktop * 100)) * 255) / 100));
 hyprlandPackage = pkgs.hyprland.overrideAttrs (o: {
     #patches = (o.patches or []) ++ [ ./hyprland.patch ];
 });
+colors = config.lib.stylix.colors.withHashtag;
+hyprrotate = pkgs.writeShellScriptBin "hyprrotate" ''
+#! /bin/sh
+transform="$(${pkgs.hyprland}/bin/hyprctl -j monitors | ${pkgs.jq}/bin/jq '.[0].transform')"
+if [ "$transform" -eq "0" ]; then
+    ${pkgs.hyprland}/bin/hyprctl --batch "keyword monitor eDP-1,preferred,auto,auto,transform,1; keyword input:touchdevice:transform 1;"
+else
+    ${pkgs.hyprland}/bin/hyprctl --batch "keyword monitor eDP-1,preferred,auto,auto,transform,0; keyword input:touchdevice:transform 0;"
+fi
+'';
+hyprcap = pkgs.writeShellScriptBin "hyprcap" (''
+    slurp_args="-b "${colors.base00 + hexOpacity}" -B "${colors.base00 + hexOpacity}" -c "${colors.base04 + hexOpacity}""
+
+    #${pkgs.grim}/bin/grim -l 1 ~/.cache/hyprland/screenfreeze
+    #${pkgs.feh}/bin/feh --title screenfreeze ~/.cache/hyprland/screenfreeze &
+
+    [[ "$1" != "monitor" ]] && dims="$(${pkgs.slurp}/bin/slurp $slurp_args -w 3)"
+    [[ "$1" == "monitor" ]] && dims="$(${pkgs.slurp}/bin/slurp $slurp_args -o)"
+
+    ${pkgs.grim}/bin/grim -g "$dims" - | ${pkgs.wl-clipboard}/bin/wl-copy
+
+    #${pkgs.killall}/bin/killall feh
+'');
 in
 with config.lib.stylix.colors; {
+    home.packages = with pkgs; [
+        qt5.qtwayland
+        slurp
+        grim
+        feh
+        wl-clipboard
+        hyprcap
+        hyprrotate
+    ];
     wayland.windowManager.hyprland = {
         package = hyprlandPackage;
         enable = true;
         xwayland.enable = true;
-        enableNvidiaPatches = true;
+        #enableNvidiaPatches = true;
         settings = {
             input = {
                 kb_layout = "ca";
@@ -43,7 +74,6 @@ with config.lib.stylix.colors; {
                 shadow_render_power = 8;
                 shadow_ignore_window = 0;
                 "col.shadow" = "0x77000000";
-                #"col.active_border" = "${stylix.opacity + base03}";
                 blurls = [ "gtk-layer-shell" "notifications" ];
             };
             animations = {
@@ -64,73 +94,76 @@ with config.lib.stylix.colors; {
             misc = {
                 enable_swallow = true;
                 swallow_regex = "^kitty$";
+                disable_hyprland_logo = true;
+                allow_session_lock_restore = true;
+                background_color = base00;
+                vfr = false;
             };
+            env = [
+                "WLR_DRM_DEVICE,/dev/dri/by-path/pci-0000:00:02.0-card"
+            ];
             "$mod" = "SUPER";
             bindm = [
                 "$mod,mouse:272,movewindow"
                     "$mod,mouse:273,resizewindow"
             ];
+            exec-once = [
+                "${pkgs.waybar}/bin/waybar"
+                "${pkgs.swww}/bin/swww init"
+            ];
+            exec = [
+                "${pkgs.swww}/bin/swww img ${config.stylix.image}"
+            ];
+            windowrule = [
+                "opacity 0.93,firefox"
+                "opacity 0.85,Element"
+                "opacity 0.85,deluge"
+                "opacity 0.85,title:Spotify"
+            ];
+            bind = [
+                "$mod,Q,exec,${config.programs.swaylock.package}/bin/swaylock"
+                "$mod,B,exec,firefox"
+                "$mod,Return,exec,MESA_LOADER_DRIVER_OVERRIDE=iris __EGL_VENDOR_LIBRARY_FILENAMES=${pkgs.mesa_drivers}/share/glvnd/egl_vendor.d/50_mesa.json kitty"
+                "$mod SHIFT,B,exec,firefox --private-window"
+                "$mod,D,exec,wofi --show drun"
+                "$mod,W,exec,looking-glass-client -f /dev/shm/looking-glass1"
+                "$mod,C,exec,${hyprcap}/bin/hyprcap"
+                "$mod,M,exec,${hyprrotate}/bin/hyprrotate"
+
+                "$mod SHIFT,Q,exit,"
+                "$mod,S,togglefloating,"
+                "$mod,F,fullscreen,"
+                "$mod SHIFT,F,fakefullscreen,"
+                "$mod,T,togglesplit"
+                "$mod,G,togglegroup"
+                "$mod,U,changegroupactive,f"
+
+                "$mod,H,movefocus,l"
+                "$mod,L,movefocus,r"
+                "$mod,K,movefocus,u"
+                "$mod,J,movefocus,d"
+
+                "$mod SHIFT,H,movewindow,l"
+                "$mod SHIFT,L,movewindow,r"
+                "$mod SHIFT,K,movewindow,u"
+                "$mod SHIFT,J,movewindow,d"
+                "$mod SHIFT,C,killactive,"
+
+                ",XF86AudioRaiseVolume,exec,pactl set-sink-volume @DEFAULT_SINK@ +5%"
+                ",XF86AudioLowerVolume,exec,pactl set-sink-volume @DEFAULT_SINK@ -5%"
+                ",XF86AudioMute,exec,pactl set-sink-mute @DEFAULT_SINK@ toggle"
+                ",XF86MonBrightnessDown,exec, brillo -u 150000 -U 5"
+                ",XF86MonBrightnessUp,exec, brillo -u 150000 -A 5"
+                ",XF86AudioPlay,exec,playerctl play"
+                ",XF86AudioPause,exec,playerctl pause"
+                ",XF86AudioStop,exec,playerctl pause"
+                ",XF86AudioPrev,exec,playerctl previous"
+                ",XF86AudioNext,exec,playerctl next"
+            ] ++ builtins.concatLists (builtins.genList (x :
+            let xs = builtins.toString x; in [
+                "$mod,${xs},workspace,${xs}"
+                "$mod SHIFT,${xs},movetoworkspace,${xs}"
+            ]) 9);
         };
-        extraConfig = builtins.concatStringsSep "\n" (builtins.genList (x:
-            let xs = builtins.toString x; in ''
-                bind=$mod,${xs},workspace,${xs}
-                bind=$mod SHIFT,${xs},movetoworkspace,${xs}
-            ''
-        ) 10) + ''
-            exec-once=${pkgs.waybar}/bin/waybar
-            exec=${pkgs.swww}/bin/swww init
-            exec-once=${pkgs.swww}/bin/swww img ~/.wallpapers/${INIT_WP}
-
-            bind=$mod,Q,exec,${config.programs.swaylock.package}/bin/swaylock
-            bind=$mod,B,exec,firefox
-            bind=$mod,Return,exec,kitty
-            bind=$mod SHIFT,B,exec,firefox --private-window
-            bind=$mod,D,exec,wofi --show drun
-            bind=$mod,W,exec,looking-glass-client -f /dev/shm/looking-glass1
-
-            bind=$mod SHIFT,Q,exit,
-            bind=$mod,S,togglefloating,
-            bind=$mod,F,fullscreen,
-            bind=$mod SHIFT,F,fakefullscreen,
-            bind=$mod,T,togglesplit
-            bind=$mod,G,togglegroup
-            bind=$mod,U,changegroupactive,f
-
-            bind=$mod,H,movefocus,l
-            bind=$mod,L,movefocus,r
-            bind=$mod,K,movefocus,u
-            bind=$mod,J,movefocus,d
-
-            bind=$mod SHIFT,H,movewindow,l
-            bind=$mod SHIFT,L,movewindow,r
-            bind=$mod SHIFT,K,movewindow,u
-            bind=$mod SHIFT,J,movewindow,d
-            bind=$mod SHIFT,C,killactive,
-
-            bind=,XF86AudioRaiseVolume,exec,pactl set-sink-volume @DEFAULT_SINK@ +5%
-            bind=,XF86AudioLowerVolume,exec,pactl set-sink-volume @DEFAULT_SINK@ -5%
-            bind=,XF86AudioMute,exec,pactl set-sink-mute @DEFAULT_SINK@ toggle
-            bind=,XF86MonBrightnessDown,exec, brillo -u 150000 -U 5
-            bind=,XF86MonBrightnessUp,exec, brillo -u 150000 -A 5
-            bind=,XF86AudioPlay,exec,playerctl play
-            bind=,XF86AudioPause,exec,playerctl pause
-            bind=,XF86AudioStop,exec,playerctl pause
-            bind=,XF86AudioPrev,exec,playerctl previous
-            bind=,XF86AudioNext,exec,playerctl next
-
-            monitor=eDP-1,3840x2400@60,0x0,2
-            windowrule=opacity 0.93,firefox
-            windowrule=opacity 0.85,Element
-            windowrule=opacity 0.85,deluge
-            windowrule=opacity 0.85,title:Spotify
-
-            env=WLR_DRM_DEVICE,/dev/dri/renderD128
-
-            env=GTK_IM_MODULE,wayland
-            env=QT_IM_MODULE,wayland
-            env=GLFW_IM_MODULE,wayland
-            env=XMODIFIERS,@im=kime
-            exec=${pkgs.kime}/bin/kime
-        '';
     };
 }

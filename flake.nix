@@ -3,6 +3,7 @@
 
 	inputs = {
 		nixpkgs.url = "nixpkgs/nixos-unstable";
+        nixos-stable.url = "github:NixOS/nixpkgs/nixos-23.05";
 		home-manager = {
 			url = github:nix-community/home-manager;
 			inputs.nixpkgs.follows = "nixpkgs";
@@ -16,19 +17,23 @@
 		spicetify-nix.url = github:the-argus/spicetify-nix;
 
         stylix.url = github:danth/stylix;
+
+        nur.url = github:nix-community/NUR;
 	};
 
 	outputs = { self, nixpkgs, home-manager, ... } @ inputs: rec {
 		nixosConfigurations = {
-			linux-laptop = nixpkgs.lib.nixosSystem {
+			haskell_slay_slay = nixpkgs.lib.nixosSystem {
 				system = "x86_64-linux";
 				specialArgs = { inherit inputs; };
 				modules = [
+                    inputs.nur.nixosModules.nur
                     {
                         nixpkgs.overlays = [ 
                             (import ./pkgs).overlay
                         ];
                     }
+                    inputs.stylix.nixosModules.stylix
 					./modules/configuration.nix
 					home-manager.nixosModules.home-manager
 					{

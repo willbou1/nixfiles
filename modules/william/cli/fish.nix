@@ -13,6 +13,8 @@
             "hlc" = "hyprctl";
             "grep" = "rg";
             "clear" = "command clear; fish_greeting";
+            "sc" = "sudo systemctl";
+            "uc" = "systemctl --user";
         };
         functions = {
 #fastfetch | lolcat -a -s 1000 -d 8
@@ -31,15 +33,26 @@
         };
         interactiveShellInit = ''
             fish_vi_key_bindings
+            set -e MESA_LOADER_DRIVER_OVERRIDE
+            set -e __EGL_VENDOR_LIBRARY_FILENAMES
             '';
-        plugins = [
+        plugins = with pkgs.fishPlugins; [
+        {
+            name ="ssh-agent";
+            src = pkgs.fetchFromGitHub {
+                owner = "dnahper";
+                repo = "fish-ssh-agent";
+                rev = "fd70a2afdd03caf9bf609746bf6b993b9e83be57";
+                hash = "sha256-e94Sd1GSUAxwLVVo5yR6msq0jZLOn2m+JZJ6mvwQdLs=";
+            };
+        }
         {
             name = "fzf";
-            src = pkgs.fishPlugins.fzf-fish.src;
+            src = fzf-fish.src;
         }
         {
             name = "colored-man";
-            src = pkgs.fishPlugins.colored-man-pages.src;
+            src = colored-man-pages.src;
         }
         {
             name = "extract";

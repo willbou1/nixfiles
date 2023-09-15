@@ -116,6 +116,7 @@ in with config.lib.stylix.colors.withHashtag; {
             firenvim
                 vim-tpipeline
                 themePlugin
+                vim-gas
         ];
         options = {
             termguicolors = true;

@@ -3,28 +3,20 @@
 rec {
     imports = [
         inputs.impermanence.nixosModules.home-manager.impermanence
-        inputs.stylix.homeManagerModules.stylix
         ./mpv.nix
         ./theme.nix
         ./hyprland.nix
         ./wofi.nix
         ./spotify.nix
         ./services
-        ./nvim.nix
-        ./cmdline
+        ./cli
         ./waybar.nix
+        ./xdg.nix
+        ./virtualisation.nix
+        ./ime.nix
     ];
     home.username = "william";
     home.homeDirectory = "/home/william";
-    xdg = {
-        enable = true;
-        userDirs = {
-            music = "${config.home.homeDirectory}/priv/music";
-            pictures = "${config.home.homeDirectory}/priv/pics";
-            videos = "${config.home.homeDirectory}/priv/vids";
-            download = "${config.home.homeDirectory}/priv/dwl";
-        };
-    };
     home.persistence."/persist/home/william" = {
         directories = [
             "priv"
@@ -33,8 +25,6 @@ rec {
             ".mozilla/firefox"
             ".config/Element"
             ".config/spotify"
-            #".local/share/keyrings"
-            #".local/share/direnv"
         ];
         files = [
             ".local/share/fish/fish_history"
@@ -45,19 +35,18 @@ rec {
         config.lib.file.mkOutOfStoreSymlink "/etc/nixos/modules/william";
 
     home.packages = with pkgs; [
+        libreoffice-fresh
         vieb
-        element-desktop
+        inputs.nixos-stable.legacyPackages.x86_64-linux.element-desktop
         gimp
-        kime
         playerctl
         hyprpaper
-        svp
         swww
         dconf
 
         # Fonts
         baekmuk-ttf
-        #nerdfonts
+        nerdfonts
     ];
 
     fonts.fontconfig.enable = true;
@@ -72,13 +61,8 @@ rec {
 
         home-manager.enable = true;
 
-        git = {
-            enable = true;
-            userName = "William Boulanger";
-            userEmail = "willbou2@gmail.com";
-        };
     };
 
     # Wallpapers
-    home.file.".wallpapers".source = ../wallpapers;
+    home.file.".wallpapers".source = ../../resources/wallpapers;
 }

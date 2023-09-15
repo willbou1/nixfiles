@@ -3,7 +3,7 @@ swaylock = "${config.programs.swaylock.package}/bin/swaylock";
 brillo = "${pkgs.brillo}/bin/brillo";
 in {
     services.swayidle = {
-        enable = true;
+        enable = false;
         systemdTarget = "hyprland-session.target";
         timeouts = [
             {
@@ -13,7 +13,7 @@ in {
             }
             {
                 timeout = 600;
-                command = "${swaylock}/bin/swaylock -F";
+                command = "${swaylock} -F";
             }
             {
                 timeout = 700;
@@ -28,7 +28,7 @@ in {
             }
             {
                 event = "before-sleep";
-                command = "${swaylock}/bin/swaylock -F";
+                command = "${swaylock} -F";
             }
         ];
     };

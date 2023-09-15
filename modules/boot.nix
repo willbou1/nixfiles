@@ -2,6 +2,10 @@
 LUKS_UUID = "/dev/disk/by-uuid/5a7e9eb7-cd9d-43af-892e-a7c70e09e6d5";
 BTRFS_UUID = "/dev/disk/by-uuid/ac418410-e9e7-4e54-9dec-5c9b0a0fb75d";
 in {
+	boot.kernelPackages = pkgs.linuxPackages_latest;
+
+    boot.binfmt.emulatedSystems = [ "aarch64-linux" ];
+
 	boot.supportedFilesystems = [ "ntfs" ];
 	boot.kernel.sysctl = { "vm.swappiness" = 10;};	
 	boot.loader.efi.canTouchEfiVariables = true;
@@ -13,12 +17,13 @@ in {
 		enableCryptodisk = true;
 		#useOSProber = true;
 		gfxmodeEfi = "3840x2400";
-		fontSize = 36;
 	};
 
 	boot.initrd.availableKernelModules = [ "vmd" "xhci_pci" "thunderbolt" "nvme" "usb_storage" "sd_mod" "rtsx_pci_sdmmc" ];
 	boot.initrd.kernelModules = [ "kvm-intel" ];
 	boot.kernelModules = [ "iwlwifi" ];
+    # Make TTY look bigger
+    boot.kernelParams = [ "video=1920x1200@60" ];
 	boot.extraModulePackages = [ ];
 
 	boot.initrd.luks.devices = {
@@ -34,12 +39,12 @@ in {
 		"/" = {
 			device = "none";
 			fsType = "tmpfs";
-			options = [ "size=3G" "mode=755" ];
+			options = [ "size=10G" "mode=755" ];
 		};
 		"/home/william" = {
 			device = "none";
 			fsType = "tmpfs";
-			options = [ "size=4G" "mode=777" ];
+			options = [ "size=10G" "mode=777" ];
 		};
 		"/persist" = {
 			device = BTRFS_UUID;
