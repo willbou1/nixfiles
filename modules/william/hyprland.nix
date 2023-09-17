@@ -12,6 +12,8 @@ if [ "$transform" -eq "0" ]; then
 else
     ${pkgs.hyprland}/bin/hyprctl --batch "keyword monitor eDP-1,preferred,auto,auto,transform,0; keyword input:touchdevice:transform 0;"
 fi
+sleep 0.2
+${pkgs.swww}/bin/swww img ${config.stylix.image}
 '';
 hyprcap = pkgs.writeShellScriptBin "hyprcap" (''
     slurp_args="-b "${colors.base00 + hexOpacity}" -B "${colors.base00 + hexOpacity}" -c "${colors.base04 + hexOpacity}""
@@ -57,9 +59,9 @@ with config.lib.stylix.colors; {
                 gaps_in = 10;
                 gaps_out = 10;
                 border_size = 3;
-                "col.inactive_border" = "0x${hexOpacity + base03}";
-                "col.active_border" = "0x${hexOpacity + base04}";
-                "col.group_border" = "0x${hexOpacity + base0E}";
+                "col.inactive_border" = lib.mkForce "0x${hexOpacity + base03}";
+                "col.active_border" = lib.mkForce "0x${hexOpacity + base04}";
+                "col.group_border" = lib.mkForce "0x${hexOpacity + base0E}";
             };
             decoration = {
                 rounding = 20;
@@ -73,7 +75,6 @@ with config.lib.stylix.colors; {
                 shadow_offset = "5 5";
                 shadow_render_power = 8;
                 shadow_ignore_window = 0;
-                "col.shadow" = "0x77000000";
                 blurls = [ "gtk-layer-shell" "notifications" ];
             };
             animations = {
@@ -96,7 +97,7 @@ with config.lib.stylix.colors; {
                 swallow_regex = "^kitty$";
                 disable_hyprland_logo = true;
                 allow_session_lock_restore = true;
-                background_color = base00;
+                background_color = lib.mkForce base00;
                 vfr = false;
             };
             env = [
@@ -160,7 +161,7 @@ with config.lib.stylix.colors; {
                 ",XF86AudioPrev,exec,playerctl previous"
                 ",XF86AudioNext,exec,playerctl next"
             ] ++ builtins.concatLists (builtins.genList (x :
-            let xs = builtins.toString x; in [
+            let xs = builtins.toString (x + 1); in [
                 "$mod,${xs},workspace,${xs}"
                 "$mod SHIFT,${xs},movetoworkspace,${xs}"
             ]) 9);

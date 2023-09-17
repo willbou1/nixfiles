@@ -2,7 +2,7 @@
 
 with config.lib.stylix.colors.withHashtag; {
     stylix = {
-        image = ../../resources/wallpapers/space.jpg;
+        image = ../../resources/wallpapers/gil_nak_won_1.png;
         polarity = "dark";
         targets.vim.enable = false;
         fonts.sizes = {

@@ -24,40 +24,45 @@
                 "classify+='  ::*.avi,,*.ts,,*.axv,,*.divx,,*.m2v,,*.m4p,,*.m4v,,.mka,,*.mkv,,*.mov,,*.mp4,,*.flv,,*.mp4v,,*.mpeg,,*.mpg,,*.nuv,,*.ogv,,*.pbm,,*.pgm,,*.qt,,*.vob,,*.wmv,,*.xvid::'"
                 "classify+='  ::*.doc,,*.docx::,  ::*.xls,,*.xls[mx]::,  ::*.pptx,,*.ppt::'"
             ];
-            filetype = {
-                "*.csv,*.xlsx" = "libreoffice %c %i";
-                "<text/*>,*.sh" = "nvim";
-                "*.pdf" = "zathura %c %i &";
-                "*.epub" = "zathura %c %i &";
-                "<audio/*>" = "mpv %c %i </dev/null &>/dev/null &";
-                "<video/*>" = "mpv %c %i </dev/null &>/dev/null &";
-                "<image/*>" = "feh %c %i </dev/null &>/dev/null &";
-            };
-            fileviewer = with pkgs; {
-                "<text/*>,*.sh,*.nix" = "env -uCOLORTERM bat --color always --wrap never --pager never %c -p";
-                "*.zip,*.jar,*.war,*.ear,*.oxt" = "zip -sf %c";
-                "*.tgz,*.tar.gz" = "tar -tzf %c";
-                "*.tar.bz2,*.tbz2" = "tar -tjf %c";
-                "*.tar.txz,*.txz" = "xz --list %c";
-                "*.tar" = "tar -tf %c";
-                "*.rar" = "unrar v %c";
-                "*.7z" = "7z l %c";
-                "*/" = "lsd --color always --icon always";
-                ".*/" = "lsd --color always --icon always";
-            };
-            map = {
-                "q" = "ZQ";
-            };
-            nnoremap = {
-                "gg" = "ggj";
-                "." = "za";
-            };
-
+            filetype = [
+                "*.csv,*.xlsx libreoffice %c %i"
+                "<text/*>,*.sh nvim"
+                "*.pdf zathura %c %i &"
+                "*.epub zathura %c %i &"
+                "<audio/*> mpv %c %i </dev/null &>/dev/null &"
+                "<video/*> mpv %c %i </dev/null &>/dev/null &"
+                "<image/*> feh %c %i </dev/null &>/dev/null &"
+                "* xdg-open %c"
+            ];
+            fileviewer = [
+                "<text/*>,*.sh,*.nix env -uCOLORTERM bat --color always --wrap never --pager never %c -p"
+                "*.zip,*.jar,*.war,*.ear,*.oxt zip -sf %c"
+                "*.tgz,*.tar.gz tar -tzf %c"
+                "*.tar.bz2,*.tbz2 tar -tjf %c"
+                "*.tar.txz,*.txz xz --list %c"
+                "*.tar tar -tf %c"
+                "*.rar unrar v %c"
+                "*.7z 7z l %c"
+                "*/ lsd --color always --icon always"
+                ".*/ lsd --color always --icon always"
+                "* file -b %c"
+            ];
+            map = [
+                "q ZQ"
+            ];
+            nnoremap = [
+                "gg ggj"
+                ". za"
+                "F :FZFfind <cr>"
+                "o :!dragon-drag-and-drop %f </dev/null &>/dev/null & <cr>"
+                "I cw<c-a>"
+                "cc cw<c-u>"
+                "A cw"
+                "w :view<cr>"
+                "S :sort<cr>"
+                "s :shell<cr>"
+            ];
+            view = [ "" ];
         };
-        extraConfig = ''
-            view
-            filetype * xdg-open %c
-            fileviewer * file -b %c
-        '';
     };
 }

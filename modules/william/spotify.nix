@@ -3,6 +3,9 @@ spicePkgs = inputs.spicetify-nix.packages.${pkgs.system}.default;
 in 
 with config.lib.stylix.colors; {
 	imports = [ inputs.spicetify-nix.homeManagerModule ];
+    home.persistence."/persist/home/william".directories = [
+            ".config/spotify"
+    ];
 	programs.spicetify = {
 		enable = true;
 

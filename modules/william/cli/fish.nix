@@ -1,6 +1,9 @@
 { pkgs, ... }:
 
 {
+    home.persistence."/persist/home/william".files = [
+        ".local/share/fish/fish_history"
+    ];
     programs.fish = {
         enable = true;
         shellAliases = {

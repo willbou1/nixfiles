@@ -1,0 +1,6 @@
+keys:
+  - &william age1ttadzev8ah28mvtrf2mlgqpq22l0hsjku28q0x4unfpx5fz7spssu0xkwk
+creation_rules:
+  - key_groups:
+    - age:
+      - *william

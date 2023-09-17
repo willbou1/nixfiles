@@ -4,6 +4,7 @@
 	inputs = {
 		nixpkgs.url = "nixpkgs/nixos-unstable";
         nixos-stable.url = "github:NixOS/nixpkgs/nixos-23.05";
+        sops-nix.url = github:Mic92/sops-nix;
 		home-manager = {
 			url = github:nix-community/home-manager;
 			inputs.nixpkgs.follows = "nixpkgs";
@@ -34,12 +35,17 @@
                         ];
                     }
                     inputs.stylix.nixosModules.stylix
+                    inputs.sops-nix.nixosModules.sops
 					./modules/configuration.nix
 					home-manager.nixosModules.home-manager
 					{
 						home-manager.extraSpecialArgs = {inherit inputs;};
 						home-manager.useGlobalPkgs = true;
 						home-manager.useUserPackages = true;
+                        home-manager.sharedModules = [
+                            inputs.impermanence.nixosModules.home-manager.impermanence
+                            inputs.sops-nix.homeManagerModules.sops
+                        ];
 						home-manager.users.william = import ./modules/william/home.nix;
 					}
 				];

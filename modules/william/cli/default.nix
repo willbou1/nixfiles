@@ -32,7 +32,6 @@
             enable = true;
             enableFishIntegration = true;
         };
-        neomutt.enable = true;
     };
 
     home.packages = with pkgs; [

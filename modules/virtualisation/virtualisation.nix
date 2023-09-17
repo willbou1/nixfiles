@@ -11,13 +11,17 @@ done;
 in {
     boot.kernelParams = [ "intel_iommu=on" "default_hugepagesz=1G" "hugepagesz=1G" "hugepages=24" "kvm-intel.enable_apicv=y" "vfio-pci.ids=10de:27a0,10de:22bc" ];
     boot.kernelModules = [ "vfio" "vfio_iommu_type1" "vfio_pci" "vfio_virqfd" ];
-
-    environment.systemPackages = with pkgs; [
-        virt-manager
-        libguestfs
-        lsiommu
-        win-virtio
-    ];
+    environment = {
+        persistence."/persist".directories = [
+            "/var/lib/libvirt"
+        ];
+        systemPackages = with pkgs; [
+            virt-manager
+                libguestfs
+                lsiommu
+                win-virtio
+        ];
+    };
 
     virtualisation = {
         libvirtd = {

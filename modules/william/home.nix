@@ -2,7 +2,6 @@
 
 rec {
     imports = [
-        inputs.impermanence.nixosModules.home-manager.impermanence
         ./mpv.nix
         ./theme.nix
         ./hyprland.nix
@@ -17,6 +16,10 @@ rec {
     ];
     home.username = "william";
     home.homeDirectory = "/home/william";
+    sops = {
+        defaultSopsFile = ./secrets.yaml;
+        age.sshKeyPaths = [ "/home/william/.ssh/id_ed25519" ];
+    };
     home.persistence."/persist/home/william" = {
         directories = [
             "priv"
@@ -24,10 +27,6 @@ rec {
             ".ssh"
             ".mozilla/firefox"
             ".config/Element"
-            ".config/spotify"
-        ];
-        files = [
-            ".local/share/fish/fish_history"
         ];
         allowOther = true;
     };

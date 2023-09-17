@@ -38,6 +38,12 @@
     console.font = "ter-i32b";
     console.packages = with pkgs; [ terminus_font ];
 
+    sops = {
+        defaultSopsFile = ../secrets.yaml;
+        age.sshKeyPaths = [ "/persist/etc/ssh/ssh_host_ed25519_key" ];
+        gnupg.sshKeyPaths = [ "/persist/etc/ssh/ssh_host_rsa_key" ];
+    };
+
 	environment = {
 		systemPackages = with pkgs; [
             file
@@ -48,7 +54,6 @@
             killall
 			tmux
 			mlocate
-			gnupg
 			nix-prefetch-github
 			miniupnpc
             acpi
@@ -57,16 +62,11 @@
 		persistence."/persist" = {
 			hideMounts = true;
 			directories = [
+                "/etc/ssh"
 				"/etc/nixos"
 				"/var/log"
-                "/var/lib/libvirt"
 				"/var/lib/bluetooth"
-                "/var/lib/deluge"
-                "/srv/torrents"
 				"/var/lib/nixos"
-				"/etc/NetworkManager/system-connections"
-                "/cat_installer"
-                "/etc/openvpn/expressvpn"
 			];
 			files = [
 				"/etc/machine-id"
@@ -120,6 +120,11 @@
 			vimAlias = true;
 		};
 		fish.enable = true;
+        gnupg.agent = {
+            enable = true;
+            pinentryFlavor = "curses";
+            enableSSHSupport = true;
+        };
 	};
 
 	services = {
