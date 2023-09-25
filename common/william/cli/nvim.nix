@@ -19,10 +19,10 @@ themePlugin = pkgs.vimUtils.buildVimPlugin {
         '';
 };
 in with config.lib.stylix.colors.withHashtag; {
-    imports = [ inputs.nixvim.homeManagerModules.nixvim ];
     programs.nixvim = {
         enable = true;
         colorscheme = "base16-stylix";
+        package = pkgs.neovim-nightly;
         plugins = {
             lualine = {
                 enable = true;

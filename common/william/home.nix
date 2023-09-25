@@ -12,6 +12,7 @@ rec {
         ./waybar.nix
         ./xdg.nix
         ./virtualisation.nix
+        ./zathura.nix
         ./ime.nix
     ];
     home.username = "william";
@@ -35,13 +36,14 @@ rec {
 
     home.packages = with pkgs; [
         libreoffice-fresh
-        vieb
         inputs.nixos-stable.legacyPackages.x86_64-linux.element-desktop
+        inputs.nixos-stable.legacyPackages.x86_64-linux.vieb
         gimp
         playerctl
         hyprpaper
         swww
         dconf
+        helvum
 
         # Fonts
         baekmuk-ttf
@@ -56,7 +58,6 @@ rec {
         firefox.enable = true;
         
         kitty = import ./kitty.nix;
-        zathura.enable = true;
 
         home-manager.enable = true;
 

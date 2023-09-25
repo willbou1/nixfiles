@@ -3,6 +3,9 @@
 {
     powerManagement.enable = true;
     services = {
+        logind = {
+            powerKey = "suspend";
+        };
         thermald.enable = true;
         auto-cpufreq = {
             enable = true;

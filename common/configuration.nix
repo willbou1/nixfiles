@@ -3,13 +3,13 @@
 {
 	imports =
 		[ 
-		./boot.nix
+        ./security.nix
 		./virtualisation
+        ./specialisations
 		./networking.nix
 		./pipewire.nix
 		./users.nix
-        ./video.nix
-        ./power.nix
+        ./boot.nix
 		inputs.impermanence.nixosModules.impermanence
 		];
 
@@ -38,12 +38,6 @@
     console.font = "ter-i32b";
     console.packages = with pkgs; [ terminus_font ];
 
-    sops = {
-        defaultSopsFile = ../secrets.yaml;
-        age.sshKeyPaths = [ "/persist/etc/ssh/ssh_host_ed25519_key" ];
-        gnupg.sshKeyPaths = [ "/persist/etc/ssh/ssh_host_rsa_key" ];
-    };
-
 	environment = {
 		systemPackages = with pkgs; [
             file
@@ -62,7 +56,6 @@
 		persistence."/persist" = {
 			hideMounts = true;
 			directories = [
-                "/etc/ssh"
 				"/etc/nixos"
 				"/var/log"
 				"/var/lib/bluetooth"
@@ -70,7 +63,6 @@
 			];
 			files = [
 				"/etc/machine-id"
-                "/crypto_keyfile.cpio.gz"
 			];
 		};
 		etc = {
@@ -120,18 +112,6 @@
 			vimAlias = true;
 		};
 		fish.enable = true;
-        gnupg.agent = {
-            enable = true;
-            pinentryFlavor = "curses";
-            enableSSHSupport = true;
-        };
-	};
-
-	services = {
-		printing.enable = true;
-        fprintd = {
-            enable = true;
-        };
 	};
 
 	nix = {
@@ -171,11 +151,5 @@
         extraBackends = [ pkgs.sane-airscan ];
     };
 
-  security.pam = {
-      services.swaylock.text = ''
-              auth sufficient pam_unix.so try_first_pass likeauth nullok
-              auth sufficient pam_fprintd.so
-              '';
-  };
   services.udisks2.enable = true;
 }

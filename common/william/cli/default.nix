@@ -8,9 +8,17 @@
         ./fish.nix
         ./starship.nix
         ./mail.nix
+        ./tmux.nix
+    ];
+    home.persistence."/persist/home/william".directories = [
+        ".local/share/zoxide"
     ];
 
     programs = {
+        ssh = {
+            enable = true;
+            extraConfig = "AddKeysToAgent yes";
+        };
         git = {
             enable = true;
             userName = "William Boulanger";

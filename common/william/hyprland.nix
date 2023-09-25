@@ -45,6 +45,10 @@ with config.lib.stylix.colors; {
         xwayland.enable = true;
         #enableNvidiaPatches = true;
         settings = {
+            "device:elan2097:00-04f3:2a15" = {
+                transform = 0;
+                output = "eDP-1";
+            };
             input = {
                 kb_layout = "ca";
                 kb_variant = "multix";
@@ -56,7 +60,7 @@ with config.lib.stylix.colors; {
             };
             general = {
                 sensitivity = 1;
-                gaps_in = 10;
+                gaps_in = 5;
                 gaps_out = 10;
                 border_size = 3;
                 "col.inactive_border" = lib.mkForce "0x${hexOpacity + base03}";
@@ -75,7 +79,6 @@ with config.lib.stylix.colors; {
                 shadow_offset = "5 5";
                 shadow_render_power = 8;
                 shadow_ignore_window = 0;
-                blurls = [ "gtk-layer-shell" "notifications" ];
             };
             animations = {
                 enabled = true;
@@ -111,15 +114,28 @@ with config.lib.stylix.colors; {
             exec-once = [
                 "${pkgs.waybar}/bin/waybar"
                 "${pkgs.swww}/bin/swww init"
+                "SVPManager"
+                "element-desktop"
+                "spotify"
+                "firefox"
             ];
             exec = [
                 "${pkgs.swww}/bin/swww img ${config.stylix.image}"
             ];
             windowrule = [
                 "opacity 0.93,firefox"
+                "workspace 1,firefox"
+
                 "opacity 0.85,Element"
+                "workspace 5 silent,Element"
+
                 "opacity 0.85,deluge"
+
                 "opacity 0.85,title:Spotify"
+                "workspace 6 silent,title:Spotify"
+
+                "float,SVPManager"
+                "workspace 9 silent,SVPManager"
             ];
             bind = [
                 "$mod,Q,exec,${config.programs.swaylock.package}/bin/swaylock"
@@ -144,6 +160,7 @@ with config.lib.stylix.colors; {
                 "$mod,K,movefocus,u"
                 "$mod,J,movefocus,d"
 
+                "$mod,N,swapactiveworkspaces,eDP-1 DP-4"
                 "$mod SHIFT,H,movewindow,l"
                 "$mod SHIFT,L,movewindow,r"
                 "$mod SHIFT,K,movewindow,u"

@@ -16,43 +16,58 @@
 		impermanence.url = github:nix-community/impermanence;
 		hosts.url = github:StevenBlack/hosts;
 		spicetify-nix.url = github:the-argus/spicetify-nix;
+        neovim-nightly-overlay.url = github:nix-community/neovim-nightly-overlay;
 
         stylix.url = github:danth/stylix;
 
         nur.url = github:nix-community/NUR;
 	};
 
-	outputs = { self, nixpkgs, home-manager, ... } @ inputs: rec {
+	outputs = { self, nixpkgs, home-manager, ... } @ inputs: let
+    commonNixosModules = [
+        inputs.nur.nixosModules.nur
+        {
+            nixpkgs.overlays = [ 
+                (import ./pkgs).overlay
+                inputs.neovim-nightly-overlay.overlay
+            ];
+        }
+        inputs.stylix.nixosModules.stylix
+        inputs.sops-nix.nixosModules.sops
+        ./common/configuration.nix
+        home-manager.nixosModules.home-manager
+        {
+            home-manager.extraSpecialArgs = {inherit inputs;};
+            home-manager.useGlobalPkgs = true;
+            home-manager.useUserPackages = true;
+            home-manager.sharedModules = [
+                inputs.impermanence.nixosModules.home-manager.impermanence
+                inputs.sops-nix.homeManagerModules.sops
+                inputs.nixvim.homeManagerModules.nixvim
+            ];
+            home-manager.users.william = import ./common/william/home.nix;
+        }
+    ];
+    in rec {
 		nixosConfigurations = {
 			haskell_slay_slay = nixpkgs.lib.nixosSystem {
 				system = "x86_64-linux";
 				specialArgs = { inherit inputs; };
 				modules = [
-                    inputs.nur.nixosModules.nur
-                    {
-                        nixpkgs.overlays = [ 
-                            (import ./pkgs).overlay
-                        ];
-                    }
-                    inputs.stylix.nixosModules.stylix
-                    inputs.sops-nix.nixosModules.sops
-					./modules/configuration.nix
-					home-manager.nixosModules.home-manager
-					{
-						home-manager.extraSpecialArgs = {inherit inputs;};
-						home-manager.useGlobalPkgs = true;
-						home-manager.useUserPackages = true;
-                        home-manager.sharedModules = [
-                            inputs.impermanence.nixosModules.home-manager.impermanence
-                            inputs.sops-nix.homeManagerModules.sops
-                        ];
-						home-manager.users.william = import ./modules/william/home.nix;
-					}
-				];
+					./haskell_slay_slay/configuration.nix
+				] ++ commonNixosModules;
+			};
+			linux-amd = nixpkgs.lib.nixosSystem {
+				system = "x86_64-linux";
+				specialArgs = { inherit inputs; };
+				modules = [
+					./haskell_slay_slay/configuration.nix
+				] ++ commonNixosModules;
 			};
 		};
 		homeConfigurations = {
-			william = nixosConfigurations.linux-laptop.config.home-manager.users.william.home;
+			"william@haskell_slay_slay" = nixosConfigurations.haskell_slay_slay.config.home-manager.users.william.home;
+			"william@linux-amd" = nixosConfigurations.linux-amd.config.home-manager.users.william.home;
 		};
 	};
 }

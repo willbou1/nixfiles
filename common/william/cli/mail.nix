@@ -27,9 +27,8 @@
             realName = "William Boulanger";
         };
     };
-
+    services.mbsync.enable = true;
     programs = {
-        mbsync.enable = true;
         msmtp.enable = true;
         neomutt = {
             enable = true;
