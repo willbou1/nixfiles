@@ -18,6 +18,7 @@
             "clear" = "command clear; fish_greeting";
             "sc" = "sudo systemctl";
             "uc" = "systemctl --user";
+            "nd" = "nix develop --command fish";
         };
         functions = {
 #fastfetch | lolcat -a -s 1000 -d 8

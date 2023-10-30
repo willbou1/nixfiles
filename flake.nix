@@ -34,6 +34,7 @@
         }
         inputs.stylix.nixosModules.stylix
         inputs.sops-nix.nixosModules.sops
+		inputs.hosts.nixosModule
         ./common/configuration.nix
         home-manager.nixosModules.home-manager
         {

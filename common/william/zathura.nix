@@ -1,6 +1,8 @@
 { lib, config, ... }:
 
 with config.lib.stylix.colors; {
+    xdg.mimeApps.defaultApplications."application/pdf" =
+        [ "zathura.desktop" ];
     programs.zathura = {
         enable = true;
         options = {

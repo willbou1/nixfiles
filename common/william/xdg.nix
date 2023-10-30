@@ -3,6 +3,7 @@
 {
     xdg = {
         enable = true;
+        mimeApps.enable = true;
         userDirs = let
             home = config.home.homeDirectory;
         in {

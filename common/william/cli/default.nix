@@ -51,6 +51,7 @@
         fd
         nvtop
         ani-cli
+        mkvtoolnix
 
         weechat
         aspell

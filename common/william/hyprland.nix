@@ -8,9 +8,9 @@ hyprrotate = pkgs.writeShellScriptBin "hyprrotate" ''
 #! /bin/sh
 transform="$(${pkgs.hyprland}/bin/hyprctl -j monitors | ${pkgs.jq}/bin/jq '.[0].transform')"
 if [ "$transform" -eq "0" ]; then
-    ${pkgs.hyprland}/bin/hyprctl --batch "keyword monitor eDP-1,preferred,auto,auto,transform,1; keyword input:touchdevice:transform 1;"
+    ${pkgs.hyprland}/bin/hyprctl --batch "keyword monitor eDP-1,preferred,auto,auto,transform,1; keyword device:elan2097:00-04f3:2a15:transform 1;"
 else
-    ${pkgs.hyprland}/bin/hyprctl --batch "keyword monitor eDP-1,preferred,auto,auto,transform,0; keyword input:touchdevice:transform 0;"
+    ${pkgs.hyprland}/bin/hyprctl --batch "keyword monitor eDP-1,preferred,auto,auto,transform,0; keyword device:elan2097:00-04f3:2a15:transform 0;"
 fi
 sleep 0.2
 ${pkgs.swww}/bin/swww img ${config.stylix.image}
@@ -27,6 +27,10 @@ hyprcap = pkgs.writeShellScriptBin "hyprcap" (''
     ${pkgs.grim}/bin/grim -g "$dims" - | ${pkgs.wl-clipboard}/bin/wl-copy
 
     #${pkgs.killall}/bin/killall feh
+'');
+dic = pkgs.writeShellScriptBin "dic" (''
+    qutebrowser --target window 'https://korean.dict.naver.com/koendict/#/main'
+    qutebrowser --target tab 'https://koreanhanja.app/'
 '');
 in
 with config.lib.stylix.colors; {
@@ -67,18 +71,21 @@ with config.lib.stylix.colors; {
                 "col.active_border" = lib.mkForce "0x${hexOpacity + base04}";
                 "col.group_border" = lib.mkForce "0x${hexOpacity + base0E}";
             };
+
             decoration = {
                 rounding = 20;
                 blur = {
                     enabled = true;
                     size = 5;
                     passes = 1;
+                    special = true;
                 };
                 drop_shadow = true;
                 shadow_range = 30;
                 shadow_offset = "5 5";
                 shadow_render_power = 8;
                 shadow_ignore_window = 0;
+                dim_special = 0.4;
             };
             animations = {
                 enabled = true;
@@ -94,6 +101,7 @@ with config.lib.stylix.colors; {
                 pseudotile = true;
                 preserve_split = true;
                 force_split = 2;
+                special_scale_factor = 0.9;
             };
             misc = {
                 enable_swallow = true;
@@ -109,7 +117,7 @@ with config.lib.stylix.colors; {
             "$mod" = "SUPER";
             bindm = [
                 "$mod,mouse:272,movewindow"
-                    "$mod,mouse:273,resizewindow"
+                "$mod,mouse:273,resizewindow"
             ];
             exec-once = [
                 "${pkgs.waybar}/bin/waybar"
@@ -117,14 +125,18 @@ with config.lib.stylix.colors; {
                 "SVPManager"
                 "element-desktop"
                 "spotify"
-                "firefox"
+                "qutebrowser"
             ];
             exec = [
                 "${pkgs.swww}/bin/swww img ${config.stylix.image}"
             ];
             windowrule = [
+                "idleinhibit fullscreen,.*"
+
+                "opacity 0.93,org.qutebrowser.qutebrowser"
                 "opacity 0.93,firefox"
-                "workspace 1,firefox"
+
+                "workspace 4,mpv"
 
                 "opacity 0.85,Element"
                 "workspace 5 silent,Element"
@@ -139,9 +151,9 @@ with config.lib.stylix.colors; {
             ];
             bind = [
                 "$mod,Q,exec,${config.programs.swaylock.package}/bin/swaylock"
-                "$mod,B,exec,firefox"
+                "$mod,B,exec,qutebrowser"
+                "$mod SHIFT,D,exec,${dic}/bin/dic"
                 "$mod,Return,exec,MESA_LOADER_DRIVER_OVERRIDE=iris __EGL_VENDOR_LIBRARY_FILENAMES=${pkgs.mesa_drivers}/share/glvnd/egl_vendor.d/50_mesa.json kitty"
-                "$mod SHIFT,B,exec,firefox --private-window"
                 "$mod,D,exec,wofi --show drun"
                 "$mod,W,exec,looking-glass-client -f /dev/shm/looking-glass1"
                 "$mod,C,exec,${hyprcap}/bin/hyprcap"
@@ -177,6 +189,9 @@ with config.lib.stylix.colors; {
                 ",XF86AudioStop,exec,playerctl pause"
                 ",XF86AudioPrev,exec,playerctl previous"
                 ",XF86AudioNext,exec,playerctl next"
+
+                "$mod SHIFT,S,togglespecialworkspace,secret"
+                "$mod SHIFT,B,exec,qutebrowser ':open -p'"
             ] ++ builtins.concatLists (builtins.genList (x :
             let xs = builtins.toString (x + 1); in [
                 "$mod,${xs},workspace,${xs}"

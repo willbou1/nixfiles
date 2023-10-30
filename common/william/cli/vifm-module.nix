@@ -2,6 +2,7 @@
 cfg = config.programs.vifm;
 vifmimg = pkgs.writeShellScriptBin "vifmimg" (''
 #!/bin/sh
+mkdir -p "$HOME/.cache/vifm"
 export PCACHE="$HOME/.cache/vifm/thumbnail.$(stat --printf '%n\0%i\0%F\0%s\0%W\0%Y' -- "$(readlink -f "$PWD/$6")" | sha256sum | awk '{print $1}'))"
 '' + {
 kitty = ''

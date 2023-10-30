@@ -15,7 +15,7 @@
                 corner_radius = 20;
                 follow = "none";
                 monitor = 0;
-                browser = "firefox";
+                browser = "qutebrowser";
                 markup = "full";
             };
         };

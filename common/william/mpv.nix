@@ -21,6 +21,7 @@ in {
         config = {
             slang = "kor,ko,eng,en,enUS";
             sub-font-size = 75;
+            sub-margin-y = 50;
             sub-back-color = "0.0/0.0/0.0/0.45";
             sub-border-size = 0;
             demuxer-mkv-subtitle-preroll = true;
@@ -60,6 +61,7 @@ in {
         bindings = {
             "ALT+k" = "add sub-scale +0.1";
             "ALT+j" = "add sub-scale -0.1";
+            "CTRL+0" = "no-osd change-list glsl-shaders set \"\"";
         };
     };
 

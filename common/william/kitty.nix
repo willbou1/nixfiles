@@ -12,7 +12,7 @@
         window_padding_width = 10;
         tab_bar_edge = "bottom";
         tab_bar_align = "center";
-        open_url_with = "firefox";
+        open_url_with = "qutebrowser";
         detect_urls = true;
         paste_actions = "quote-urls-at-prompt";
         strip_trailing_spaces = "always";

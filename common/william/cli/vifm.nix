@@ -35,7 +35,7 @@
                 "* xdg-open %c"
             ];
             fileviewer = [
-                "<text/*>,*.sh,*.nix env -uCOLORTERM bat --color always --wrap never --pager never %c -p"
+                "<text/*>,*.sh,*.nix,*.xml env -uCOLORTERM bat --color always --wrap never --pager never %c -p"
                 "*.zip,*.jar,*.war,*.ear,*.oxt zip -sf %c"
                 "*.tgz,*.tar.gz tar -tzf %c"
                 "*.tar.bz2,*.tbz2 tar -tjf %c"

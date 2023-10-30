@@ -8,9 +8,6 @@ expressvpnServers = servers: builtins.listToAttrs(map (s: {
     };
 }) servers);
 in {
-	imports = [
-		inputs.hosts.nixosModule
-	];
     sops = {
         secrets = {
             "wifi/maman" = {};

@@ -78,6 +78,9 @@ in with config.lib.stylix.colors.withHashtag; {
             dap = {
                 enable = true;
                 extensions.dap-ui.enable = true;
+                adapters.executables = {
+                    cpptools.command = "${pkgs.vscode-extensions.ms-vscode.cpptools}/share/vscode/extensions/ms-vscode.cpptools/debugAdapters/bin/OpenDebugAD7";
+                };
             };
             nvim-cmp = {
                 enable = true;
@@ -137,15 +140,28 @@ in with config.lib.stylix.colors.withHashtag; {
             guifont = "Monospace:h18";
             undofile = true;
         };
-        globals.mapleader = " ";
-        maps = {
-            normal = {
-                "<C-h>".action = "<C-w>h";
-                "<C-j>".action = "<C-w>j";
-                "<C-k>".action = "<C-w>k";
-                "<C-l>".action = "<C-w>l";
-            };
+        filetype.extension = {
+            as = "asm";
         };
+        globals.mapleader = " ";
+        keymaps = [
+            {
+                key = "<C-h>";
+                action = "<C-w>h";
+            }
+            {
+                key = "<C-j>";
+                action = "<C-w>j";
+            }
+            {
+                key = "<C-k>";
+                action = "<C-w>k";
+            }
+            {
+                key = "<C-l>";
+                action = "<C-w>l";
+            }
+        ];
         globals.tpipeline_restore = 1;
 # Firenvim
         globals.firenvim_config = {

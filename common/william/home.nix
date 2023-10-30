@@ -14,6 +14,7 @@ rec {
         ./virtualisation.nix
         ./zathura.nix
         ./ime.nix
+        ./qutebrowser.nix
     ];
     home.username = "william";
     home.homeDirectory = "/home/william";
@@ -35,9 +36,9 @@ rec {
         config.lib.file.mkOutOfStoreSymlink "/etc/nixos/modules/william";
 
     home.packages = with pkgs; [
+        home-manager
         libreoffice-fresh
-        inputs.nixos-stable.legacyPackages.x86_64-linux.element-desktop
-        inputs.nixos-stable.legacyPackages.x86_64-linux.vieb
+        element-desktop
         gimp
         playerctl
         hyprpaper
@@ -58,9 +59,6 @@ rec {
         firefox.enable = true;
         
         kitty = import ./kitty.nix;
-
-        home-manager.enable = true;
-
     };
 
     # Wallpapers

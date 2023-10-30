@@ -30,6 +30,7 @@
     services.mbsync.enable = true;
     programs = {
         msmtp.enable = true;
+        mbsync.enable = true;
         neomutt = {
             enable = true;
             vimKeys = true;

@@ -8,7 +8,9 @@ rec {
         env = [
             "GTK_IM_MODULE,kime"
             "QT_IM_MODULE,kime"
+            "DefaultIMModule,kime"
             "XMODIFIERS,@im=kime"
+            "XMODIFIER,@im=kime"
         ];
         exec = [ "kime" ];
     };
