@@ -8,6 +8,10 @@ expressvpnServers = servers: builtins.listToAttrs(map (s: {
     };
 }) servers);
 in {
+	options.networking.networkmanager.wifiAddress = lib.mkOption {
+		type = lib.types.str;
+	};
+	config = {
     sops = {
         secrets = {
             "wifi/maman" = {};
@@ -21,7 +25,6 @@ in {
 id=maman
 uuid=35fe8ef3-1770-4e86-a1c4-3e381153595d
 type=wifi
-interface-name=wlp0s20f3
 
 [wifi]
 mode=infrastructure
@@ -33,7 +36,7 @@ key-mgmt=wpa-psk
 psk=${config.sops.placeholder."wifi/maman"}
 
 [ipv4]
-address1=10.0.0.161/8,10.0.0.1
+address1=${config.networking.networkmanager.wifiAddress}
 method=manual
 
 [ipv6]
@@ -47,7 +50,6 @@ method=auto
 id=papa
 uuid=a13cea5f-cd1c-4b2e-a180-829a3844eae4
 type=wifi
-interface-name=wlp0s20f3
 timestamp=1694489603
 
 [wifi]
@@ -60,7 +62,7 @@ key-mgmt=wpa-psk
 psk=${config.sops.placeholder."wifi/papa"}
 
 [ipv4]
-address1=10.0.0.161/8,10.0.0.1
+address1=${config.networking.networkmanager.wifiAddress}
 dns=9.9.9.9;
 method=manual
 
@@ -75,7 +77,6 @@ method=auto
 id=udes
 uuid=808629a6-b065-44a5-9d7d-50145c3d616e
 type=wifi
-interface-name=wlp0s20f3
 timestamp=1694015437
 
 [wifi]
@@ -122,7 +123,6 @@ ${config.sops.placeholder."expressvpn/password"}
         etc."openvpn/expressvpn".source = ../resources/expressvpn;
     };
 	networking = {
-		hostName = "haskell_slay_slay";
 		networkmanager = {
             enable = true;
             connectionConfig = {
@@ -176,4 +176,5 @@ ${config.sops.placeholder."expressvpn/password"}
             { name = "japan"; fullName = "japan - tokyo"; autoStart = false; }
         ];
 	};
+};
 }

@@ -9,7 +9,6 @@
 
     environment.persistence."/persist".directories = [
         "/etc/ssh"
-        "/var/lib/fprint"
     ];
 
     programs = {
@@ -20,18 +19,8 @@
         };
     };
 
-    services = {
-        printing.enable = true;
-        fprintd = {
-            enable = true;
-        };
-    };
-
     security.pam = {
-        services.swaylock = {
-            fprintAuth = true;
-            unixAuth = true;
-        };
+        services.swaylock.unixAuth = true;
         loginLimits = [
             {
                 domain = "*";

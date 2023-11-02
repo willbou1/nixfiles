@@ -1,6 +1,8 @@
 { inputs, lib, config, pkgs, ... }: 
 
 {
+	networking.networkmanager.wifiAddress = "10.0.0.160/24,10.0.0.1";
+	networking.hostName = "linux-amd";
 	environment = {
         persistence."/persist".directories = [
             "/var/lib/jellyfin"
@@ -26,10 +28,10 @@
             enable = true;
             localUsers = true;
             writeEnable = true;
-            chrootLocalUser = true;
+            chrootlocalUser = true;
             allowWriteableChroot = true;
-            forceLocalDataSSL = true;
-            forceLocalLoginsSSL = true;
+            #forceLocalDataSSL = true;
+            #forceLocalLoginsSSL = true;
             userlist = [
                 "william"
                 "laurice"

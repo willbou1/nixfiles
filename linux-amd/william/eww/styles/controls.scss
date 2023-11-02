@@ -1,0 +1,15 @@
+.choice_icons, .selected_choice_icons {
+	padding: 5px;
+	border-radius: 100%;
+	border: solid 2px rgba($foreground, 0.75);
+	margin-left: 5px;
+	margin-right: 4px;
+}
+
+.choice_icons:hover {
+	background-color: rgba($color5, 0.75);
+}
+
+.selected_choice_icons {
+	background-color: rgba($color2, 0.75);
+}

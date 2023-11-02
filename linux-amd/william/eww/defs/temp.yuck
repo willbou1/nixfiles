@@ -1,0 +1,161 @@
+(defvar temp_cpu_reveal false)
+(defvar temp_gpu_reveal false)
+
+(defpoll temp_cpu_curr
+  :interval "1s" 
+  :initial 0.0
+  "scripts/temp_info --cpu --curr")
+
+(defpoll temp_cpu_crit
+  :interval "1s"
+  :initial 0.0
+  "scripts/temp_info --cpu --crit")
+
+(defpoll temp_gpu_curr
+  :interval "1s" 
+  :initial 0.0
+  "scripts/temp_info --gpu --curr")
+
+(defpoll temp_gpu_crit
+  :interval "1s"
+  :initial 0.0
+  "scripts/temp_info --gpu --crit")
+
+(defwindow bar_temp 
+  :stacking "fg"
+  :windowtype "normal"
+  :wm-ignore true
+  :monitor 0
+  :geometry (geometry
+    :width "380"
+    :height "60"
+    :x "1730"
+    :y "20")
+  (eventbox
+    :class "bars"
+    (box 
+      :space-evenly "true"
+      :orientation "h"
+      :valign "fill"
+      (temp_cpu)
+      (temp_gpu))
+    ))
+
+(defwidget temp_cpu []
+  (eventbox
+    :onhover "${eww} update temp_cpu_reveal=\"true\""
+    :onhoverlost "${eww} update temp_cpu_reveal=\"false\""
+    :tooltip "CPU temp"
+    :halign "center"
+    (box 
+      :orientation "h"
+      :space-evenly "false"
+      :class "ram_box"
+      :vexpand "false"
+      :hexpand "false"
+      (image
+        :class "center_icons"
+        :path "images/cpu.png"
+        :image-width 30
+        :image-height 30)
+      (box 
+        :orientation "v"
+        :space-evenly "false"
+        :vexpand "false"
+        :hexpand "false"
+        :valign "center"
+        :class "center_boxes"
+        (revealer
+          :reveal "${!temp_cpu_reveal}"
+          :transition "slidedown"
+          :duration "350ms"
+          (box
+            :orientation "v"
+            :class "center_info"
+            :valign "start"
+            (label
+              :class "center_labels"
+              :text "${temp_cpu_curr} °C"
+              :halign "center")
+            (scale
+              :min 0
+              :max temp_cpu_crit
+              :value temp_cpu_curr
+              :orientation "h")))
+        (revealer
+          :reveal temp_cpu_reveal
+          :transition "slideup"
+          :duration "350ms"
+          :valign "center"
+          (box
+            :valign "center"
+            :class "center_revealers"
+            (graph
+              :thickness 3
+              :time-range "1m"
+              :min 0
+              :max temp_cpu_crit
+              :value temp_cpu_curr
+              :dynamic "true"
+              :line-style "round")) 
+          )))))
+
+(defwidget temp_gpu []
+  (eventbox
+    :onhover "${eww} update temp_gpu_reveal=\"true\""
+    :onhoverlost "${eww} update temp_gpu_reveal=\"false\""
+    :tooltip "GPU temp"
+    :halign "center"
+    (box 
+      :orientation "h"
+      :space-evenly "false"
+      :class "swap_box"
+      :vexpand "false"
+      :hexpand "false"
+      (image
+        :class "center_icons"
+        :path "images/gpu.png"
+        :image-width 30
+        :image-height 30)
+      (box 
+        :orientation "v"
+        :space-evenly "false"
+        :vexpand "false"
+        :hexpand "false"
+        :valign "center"
+        :class "center_boxes"
+        (revealer
+          :reveal "${!temp_gpu_reveal}"
+          :transition "slidedown"
+          :duration "350ms"
+          (box
+            :orientation "v"
+            :class "center_info"
+            :valign "start"
+            (label
+              :class "center_labels"
+              :text "${temp_gpu_curr} °C"
+              :halign "center")
+            (scale
+              :min 0
+              :max temp_gpu_crit
+              :value temp_gpu_curr
+              :orientation "h")))
+        (revealer
+          :reveal temp_gpu_reveal
+          :transition "slideup"
+          :duration "350ms"
+          :valign "center"
+          (box
+            :valign "center"
+            :class "center_revealers"
+            (graph
+              :thickness 3
+              :time-range "1m"
+              :min 0
+              :max temp_gpu_crit
+              :value temp_gpu_curr
+              :dynamic "true"
+              :line-style "round")) 
+          )))))
+

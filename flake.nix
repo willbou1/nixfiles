@@ -56,13 +56,19 @@
 				specialArgs = { inherit inputs; };
 				modules = [
 					./haskell_slay_slay/configuration.nix
+                    {home-manager.sharedModules = [
+                        ./haskell_slay_slay/william/home.nix
+                    ];}
 				] ++ commonNixosModules;
 			};
 			linux-amd = nixpkgs.lib.nixosSystem {
 				system = "x86_64-linux";
 				specialArgs = { inherit inputs; };
 				modules = [
-					./haskell_slay_slay/configuration.nix
+					./linux-amd/configuration.nix
+                    {home-manager.sharedModules = [
+                        ./linux-amd/william/home.nix
+                    ];}
 				] ++ commonNixosModules;
 			};
 		};

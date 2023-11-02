@@ -1,0 +1,17 @@
+#! /bin/bash
+
+mon="$([ $1 -eq 1 ] && echo "HDMI-A-1" || echo "DP-1")"
+
+while true; do
+	ws="$(hyprctl -j workspaces)"
+	ma="$(hyprctl -j monitors | jq -a -e ".[] | select(.name == \"$mon\") | .activeWorkspace.id")"
+	for i in {1..9}; do
+		w="$(echo $ws | jq -a -e ".[] | select(.id==$i)")"
+		if [ "$?" -eq 4 ]; then
+			eww update "wp$((i - 1))_$1=○"
+		else
+			[[ "$ma" == "$i" ]] && eww update "wp$((i - 1))_$1=●" || eww update "wp$((i - 1))_$1=◎"
+		fi
+	done
+	echo "cycle"
+done

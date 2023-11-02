@@ -1,0 +1,333 @@
+(defvar b1_bar_class "bar_normal")
+(defvar b2_bar_class "bar_normal")
+(defvar bs_bar_class "bar_normal")
+(defvar brightness_reveal false)
+(defvar audio_sink_reveal false)
+(defvar onchange_brightness_bar "true")
+
+(defvar audio_sink_bar_class "bar_normal")
+(defvar onchange_audio_sink_bar "true")
+(defvar audio_sink_choice_card_class "choice_icons")
+(defvar audio_sink_choice_monitor_class "choice_icons")
+(defvar audio_sink_choice_bluetooth_class "choice_icons")
+
+(defvar audio_source_bar_class "bar_normal")
+(defvar onchange_audio_source_bar "true")
+
+(defpoll b1
+  :initial "70"
+  :interval "0ms"
+  "scripts/brightness_info -1")
+
+(defpoll b2
+  :initial "70"
+  :interval "0ms"
+  "scripts/brightness_info -2")
+
+(defpoll audio_sink_volume
+  :initial "70"
+  :interval "1s"
+  "scripts/audio_info --sink --volume")
+
+(defpoll audio_source_volume
+  :initial "70"
+  :interval "1s"
+  "scripts/audio_info --source --volume")
+
+(defwindow bar_controls
+:stacking "fg"
+  :windowtype "normal"
+  :wm-ignore true
+  :monitor 1
+  :geometry (geometry
+  :width "560"
+  :height "60"
+  :x "840"
+  :y "20")
+  (eventbox
+    :class "bars"
+    (box 
+      :space-evenly "true"
+      :orientation "h"
+      :valign "fill"
+      (audio_sink)
+      (audio_source)
+      (brightness))
+    ))
+
+(defwidget brightness []
+  (box
+    :orientation "h"
+    :halign "center"
+    :space-evenly false
+    :vexpand false
+    :hexpand false
+    (button
+      :timeout "2000ms"
+      :onclick "scripts/brightness_control --toggle"
+      (image
+        :class "center_icons"
+        :path "images/brightness.png"
+        :image-width 30
+        :image-height 30))
+    (box 
+      :orientation "v"
+      :space-evenly "false"
+      :vexpand "false"
+      :hexpand "false"
+      :valign "center"
+      :class "center_boxes"
+      (revealer
+        :reveal "${!brightness_reveal}"
+        :transition "slidedown"
+        :duration "350ms"
+        (box
+          :orientation "v"
+          :class "center_info"
+          :valign "center"
+          (label
+            :class "center_labels"
+            :text "${b1} %"
+            :halign "center")
+          (box
+            :space-evenly false
+            :class bs_bar_class
+            :halign "center"
+            :vexpand false
+            :hexpand false
+            (eventbox
+              :cursor "pointer"
+              :onhover "${eww} update bs_bar_class=bar_highlighted; ${eww} update onchange_brightness_bar=\"scripts/brightness_control\""
+              :onhoverlost "${eww} update bs_bar_class=bar_normal; ${eww} update onchange_brightness_bar=\"true\""
+              (scale
+                :active true
+                :min 0
+                :max 100
+                :value b1
+                :orientation "h"
+                :tooltip "Adbust brightness"
+                :onchange "${onchange_brightness_bar} --synced {}; ${eww} update onchange_brightness_bar=\"true\"")))))
+      (revealer
+        :reveal "${brightness_reveal}"
+        :transition "slideup"
+        :duration "350ms"
+        (box
+          :orientation "v"
+          :valign "fill"
+          :class "center_info"
+          (box
+            :class b1_bar_class
+            :halign "center"
+            :valign "center"
+            :vexpand false
+            :hexpand false
+            (eventbox
+              :cursor "pointer"
+              :onhover "${eww} update b1_bar_class=bar_highlighted; ${eww} update onchange_brightness_bar=\"scripts/brightness_control\""
+              :onhoverlost "${eww} update b1_bar_class=bar_normal; ${eww} update onchange_brightness_bar=\"true\""
+              (scale
+                :style "margin-bottom: 0"
+                :active true
+                :min 0
+                :max 100
+                :value b1
+                :orientation "h"
+                :tooltip "Adbust brightness for DP-1"
+                :onchange "${onchange_brightness_bar} -1 {}; ${eww} update onchange_brightness_bar=\"true\"")))
+          (box
+            :class b2_bar_class
+            :halign "center"
+            :vexpand false
+            :hexpand false
+            (eventbox
+              :cursor "pointer"
+              :onhover "${eww} update b2_bar_class=bar_highlighted; ${eww} update onchange_brightness_bar=\"scripts/brightness_control\""
+              :onhoverlost "${eww} update b2_bar_class=bar_normal; ${eww} update onchange_brightness_bar=\"true\""
+              (scale
+                :active true
+                :style "margin-bottom: 0"
+                :style "margin-top: 1"
+                :min 0
+                :max 100
+                :value b2
+                :orientation "h"
+                :tooltip "Adbust brightness for DP-1"
+                :onchange "${onchange_brightness_bar} -2 {}; ${eww} update onchange_brightness_bar=\"true\""))))))))
+
+(defwidget audio_sink []
+  (box 
+    :orientation "h"
+    :space-evenly "false"
+    :class "ram_box"
+    :vexpand "false"
+    :hexpand "false"
+    (button
+      :onclick "scripts/audio_control --toggle"
+      (image
+        :class "center_icons"
+        :path "images/sink_volume.png"
+        :image-width 30
+        :image-height 30))
+    (box 
+      :orientation "v"
+      :space-evenly "false"
+      :vexpand "false"
+      :hexpand "false"
+      :valign "center"
+      :class "center_boxes"
+      (revealer
+        :reveal "${!audio_sink_reveal}"
+        :transition "slidedown"
+        :duration "350ms"
+        (box
+          :orientation "v"
+          :class "center_info"
+          :valign "start"
+          (label
+            :class "center_labels"
+            :text "${audio_sink_volume} %"
+            :halign "center")
+          (box
+            :space-evenly false
+            :class audio_sink_bar_class
+            :halign "center"
+            :vexpand false
+            :hexpand false
+            (eventbox
+              :cursor "pointer"
+              :onhover "${eww} update audio_sink_bar_class=bar_highlighted; ${eww} update onchange_audio_sink_bar=\"scripts/audio_control\""
+              :onhoverlost "${eww} update audio_sink_bar_class=bar_normal; ${eww} update onchange_audio_sink_bar=\"true\""
+              (scale
+                :active true
+                :min 0
+                :max 130
+                :value audio_sink_volume
+                :orientation "h"
+                :tooltip "Adjust audio sink volume"
+                :onchange "${onchange_audio_sink_bar} --sink --volume {}")))))
+      (revealer
+        :reveal audio_sink_reveal
+        :transition "slideup"
+        :duration "350ms"
+        :valign "center"
+        (box
+          :orientation "h"
+          :space-evenly false
+          :valign "center"
+          (eventbox
+            :cursor "pointer"
+            (button
+              :onclick "scripts/audio_control --sink --card"
+              :class audio_sink_choice_card_class
+              (image
+                :path "images/sound_card.png"
+                :image-width 15
+                :image-height 15)))
+          (eventbox
+            :cursor "pointer"
+            (button
+              :onclick "scripts/audio_control --sink --monitor"
+              :class audio_sink_choice_monitor_class
+              (image
+                :path "images/monitor.png"
+                :image-width 15
+                :image-height 15)))
+          (eventbox
+            :cursor "pointer"
+            (button
+              :onclick "scripts/audio_control --sink --bluetooth"
+              :class audio_sink_choice_bluetooth_class
+              (image
+                :path "images/bluetooth.png"
+                :image-width 15
+                :image-height 15))))
+        ))))
+
+(defwidget audio_source []
+  (box 
+    :orientation "h"
+    :space-evenly "false"
+    :class "ram_box"
+    :vexpand "false"
+    :hexpand "false"
+    (button
+      :onclick "scripts/audio_control --toggle"
+      (image
+        :class "center_icons"
+        :path "images/microphone.png"
+        :image-width 30
+        :image-height 30))
+    (box 
+      :orientation "v"
+      :space-evenly "false"
+      :vexpand "false"
+      :hexpand "false"
+      :valign "center"
+      :class "center_boxes"
+      (revealer
+        :reveal "${!audio_sink_reveal}"
+        :transition "slidedown"
+        :duration "350ms"
+        (box
+          :orientation "v"
+          :class "center_info"
+          :valign "start"
+          (label
+            :class "center_labels"
+            :text "${audio_source_volume} %"
+            :halign "center")
+          (box
+            :space-evenly false
+            :class audio_source_bar_class
+            :halign "center"
+            :vexpand false
+            :hexpand false
+            (eventbox
+              :cursor "pointer"
+              :onhover "${eww} update audio_source_bar_class=bar_highlighted; ${eww} update onchange_audio_source_bar=\"scripts/audio_control\""
+              :onhoverlost "${eww} update audio_source_bar_class=bar_normal; ${eww} update onchange_audio_source_bar=\"true\""
+              (scale
+                :active true
+                :min 0
+                :max 100
+                :value audio_source_volume
+                :orientation "h"
+                :tooltip "Adjust audio source volume"
+                :onchange "${onchange_audio_source_bar} --source --volume {}")))))
+      (revealer
+        :reveal audio_sink_reveal
+        :transition "slideup"
+        :duration "350ms"
+        :valign "center"
+        (box
+          :orientation "h"
+          :space-evenly false
+          :valign "center"
+          (eventbox
+            :cursor "pointer"
+            (button
+              :onclick "scripts/audio_control --sink --card"
+              :class audio_sink_choice_card_class
+              (image
+                :path "images/sound_card.png"
+                :image-width 15
+                :image-height 15)))
+          (eventbox
+            :cursor "pointer"
+            (button
+              :onclick "scripts/audio_control --sink --monitor"
+              :class audio_sink_choice_monitor_class
+              (image
+                :path "images/monitor.png"
+                :image-width 15
+                :image-height 15)))
+          (eventbox
+            :cursor "pointer"
+            (button
+              :onclick "scripts/audio_control --sink --bluetooth"
+              :class audio_sink_choice_bluetooth_class
+              (image
+                :path "images/bluetooth.png"
+                :image-width 15
+                :image-height 15))))
+        ))))

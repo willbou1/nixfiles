@@ -1,0 +1,133 @@
+(include '/home/william/.config/stylix/colors.yuck')
+
+(include 'defs/music.yuck')
+(include 'defs/cpu.yuck')
+(include 'defs/mem.yuck')
+(include 'defs/temp.yuck')
+(include 'defs/wm.yuck')
+(include 'defs/net.yuck')
+(include 'defs/controls.yuck')
+
+(defvar eww "eww -c $HOME/.config/eww/")
+
+(defvar date_canada_reveal false)
+(defvar date_sk_reveal false)
+
+(defpoll canada_hour :interval "1s" "scripts/time_info --canada --hour")
+(defpoll canada_minutes :interval "1s" "scripts/time_info --canada --minutes")
+(defpoll canada_type :interval "1s" "scripts/time_info --canada --type")
+(defpoll canada_date :interval "1s" "scripts/time_info --canada --date")
+
+(defpoll sk_hour :interval "1s" "scripts/time_info --sk --hour")
+(defpoll sk_minutes :interval "1s" "scripts/time_info --sk --minutes")
+(defpoll sk_type :interval "1s" "scripts/time_info --sk --type")
+(defpoll sk_date :interval "1s" "scripts/time_info --sk --date")
+
+(defwindow bar_right_mon1
+  :stacking "fg"
+  :windowtype "normal"
+  :wm-ignore true
+  :monitor 1
+  :geometry (geometry
+  :width "500"
+  :height "60"
+  :x "2920"
+  :y "20"
+              )
+  (eventbox
+      :class "bars"
+    (box 
+      :space-evenly "true"
+      :orientation "h"
+      :valign "fill"
+      (time_canada)
+      (time_sk))
+    ))
+
+(defwindow bar_right_mon2
+  :stacking "fg"
+  :windowtype "normal"
+  :wm-ignore true
+  :monitor 0
+  :geometry (geometry
+  :width "500"
+  :height "60"
+  :x "2920"
+  :y "20"
+              )
+  (eventbox
+      :class "bars"
+    (box 
+      :space-evenly "true"
+      :orientation "h"
+      :valign "fill"
+      (time_canada)
+      (time_sk))
+    ))
+
+(defwidget time_canada []
+  (eventbox
+    :tooltip "Current time"
+    :onhover "${eww} update date_canada_reveal=true"
+    :onhoverlost "${eww} update date_canada_reveal=false"
+    :cursor "pointer"
+    :halign "center"
+      (box
+        :class "time_box"
+        :space-evenly "false"
+        :orientation "h"
+        :valign "center"
+        :halign "fill"
+        (image
+          :class "center_icons"
+          :path "images/canada.png"
+          :image-width 30
+          :image-height 30)
+        (label 
+          :valign "center"
+          :class "time"
+          :markup "<span font-weight=\"heavy\">${canada_hour}</span><span font-weight=\"heavy\">:${canada_minutes}</span><span font-size=\"xx-small\">${canada_type}</span>" )
+        (revealer
+          :reveal date_canada_reveal
+          :transition "slideright"
+          :duration "350ms"
+          :valign "fill"
+          (label
+            :valign "fill"
+            :class "date"
+            :markup "<span font-size=\"xx-small\">${canada_date}</span>"
+            )))))
+
+(defwidget time_sk []
+  (eventbox
+    :tooltip "Current time"
+    :onhover "${eww} update date_sk_reveal=true"
+    :onhoverlost "${eww} update date_sk_reveal=false"
+    :cursor "pointer"
+    :halign "center"
+      (box
+        :class "time_box"
+        :space-evenly "false"
+        :orientation "h"
+        :valign "center"
+        :halign "fill"
+        (image
+          :class "center_icons"
+          :path "images/sk.png"
+          :image-width 30
+          :image-height 30)
+        (label 
+          :valign "center"
+          :class "time"
+          :markup "<span font-weight=\"heavy\">${sk_hour}</span><span font-weight=\"heavy\">:${sk_minutes}</span><span font-size=\"xx-small\">${sk_type}</span>" )
+        (revealer
+          :reveal date_sk_reveal
+          :transition "slideright"
+          :duration "350ms"
+          :valign "fill"
+          (label
+            :valign "fill"
+            :class "date"
+            :markup "<span font-size=\"xx-small\">${sk_date}</span>"
+            )))))
+

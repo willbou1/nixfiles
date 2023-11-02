@@ -4,17 +4,6 @@ hyprlandPackage = pkgs.hyprland.overrideAttrs (o: {
     #patches = (o.patches or []) ++ [ ./hyprland.patch ];
 });
 colors = config.lib.stylix.colors.withHashtag;
-hyprrotate = pkgs.writeShellScriptBin "hyprrotate" ''
-#! /bin/sh
-transform="$(${pkgs.hyprland}/bin/hyprctl -j monitors | ${pkgs.jq}/bin/jq '.[0].transform')"
-if [ "$transform" -eq "0" ]; then
-    ${pkgs.hyprland}/bin/hyprctl --batch "keyword monitor eDP-1,preferred,auto,auto,transform,1; keyword device:elan2097:00-04f3:2a15:transform 1;"
-else
-    ${pkgs.hyprland}/bin/hyprctl --batch "keyword monitor eDP-1,preferred,auto,auto,transform,0; keyword device:elan2097:00-04f3:2a15:transform 0;"
-fi
-sleep 0.2
-${pkgs.swww}/bin/swww img ${config.stylix.image}
-'';
 hyprcap = pkgs.writeShellScriptBin "hyprcap" (''
     slurp_args="-b "${colors.base00 + hexOpacity}" -B "${colors.base00 + hexOpacity}" -c "${colors.base04 + hexOpacity}""
 
@@ -41,7 +30,6 @@ with config.lib.stylix.colors; {
         feh
         wl-clipboard
         hyprcap
-        hyprrotate
     ];
     wayland.windowManager.hyprland = {
         package = hyprlandPackage;
@@ -49,10 +37,6 @@ with config.lib.stylix.colors; {
         xwayland.enable = true;
         #enableNvidiaPatches = true;
         settings = {
-            "device:elan2097:00-04f3:2a15" = {
-                transform = 0;
-                output = "eDP-1";
-            };
             input = {
                 kb_layout = "ca";
                 kb_variant = "multix";
@@ -111,16 +95,12 @@ with config.lib.stylix.colors; {
                 background_color = lib.mkForce base00;
                 vfr = false;
             };
-            env = [
-                "WLR_DRM_DEVICE,/dev/dri/by-path/pci-0000:00:02.0-card"
-            ];
             "$mod" = "SUPER";
             bindm = [
                 "$mod,mouse:272,movewindow"
                 "$mod,mouse:273,resizewindow"
             ];
             exec-once = [
-                "${pkgs.waybar}/bin/waybar"
                 "${pkgs.swww}/bin/swww init"
                 "SVPManager"
                 "element-desktop"
@@ -157,7 +137,6 @@ with config.lib.stylix.colors; {
                 "$mod,D,exec,wofi --show drun"
                 "$mod,W,exec,looking-glass-client -f /dev/shm/looking-glass1"
                 "$mod,C,exec,${hyprcap}/bin/hyprcap"
-                "$mod,M,exec,${hyprrotate}/bin/hyprrotate"
 
                 "$mod SHIFT,Q,exit,"
                 "$mod,S,togglefloating,"

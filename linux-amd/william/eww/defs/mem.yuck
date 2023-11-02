@@ -1,0 +1,165 @@
+(defvar ram_reveal false)
+(defvar swap_reveal false)
+
+(defpoll ram_used
+  :interval "1s" 
+  :initial 0.0
+  "scripts/ram_info --used")
+
+(defpoll ram_all
+  :interval "1s"
+  :initial 0.0
+  "scripts/ram_info --all")
+
+(defpoll ram_parsed :interval "1s" "scripts/ram_info --parsed")
+
+(defpoll swap_used
+  :interval "1s" 
+  :initial 0.0
+  "scripts/swap_info --used")
+
+(defpoll swap_all
+  :interval "1s"
+  :initial 0.0
+  "scripts/swap_info --all")
+
+(defpoll swap_parsed :interval "1s" "scripts/swap_info --parsed")
+
+(defwindow bar_mem
+  :stacking "fg"
+  :windowtype "normal"
+  :wm-ignore true
+  :monitor 0
+  :geometry (geometry
+    :width "380"
+    :height "60"
+    :x "1330"
+    :y "20")
+  (eventbox
+    :class "bars"
+    (box 
+      :space-evenly "true"
+      :orientation "h"
+      :valign "fill"
+      (ram)
+      (swap))
+    ))
+
+(defwidget ram []
+  (eventbox
+    :onhover "${eww} update ram_reveal=\"true\""
+    :onhoverlost "${eww} update ram_reveal=\"false\""
+    :tooltip "RAM usage"
+    :halign "center"
+    (box 
+      :orientation "h"
+      :space-evenly "false"
+      :class "ram_box"
+      :vexpand "false"
+      :hexpand "false"
+      (image
+        :class "center_icons"
+        :path "images/ram.png"
+        :image-width 30
+        :image-height 30)
+      (box 
+        :orientation "v"
+        :space-evenly "false"
+        :vexpand "false"
+        :hexpand "false"
+        :valign "center"
+        :class "center_boxes"
+        (revealer
+          :reveal "${!ram_reveal}"
+          :transition "slidedown"
+          :duration "350ms"
+          (box
+            :orientation "v"
+            :class "center_info"
+            :valign "start"
+            (label
+              :class "center_labels"
+              :text "${ram_parsed}"
+              :halign "center")
+            (scale
+              :min 0
+              :max ram_all
+              :value ram_used
+              :orientation "h")))
+        (revealer
+          :reveal ram_reveal
+          :transition "slideup"
+          :duration "350ms"
+          :valign "center"
+          (box
+            :valign "center"
+            :class "center_revealers"
+            (graph
+              :thickness 3
+              :time-range "1m"
+              :min 0
+              :max ram_all
+              :value 0
+              :dynamic "true"
+              :line-style "round")) 
+          )))))
+
+(defwidget swap []
+  (eventbox
+    :onhover "${eww} update swap_reveal=\"true\""
+    :onhoverlost "${eww} update swap_reveal=\"false\""
+    :tooltip "RAM usage"
+    :halign "center"
+    (box 
+      :orientation "h"
+      :space-evenly "false"
+      :class "swap_box"
+      :vexpand "false"
+      :hexpand "false"
+      (image
+        :class "center_icons"
+        :path "images/swap.png"
+        :image-width 30
+        :image-height 30)
+      (box 
+        :orientation "v"
+        :space-evenly "false"
+        :vexpand "false"
+        :hexpand "false"
+        :valign "center"
+        :class "center_boxes"
+        (revealer
+          :reveal "${!swap_reveal}"
+          :transition "slidedown"
+          :duration "350ms"
+          (box
+            :orientation "v"
+            :class "center_info"
+            :valign "start"
+            (label
+              :class "center_labels"
+              :text "${swap_parsed}"
+              :halign "center")
+            (scale
+              :min 0
+              :max swap_all
+              :value swap_used
+              :orientation "h")))
+        (revealer
+          :reveal swap_reveal
+          :transition "slideup"
+          :duration "350ms"
+          :valign "center"
+          (box
+            :valign "center"
+            :class "center_revealers"
+            (graph
+              :thickness 3
+              :time-range "1m"
+              :min 0
+              :max swap_all
+              :value swap_used
+              :dynamic "true"
+              :line-style "round")) 
+          )))))
+

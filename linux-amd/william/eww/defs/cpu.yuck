@@ -1,0 +1,127 @@
+(defvar cpu_reveal false)
+
+(defpoll cpu0_8
+  :interval "2s"
+  "mpstat -o JSON -P ALL 1 1 | jq -a '.sysstat.hosts[0].statistics[0][\"cpu-load\"] | map(100 - .idle | floor) | .[1:9]'")
+
+(defpoll cpu8_16
+  :interval "2s"
+  "mpstat -o JSON -P ALL 1 1 | jq -a '.sysstat.hosts[0].statistics[0][\"cpu-load\"] | map(100 - .idle | floor) | .[9:17]'")
+
+(defpoll cpu16_24
+  :interval "2s"
+  "mpstat -o JSON -P ALL 1 1 | jq -a '.sysstat.hosts[0].statistics[0][\"cpu-load\"] | map(100 - .idle | floor) | .[17:25]'")
+
+(defpoll cpu_usage
+  :interval "2s"
+  "mpstat -o JSON 1 1 | jq '100 - .sysstat.hosts[0].statistics[0][\"cpu-load\"][0].idle | floor'")
+
+(defwindow bar_cpu
+  :stacking "fg"
+  :windowtype "normal"
+  :wm-ignore true
+  :monitor 0
+  :geometry (geometry
+  :width "810"
+  :height "60"
+  :x "500"
+  :y "20"
+              )
+  (eventbox
+      :class "bars"
+    (box 
+      :space-evenly "true"
+      :orientation "h"
+      :valign "fill"
+      (cpu))
+    ))
+
+(defwidget cpu []
+  (eventbox
+    :onhover "${eww} update cpu_reveal=\"true\""
+    :onhoverlost "${eww} update cpu_reveal=\"false\""
+    :tooltip "CPU usage"
+    :halign "center"
+    (box
+      :orientation "h"
+      :valign "fill"
+      :halign "center"
+      :space-evenly false
+      (image
+        :class "center_icons"
+        :path "images/cpu.png"
+        :image-width 30
+        :image-height 30)
+      (box 
+        :orientation "v"
+        :space-evenly "false"
+        :vexpand "false"
+        :hexpand "false"
+        :valign "center"
+        :class "center_boxes"
+        (revealer
+          :reveal "${!cpu_reveal}"
+          :transition "slidedown"
+          :duration "350ms"
+          (box
+            :orientation "v"
+            :valign "fill"
+            :halign "center"
+            :style "min-height: 38px"
+            (box
+              :orientation "h"
+              :space-evenly false
+              (for cpu in cpu0_8
+                (scale
+                  :orientation "h"
+                  :class "cpu_progress"
+                  :min 0
+                  :max 100
+                  :value cpu))
+              )
+            (box
+              :orientation "h"
+              :space-evenly false
+              (for cpu in cpu8_16
+                (scale
+                  :orientation "h"
+                  :class "cpu_progress"
+                  :min 0
+                  :max 100
+                  :value cpu))
+              )
+            (box
+              :orientation "h"
+              :space-evenly false
+              (for cpu in cpu16_24
+                (scale
+                  :orientation "h"
+                  :class "cpu_progress"
+                  :min 0
+                  :max 100
+                  :value cpu))
+              )
+            )
+          )
+        (revealer
+          :reveal cpu_reveal
+          :transition "slideup"
+          :duration "350ms"
+          :valign "center"
+          (box
+            :valign "center"
+            :class "center_revealers"
+            (graph
+              :thickness 3
+              :value cpu_usage
+              :time-range "1m"
+              :min 0
+              :max 100
+              :dynamic "true"
+              :line-style "round")) 
+          )
+        )
+      )
+    )
+  )
+

@@ -1,0 +1,14 @@
+#! /bin/sh
+
+killall eww
+eww daemon
+eww open bar_wm_mon1
+eww open bar_wm_mon2
+eww open bar_music
+eww open bar_cpu
+eww open bar_mem
+eww open bar_controls
+eww open bar_right_mon1
+eww open bar_right_mon2
+eww open bar_net
+eww open bar_temp

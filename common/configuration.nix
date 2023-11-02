@@ -4,11 +4,11 @@
 	imports =
 		[ 
         ./security.nix
-		./virtualisation
         ./specialisations
 		./networking.nix
 		./pipewire.nix
 		./users.nix
+        ./virtualisation
         ./boot.nix
 		inputs.impermanence.nixosModules.impermanence
 		];
@@ -45,7 +45,6 @@
             lsof
             pulseaudio
 			lftp
-            killall
 			tmux
 			mlocate
 			nix-prefetch-github
@@ -80,6 +79,7 @@
 			"fgrep" = "fgrep --color=auto";
 			"egrep" = "egrep --color=auto";
 			"ip" = "ip --color=auto";
+            "b" = "bluetoothctl";
 			"c" = "clear";
 			"ftp" = "lftp";
 			"fd" = "fd -H";

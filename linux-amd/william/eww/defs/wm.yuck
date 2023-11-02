@@ -1,0 +1,321 @@
+(deflisten launch_workspaces_mon1 "scripts/workspaces 1")
+(deflisten launch_workspaces_mon2 "scripts/workspaces 2")
+
+(defvar wm_reveal false)
+
+(defvar wp0_1 "●")
+(defvar wp1_1 "○")
+(defvar wp2_1 "○")
+(defvar wp3_1 "○")
+(defvar wp4_1 "○")
+(defvar wp5_1 "○")
+(defvar wp6_1 "○")
+(defvar wp7_1 "○")
+(defvar wp8_1 "○")
+(defvar wp9_1 "○")
+
+(defvar wp0_2 "●")
+(defvar wp1_2 "○")
+(defvar wp2_2 "○")
+(defvar wp3_2 "○")
+(defvar wp4_2 "○")
+(defvar wp5_2 "○")
+(defvar wp6_2 "○")
+(defvar wp7_2 "○")
+(defvar wp8_2 "○")
+(defvar wp9_2 "○")
+
+(defpoll wn
+  :interval "50ms"
+  "hyprctl -j activewindow | jq -er '.title' | sed 's/\\(.\\{28\\}\\).*/\\1.../'")
+
+(defwindow bar_wm_mon1
+  :stacking "fg"
+  :windowtype "normal"
+  :wm-ignore true
+  :monitor 1
+  :geometry (geometry
+  :width "460"
+  :height "60"
+  :x "20"
+  :y "20"
+              )
+  (eventbox
+      :class "bars"
+    (box 
+      :space-evenly "true"
+      :orientation "h"
+      :valign "fill"
+      (workspaces_mon1))
+    ))
+
+(defwindow bar_wm_mon2
+  :stacking "fg"
+  :windowtype "normal"
+  :wm-ignore true
+  :monitor 0
+  :geometry (geometry
+  :width "460"
+  :height "60"
+  :x "20"
+  :y "20"
+              )
+  (eventbox
+      :class "bars"
+    (box 
+      :space-evenly "true"
+      :orientation "h"
+      :valign "fill"
+      (workspaces_mon2))
+    ))
+
+(defwidget workspaces_mon1 []
+  (eventbox
+    :onhover "${eww} update wm_reveal=true"
+    :onhoverlost "${eww} update wm_reveal=false"
+    (box 
+      :orientation "v"
+      :halign "fill"
+      :valign "center"
+      :class "workspaces"
+      (box
+        :halign "center"
+        :orientation "h"
+        :valign "fill"
+        :space-evenly false
+        (label
+          :markup wn
+          :hexpand true
+          :class "window_names")
+        (revealer
+          :reveal wm_reveal
+          :transition "slideright"
+          :duration "350ms"
+          (box
+            :orientation "h"
+            :valign "center"
+            :class "wm_revealer"
+            (eventbox
+              :cursor "pointer"
+              (button
+                :class "wm_button"
+                :onclick "hyprctl dispatch fullscreen 0"
+                :tooltip "Toggle fullscreen"
+                "🗖"))
+            (eventbox
+              :cursor "pointer"
+              (button
+                :class "wm_button"
+                :onclick "hyprctl dispatch togglefloating active"
+                :tooltip "Toggle floating"
+                "🗗"))
+            (eventbox
+              :cursor "pointer"
+              (button
+                :class "wm_button wm_button_close"
+                :onclick "hyprctl dispatch killactive none"
+                :tooltip "Kill active window"
+                "🗙")))))
+      (box
+        :orientation "h"
+        :halign "center"
+        :class "${launch_workspaces_mon1}, test"
+        (eventbox
+          :cursor "pointer"
+          (button 
+            :tooltip "Switch to workspace 1"
+            :onclick "sleep 0.1; hyprctl dispatch workspace 1"
+            (label
+              :markup wp0_1
+              :class "workspace_buttons")))
+        (eventbox
+          :cursor "pointer"
+          (button 
+            :tooltip "Switch to workspace 2"
+            :onclick "sleep 0.1; hyprctl dispatch workspace 2"
+            (label
+              :markup wp1_1 
+              :class "workspace_buttons")))
+        (eventbox
+          :cursor "pointer"
+          (button 
+            :tooltip "Switch to workspace 3"
+            :onclick "sleep 0.1; hyprctl dispatch workspace 3"
+            (label
+              :markup wp2_1 
+              :class "workspace_buttons")))
+        (eventbox
+          :cursor "pointer"
+          (button 
+            :tooltip "Switch to workspace 4"
+            :onclick "sleep 0.1; hyprctl dispatch workspace 4"
+            (label
+              :markup wp3_1 
+              :class "workspace_buttons")))
+        (eventbox
+          :cursor "pointer"
+          (button 
+            :tooltip "Switch to workspace 5"
+            :onclick "sleep 0.1; hyprctl dispatch workspace 5"
+            (label
+              :markup wp4_1 
+              :class "workspace_buttons")))
+        (eventbox
+          :cursor "pointer"
+          (button 
+            :tooltip "Switch to workspace 6"
+            :onclick "sleep 0.1; hyprctl dispatch workspace 6"
+            (label
+              :markup wp5_1 
+              :class "workspace_buttons")))
+        (eventbox
+          :cursor "pointer"
+          (button 
+            :tooltip "Switch to workspace 7"
+            :onclick "sleep 0.1; hyprctl dispatch workspace 7"
+            (label
+              :markup wp6_1 
+              :class "workspace_buttons")))
+        (eventbox
+          :cursor "pointer"
+          (button 
+            :tooltip "Switch to workspace 8"
+            :onclick "sleep 0.1; hyprctl dispatch workspace 8"
+            (label
+              :markup wp7_1 
+              :class "workspace_buttons")))
+        (eventbox
+          :cursor "pointer"
+          (button 
+            :tooltip "Switch to workspace 9"
+            :onclick "sleep 0.1; hyprctl dispatch workspace 9"
+            (label
+              :markup wp8_1 
+              :class "workspace_buttons")))
+        ))))
+
+(defwidget workspaces_mon2 []
+  (eventbox
+    :onhover "${eww} update wm_reveal=true"
+    :onhoverlost "${eww} update wm_reveal=false"
+    (box 
+      :orientation "v"
+      :halign "fill"
+      :valign "center"
+      :class "workspaces"
+      (box
+        :halign "center"
+        :orientation "h"
+      :valign "fill"
+        :space-evenly false
+        (label
+          :markup wn
+          :hexpand true
+          :class "window_names")
+        (revealer
+          :reveal wm_reveal
+          :transition "slideright"
+          :duration "350ms"
+          (box
+            :orientation "h"
+            :valign "center"
+            :class "wm_revealer"
+            (eventbox
+              :cursor "pointer"
+              (button
+                :class "wm_button"
+                :onclick "hyprctl dispatch fullscreen 0"
+                :tooltip "Toggle fullscreen"
+                "🗖"))
+            (eventbox
+              :cursor "pointer"
+              (button
+                :class "wm_button"
+                :onclick "hyprctl dispatch togglefloating active"
+                :tooltip "Toggle floating"
+                "🗗"))
+            (eventbox
+              :cursor "pointer"
+              (button
+                :class "wm_button wm_button_close"
+                :onclick "hyprctl dispatch killactive none"
+                :tooltip "Kill active window"
+                "🗙")))))
+      (box
+        :orientation "h"
+        :halign "center"
+        :class "${launch_workspaces_mon2}, test"
+        (eventbox
+          :cursor "pointer"
+          (button 
+            :tooltip "Switch to workspace 1"
+            :onclick "sleep 0.1; hyprctl dispatch workspace 1"
+            (label
+              :markup wp0_2
+              :class "workspace_buttons")))
+        (eventbox
+          :cursor "pointer"
+          (button 
+            :tooltip "Switch to workspace 2"
+            :onclick "sleep 0.1; hyprctl dispatch workspace 2"
+            (label
+              :markup wp1_2 
+              :class "workspace_buttons")))
+        (eventbox
+          :cursor "pointer"
+          (button 
+            :tooltip "Switch to workspace 3"
+            :onclick "sleep 0.1; hyprctl dispatch workspace 3"
+            (label
+              :markup wp2_2 
+              :class "workspace_buttons")))
+        (eventbox
+          :cursor "pointer"
+          (button 
+            :tooltip "Switch to workspace 4"
+            :onclick "sleep 0.1; hyprctl dispatch workspace 4"
+            (label
+              :markup wp3_2 
+              :class "workspace_buttons")))
+        (eventbox
+          :cursor "pointer"
+          (button 
+            :tooltip "Switch to workspace 5"
+            :onclick "sleep 0.1; hyprctl dispatch workspace 5"
+            (label
+              :markup wp4_2 
+              :class "workspace_buttons")))
+        (eventbox
+          :cursor "pointer"
+          (button 
+            :tooltip "Switch to workspace 6"
+            :onclick "sleep 0.1; hyprctl dispatch workspace 6"
+            (label
+              :markup wp5_2 
+              :class "workspace_buttons")))
+        (eventbox
+          :cursor "pointer"
+          (button 
+            :tooltip "Switch to workspace 7"
+            :onclick "sleep 0.1; hyprctl dispatch workspace 7"
+            (label
+              :markup wp6_2 
+              :class "workspace_buttons")))
+        (eventbox
+          :cursor "pointer"
+          (button 
+            :tooltip "Switch to workspace 8"
+            :onclick "sleep 0.1; hyprctl dispatch workspace 8"
+            (label
+              :markup wp7_2 
+              :class "workspace_buttons")))
+        (eventbox
+          :cursor "pointer"
+          (button 
+            :tooltip "Switch to workspace 9"
+            :onclick "sleep 0.1; hyprctl dispatch workspace 9"
+            (label
+              :markup wp8_2 
+              :class "workspace_buttons")))
+        ))))
+

@@ -1,0 +1,27 @@
+#!/bin/sh
+
+case $1 in
+    "--cpu")
+	case $2 in
+		"--curr")
+			sensors -j | jq -a '."k10temp-pci-00c3"."Tctl"."temp1_input" | floor'
+			;;
+		"--crit")
+			echo "90"
+			;;
+	esac
+        ;;
+    "--gpu")
+	case $2 in
+		"--curr")
+			sensors -j | jq -a '."amdgpu-pci-0d00"."edge"."temp1_input" | floor'
+			;;
+		"--crit")
+			sensors -j | jq -a '."amdgpu-pci-0d00"."edge"."temp1_crit" | floor'
+			;;
+	esac
+        ;;
+    *)
+        true
+        ;;
+esac

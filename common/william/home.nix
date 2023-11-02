@@ -9,7 +9,6 @@ rec {
         ./spotify.nix
         ./services
         ./cli
-        ./waybar.nix
         ./xdg.nix
         ./virtualisation.nix
         ./zathura.nix
@@ -24,7 +23,6 @@ rec {
     };
     home.persistence."/persist/home/william" = {
         directories = [
-            "priv"
             ".gnupg"
             ".ssh"
             ".mozilla/firefox"

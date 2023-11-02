@@ -1,16 +1,17 @@
 { inputs, config, pkgs, ... }: let
-EFI_UUID = "/dev/disk/by-uuid/";
-NVME_LUKS_UUID = "/dev/disk/by-uuid/";
-PRIV_LUKS_UUID = "/dev/disk/by-uuid/";
-DATA_LUKS_UUID = "/dev/disk/by-uuid/";
-NVME/_BTRFS_UUID = "/dev/disk/by-uuid/";
-PRIV_BTRFS_UUID = "/dev/disk/by-uuid/";
-DATA_BTRFS_UUID = "/dev/disk/by-uuid/";
+EFI_UUID = "/dev/disk/by-uuid/04DC-F1BD";
+NVME_LUKS_UUID = "/dev/disk/by-uuid/4d0c061c-d3f2-4553-9aca-ddb5ec7bd1d7";
+PRIV_LUKS_UUID = "/dev/disk/by-uuid/82bc1f36-42ef-4548-aa86-3171543b51c3";
+DATA_LUKS_UUID = "/dev/disk/by-uuid/5f8a6096-144d-48bd-8334-3e96b36ab772";
+NVME_BTRFS_UUID = "/dev/disk/by-uuid/e52972d1-0aa0-4c70-afce-05452f847ac9";
+PRIV_BTRFS_UUID = "/dev/disk/by-uuid/ca6def83-269e-43d8-9699-bb0c9e994f27";
+DATA_BTRFS_UUID = "/dev/disk/by-uuid/15def696-18d6-4531-8cd0-9fa9817af8ea";
 in {
 	environment.persistence."/persist".files = [
         "/crypto_keyfile.cpio.gz"
     ];
 
+    hardware.cpu.amd.updateMicrocode = true;
 	boot.kernel.sysctl = { "vm.swappiness" = 10;};	
 	boot.loader.efi.canTouchEfiVariables = true;
 	boot.loader.efi.efiSysMountPoint = "/boot/efi";
@@ -19,13 +20,10 @@ in {
 		device = "nodev";
 		efiSupport = true;
 		enableCryptodisk = true;
-		#useOSProber = true;
-		gfxmodeEfi = "3840x2400";
+		#gfxmodeEfi = "3840x2400";
 	};
 
-    # check it out cause it may not work first try
-	boot.initrd.availableKernelModules = [ "vmd" "xhci_pci" "thunderbolt" "nvme" "usb_storage" "sd_mod" "rtsx_pci_sdmmc" ];
-	boot.kernelModules = [ "iwlwifi" ];
+	boot.initrd.availableKernelModules = [ "nvme" "xhci_pci" "ahci" "usbhid" "usb_storage" "sd_mod" ];
 	boot.extraModulePackages = [ ];
 
 	boot.initrd.luks.devices = let
@@ -77,10 +75,10 @@ in {
             options = [ "subvol=/" "noatime" "compress=zstd" ];
         };
         # priv
-		"/prib" = {
+		"/home/william/priv" = {
 			device = PRIV_BTRFS_UUID;
 			fsType = "btrfs";
-			options = [ "subvol=/@boot" "noatime" "compress=zlib" ];
+			options = [ "subvol=/@william" "noatime" "compress=zlib" ];
 		};
         "/.snapshots/priv" = {
             device = PRIV_BTRFS_UUID;
@@ -91,7 +89,7 @@ in {
 		"/data" = {
 			device = DATA_BTRFS_UUID;
 			fsType = "btrfs";
-			options = [ "subvol=/@boot" "noatime" "compress=zlib" ];
+			options = [ "subvol=/@data" "noatime" "compress=zlib" ];
 		};
         "/.snapshots/data" = {
             device = DATA_BTRFS_UUID;

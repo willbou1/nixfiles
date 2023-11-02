@@ -3,7 +3,6 @@ in {
     imports = [
         ./pm.nix
         ./dunst.nix
-        ./kanshi.nix
     ];
     services = {
         udiskie = {
@@ -11,5 +10,6 @@ in {
             tray = "never";
         };
         ssh-agent.enable = true;
+        easyeffects.enable = true;
     };
 }

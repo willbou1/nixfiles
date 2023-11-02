@@ -1,0 +1,122 @@
+(deflisten launch_media_info "scripts/media_info")
+
+(defvar media_bar_class "bar_normal")
+(defvar music_reveal false)
+(defvar cover "images/music.png")
+(defvar media_status "")
+(defvar artist "No artist")
+(defvar artist_parsed "No artist") 
+(defvar title "No title") 
+(defvar title_parsed "No title") 
+(defvar length 100)
+(defvar position 0)
+(defvar media_bar_onchange "")
+
+(defwindow bar_music
+  :stacking "fg"
+  :windowtype "normal"
+  :wm-ignore true
+  :monitor 1
+  :geometry (geometry
+  :width "320"
+  :height "60"
+  :x "500"
+  :y "20"
+              )
+  (eventbox
+    (box 
+      :class "bars"
+      :space-evenly "true"
+      :orientation "h"
+      :valign "fill"
+      (music))
+    ))
+
+(defwidget music []     
+  (eventbox 
+    :onhover "${eww} update music_reveal=true"
+    :onhoverlost "${eww} update music_reveal=false"
+    (box 
+      :class "music_box, ${launch_media_info}"
+      :orientation "h" 
+      :spacing 0
+      :space-evenly "false"
+      :halign "center"
+      (eventbox
+        :cursor "pointer"
+        (box 
+          :space_evenly "false"
+          :halign "start"
+          :tooltip "${title} by ${artist}"
+          (button
+            :onclick "scripts/popup_music"
+            (image
+              :class "media_art"
+              :path cover
+              :image-height 50
+              :image-width 50))))
+      (box
+        :class "media_data"
+        :orientation "v"
+        :space-evenly "false"
+        :vexpand "false"
+        :hexpand "false"
+        :valign "end"
+        :halign "start"
+        (label
+          :class "media_title"
+          :halign "center"
+          :markup title_parsed
+          :limit-width 15
+          :wrap "true"
+          :show_truncated "true")
+        (revealer
+          :reveal music_reveal
+          :transition "slideup"
+          :duration "350ms"
+          (box 
+            :orientation "h"
+            :halign "center"
+            :space-evenly "false"
+            :class "media_buttons"
+            :space-evenly "false"
+            (eventbox 
+              :cursor "pointer"
+              (button 
+                :class "prev_button"
+                :onclick "scripts/media_control --prev" 
+                :tooltip "Previous"
+                ""))
+            (eventbox 
+              :cursor "pointer"
+              (button 
+                :class "toggle_button"
+                :onclick "scripts/media_control --toggle" 
+                :tooltip "Play/Pause"
+                "${media_status}"))
+            (eventbox
+              :cursor "pointer"
+              (button 
+                :class "next_button"
+                :onclick "scripts/media_control --next" 
+                :tooltip "Next"
+                ""))))
+        (box 
+          :space-evenly false
+          :class media_bar_class
+          :halign "center"
+          :vexpand "false"
+          :hexpand "false"
+          (eventbox
+            :cursor "pointer"
+            :onhover "${eww} update media_bar_class=bar_highlighted; ${eww} update media_bar_onchange=\"scripts/media_control --seek\""
+            :onhoverlost "${eww} update media_bar_class=bar_normal; ${eww} update media_bar_onchange=\"true\""
+            (scale
+              :active false
+              :min 0
+              :max length
+              :value position
+              :orientation "h"
+              :tooltip "Seek"
+              :onchange "${media_bar_onchange} {}"
+              )))))))

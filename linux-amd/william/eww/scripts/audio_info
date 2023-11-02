@@ -1,0 +1,52 @@
+#!/bin/sh
+
+case $1 in
+	"--sink")
+		case $2 in
+			"--volume")
+				wpctl get-volume @DEFAULT_AUDIO_SINK@ | awk '{printf "%d", ($2 * 100)}'
+				;;
+			*)
+				true
+				;;
+		esac
+		;;
+	"--source")
+		case $2 in
+			"--volume")
+				wpctl get-volume @DEFAULT_AUDIO_SOURCE@ | awk '{printf "%d", ($2 * 100)}'
+				;;
+			*)
+				true
+				;;
+		esac
+		;;
+	*)
+		true
+		;;
+esac
+
+name="$(wpctl inspect @DEFAULT_AUDIO_SINK@ | awk '/node.name/ {gsub(/"/, "", $4); print $4}')"
+case $name in
+	"alsa_output.pci-0000_0d_00.1.hdmi-stereo")
+		eww update audio_sink_choice_card_class="choice_icons"
+		eww update audio_sink_choice_monitor_class="selected_choice_icons"
+		eww update audio_sink_choice_bluetooth_class="choice_icons"
+		;;
+	*iec958*)
+		eww update audio_sink_choice_card_class="selected_choice_icons"
+		eww update audio_sink_choice_monitor_class="choice_icons"
+		eww update audio_sink_choice_bluetooth_class="choice_icons"
+		;;
+	*bluez*)
+		eww update audio_sink_choice_card_class="choice_icons"
+		eww update audio_sink_choice_monitor_class="choice_icons"
+		eww update audio_sink_choice_bluetooth_class="selected_choice_icons"
+		;;
+	*)
+		eww update audio_sink_choice_card_class="choice_icons"
+		eww update audio_sink_choice_monitor_class="choice_icons"
+		eww update audio_sink_choice_bluetooth_class="choice_icons"
+		;;
+esac
+

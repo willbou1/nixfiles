@@ -1,0 +1,184 @@
+(defvar wifi_reveal false)
+
+(defpoll wifi_strength
+  :interval "1s"
+  :initial 0.0
+  "scripts/net_info --strength")
+
+(defpoll wifi_name
+  :interval "1s"
+  :initial 0.0
+  "scripts/net_info --name")
+
+(defpoll net_ip
+  :interval "1s"
+  :initial 0.0
+  "scripts/net_info --ip")
+
+(defpoll net_vpn
+  :interval "1s"
+  :initial ""
+  "scripts/net_info --vpn")
+
+(defpoll net_bandwidth
+  :interval "1s"
+  :initial 0.0
+  "scripts/net_info --bandwidth")
+
+(defwindow bar_net
+  :stacking "fg"
+  :windowtype "normal"
+  :wm-ignore true
+  :monitor 1
+  :geometry (geometry
+  :width "390"
+  :height "60"
+  :x "2510"
+  :y "20")
+  (eventbox
+    :class "bars"
+    (eventbox
+      :onhover "${eww} update wifi_reveal=\"true\""
+      :onhoverlost "${eww} update wifi_reveal=\"false\""
+      :tooltip "Net usage"
+      (box 
+        :space-evenly "true"
+        :orientation "h"
+        :valign "fill"
+        (wifi)
+        (net_etc))
+      )))
+
+(defwidget wifi []
+  (box 
+    :orientation "h"
+    :space-evenly "false"
+    :class "ram_box"
+    :vexpand "false"
+    :hexpand "false"
+    :halign "center"
+    (image
+      :class "center_icons"
+      :path "images/wifi.png"
+      :image-width 30
+      :image-height 30)
+    (box 
+      :orientation "v"
+      :space-evenly "false"
+      :vexpand "false"
+      :hexpand "false"
+      :valign "center"
+      :class "center_boxes"
+      (revealer
+        :reveal "${!wifi_reveal}"
+        :transition "slidedown"
+        :duration "350ms"
+        (box
+          :orientation "v"
+          :class "center_info"
+          :valign "start"
+          (label
+            :class "center_labels"
+            :text "${wifi_name}  ${wifi_strength}%"
+            :halign "center")
+          (scale
+            :min 0
+            :max 100
+            :value wifi_strength
+            :orientation "h")))
+      (revealer
+        :reveal wifi_reveal
+        :transition "slideup"
+        :duration "350ms"
+        :valign "center"
+        (box
+          :valign "center"
+          :class "center_revealers"
+          (graph
+            :thickness 3
+            :time-range "1m"
+            :min 0
+            :max 100
+            :value wifi_strength
+            :dynamic "true"
+            :line-style "round")) 
+        ))))
+
+(defwidget net_etc []
+  (box 
+    :orientation "h"
+    :space-evenly "false"
+    :class "ram_box"
+    :halign "center"
+    :vexpand "false"
+    :hexpand "false"
+    (box 
+      :orientation "v"
+      :space-evenly "false"
+      :vexpand "false"
+      :hexpand "false"
+      :valign "center"
+      :class "center_boxes"
+      (revealer
+        :reveal "${!wifi_reveal}"
+        :transition "slidedown"
+        :duration "350ms"
+        (box
+          :orientation "v"
+          :class "center_info"
+          :valign "start"
+          (box
+            :orientation "h"
+            :space-evenly "false"
+            (image
+              :class "center_icons"
+              :path "images/ip.png"
+              :image-width 15
+              :image-height 15)
+            (label
+              :text net_ip
+              :class "net_side_info"
+              )
+
+            )
+          (box
+            :orientation "h"
+            :space-evenly "false"
+            (image
+              :class "center_icons"
+              :path "images/vpn.png"
+              :image-width 15
+              :image-height 15)
+            (label
+              :text net_vpn
+              :class "net_side_info"
+              )
+
+            )
+          ))
+      (revealer
+        :reveal wifi_reveal
+        :transition "slideup"
+        :duration "350ms"
+        :valign "center"
+        (box
+          :orientation "h"
+          :space-evenly "false"
+          (image
+            :class "center_icons"
+            :path "images/bandwidth.png"
+            :image-width 30
+            :image-height 30)
+          (box
+            :valign "center"
+            :class "center_revealers"
+            :hexpand "true"
+            (graph
+              :thickness 3
+              :time-range "1m"
+              :min 0
+              :max 2
+              :value net_bandwidth
+              :dynamic "true"
+              :line-style "round")) 
+          )))))

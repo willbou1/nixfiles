@@ -1,0 +1,103 @@
+@import "../../../../.cache/wal/colors.scss";
+
+@import "styles/scale";
+@import "styles/music";
+@import "styles/controls";
+
+* {
+	all: unset;
+	color: $foreground;
+}
+
+.bars {
+	background-color: rgba($background, 0.5);
+	border-radius: 20px;
+	border: solid 3px rgba($color1, 0.5);
+}
+
+.workspace_buttons {
+	font-size: 23px;
+	margin-left: 9px;
+	margin-right: 9px;
+	margin-top: -2px;
+}
+
+.window_names {
+	font-size: 17px;
+}
+
+.time_box {
+    margin-top: -10px;
+    margin-bottom: -10px;
+}
+.time {
+    font-size: 25px;
+    margin-bottom: -20px;
+    margin-top: -20px;
+}
+.date {
+    font-size: 25px;
+    margin-top: 8px;
+}
+
+//cpu
+.cpu_progress {
+	margin: 0 10px 0 10px;
+}
+
+.cpu_progress trough {
+	min-height: 8px;
+	min-width: 70px;
+}
+
+.center_icons {
+	margin-right: 7px;
+}
+
+.center_icons {
+    margin-right: 7px;
+    margin-left: 7px;
+}
+.center_labels {
+    font-size: 15px;
+    margin-bottom: -3px;
+    margin-top: 1px;
+}
+
+.center_revealers {
+    border-radius: 5px;
+    min-height: 36px;
+    border: solid 2px rgba($color5, 0.75);
+}
+
+.center_info scale trough highlight {
+    border: solid 2px rgba($foreground, 0.75);
+}
+.center_info scale trough {
+    min-width: 110px;
+    min-height: 10px;               
+}
+
+.wm_revealer {
+	margin-left: 5px;
+}
+
+.wm_button {
+	font-size: 13px;
+	margin-left: 10px;
+	border-radius: 100%;
+	padding: 0px 5px 3px 5px;
+	border: solid 2px rgba($color5, 0.75);
+}
+
+.wm_button:hover {
+	background-color: rgba($color5, 0.75);
+}
+
+.wm_button_close:hover {
+	background-color: rgba($color2, 0.75);
+}
+
+.net_side_info {
+	font-size: 14px;
+}

@@ -144,24 +144,32 @@ in with config.lib.stylix.colors.withHashtag; {
             as = "asm";
         };
         globals.mapleader = " ";
-        keymaps = [
-            {
-                key = "<C-h>";
-                action = "<C-w>h";
-            }
-            {
-                key = "<C-j>";
-                action = "<C-w>j";
-            }
-            {
-                key = "<C-k>";
-                action = "<C-w>k";
-            }
-            {
-                key = "<C-l>";
-                action = "<C-w>l";
-            }
-        ];
+	maps = {
+            normal = {
+                "<C-h>".action = "<C-w>h";
+                "<C-j>".action = "<C-w>j";
+                "<C-k>".action = "<C-w>k";
+                "<C-l>".action = "<C-w>l";
+            };
+        };
+#        keymaps = [
+#            {
+#                key = "<C-h>";
+#                action = "<C-w>h";
+#            }
+#            {
+#                key = "<C-j>";
+#                action = "<C-w>j";
+#            }
+#            {
+#                key = "<C-k>";
+#                action = "<C-w>k";
+#            }
+#            {
+#                key = "<C-l>";
+#                action = "<C-w>l";
+#            }
+#        ];
         globals.tpipeline_restore = 1;
 # Firenvim
         globals.firenvim_config = {

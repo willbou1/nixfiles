@@ -116,7 +116,7 @@ in {
                 ",m" = "spawn mpv {url}";
                 ",M" = "hint --rapid links spawn mpv {hint-url}";
                 ",B" = "open https://vault.ourmiraculous.com";
-                ",b" = "spawn --userscript qute-bitwarden --password-prompt-invocation 'wofi --dmenu --password --lines=1'";
+                ",b" = "spawn --userscript qute-bitwarden --dmenu-invocation 'wofi --dmenu' --password-prompt-invocation 'wofi --dmenu --password --lines=1'";
             };
         };
         extraConfig = ''
