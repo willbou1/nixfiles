@@ -19,19 +19,18 @@ in {
         hyprrotate
     ];
     wayland.windowManager.hyprland.settings = {
-            "device:elan2097:00-04f3:2a15" = {
-                transform = 0;
-                output = "eDP-1";
-            };
-            env = [
-                "WLR_DRM_DEVICE,/dev/dri/by-path/pci-0000:00:02.0-card"
-            ];
-            exec-once = [
-                "${pkgs.waybar}/bin/waybar"
-            ];
-            bind = [
-                "$mod,M,exec,${hyprrotate}/bin/hyprrotate"
-            ];
-        };
+	    "device:elan2097:00-04f3:2a15" = {
+		    transform = 0;
+		    output = "eDP-1";
+	    };
+	    env = [
+		    "WLR_DRM_DEVICE,/dev/dri/by-path/pci-0000:00:02.0-card"
+	    ];
+	    exec-once = [
+		    "${pkgs.waybar}/bin/waybar"
+	    ];
+	    bind = [
+		    "$mod,M,exec,${hyprrotate}/bin/hyprrotate"
+	    ];
     };
 }
