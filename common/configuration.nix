@@ -92,7 +92,6 @@
 			"vim" = "nvim";
 			"se" = "sudoedit";
 			"s" = ''sudo SSH_AUTH_SOCK="$SSH_AUTH_SOCK" '';
-            "nr" = "sudo nixos-rebuild --flake /etc/nixos#haskell_slay_slay switch";
 		};
 		sessionVariables.NIXOS_OZONE_WL = "1";
 	};

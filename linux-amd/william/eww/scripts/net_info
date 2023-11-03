@@ -8,7 +8,7 @@ case $1 in
 		nmcli -f IN-USE,SIGNAL device wifi | awk '/\*/ {print $2}'
 		;;
 	"--vpn")
-		expressvpn status | grep "Connected to" | cut -d " " -f3-
+        systemctl list-units --type=service --state=running | awk '/openvpn/ { rc = 1; split($1, DASH, "-"); split(DASH[2], LOC, "."); print LOC[1]; next } END { if (rc != 1) { print "Disconnected"} }'
 		;;
 	"--name")
 		nmcli dev show wlp6s0 | awk '/GENERAL.CONNECTION/ {print substr($2, 0, 6)}'

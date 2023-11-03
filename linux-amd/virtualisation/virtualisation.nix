@@ -1,9 +1,9 @@
-{ inputs, config, pkgs, ... }:
+{ lib, inputs, config, pkgs, ... }:
 
 {
-    boot.extraModulePackages = with config.boot.kernelPackages; [
+    boot.extraModulePackages = lib.mkBefore (with config.boot.kernelPackages; [
         vendor-reset
-    ];
+    ]);
     boot.initrd.kernelModules = [ "vendor_reset" ];
     boot.kernelParams = [
         "video=efifb:off,vesafb:off"

@@ -48,8 +48,6 @@ with config.lib.stylix.colors; {
             };
             general = {
                 sensitivity = 1;
-                gaps_in = 5;
-                gaps_out = 10;
                 border_size = 3;
                 "col.inactive_border" = lib.mkForce "0x${hexOpacity + base03}";
                 "col.active_border" = lib.mkForce "0x${hexOpacity + base04}";

@@ -6,7 +6,6 @@
                 origin = "top-right";
                 width = "(0,700)";
                 height = 300;
-                offset = "20x22";
                 notification_limit = 3;
                 padding = 16;
                 horizontal_padding = 24;

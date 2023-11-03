@@ -4,10 +4,12 @@
 	networking.networkmanager.wifiAddress = "10.0.0.160/24,10.0.0.1";
 	networking.hostName = "linux-amd";
 	environment = {
-        persistence."/persist".directories = [
-            "/var/lib/jellyfin"
-            "/var/cache/jellyfin"
-        ];
+        persistence."/persist" = {
+            directories = [
+                "/var/lib/jellyfin"
+                "/var/cache/jellyfin"
+            ];
+        };
         systemPackages = with pkgs; [
             jellyfin-ffmpeg
         ];
@@ -30,16 +32,17 @@
             writeEnable = true;
             chrootlocalUser = true;
             allowWriteableChroot = true;
-            #forceLocalDataSSL = true;
-            #forceLocalLoginsSSL = true;
+            forceLocalDataSSL = true;
+            forceLocalLoginsSSL = true;
+            rsaCertFile = ../resources/vsftpd.pem;
+            localRoot = "/data";
+            userlistEnable = true;
             userlist = [
                 "william"
-                "laurice"
-                "marc"
-                "gabriel"
-                "alexandre"
             ];
             extraConfig = ''
+                ssl_ciphers=HIGH
+                require_ssl_reuse=YES
                 pasv_enable=Yes
                 pasv_max_port=2030
                 pasv_min_port=2000

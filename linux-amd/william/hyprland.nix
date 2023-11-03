@@ -1,6 +1,10 @@
 { pkgs, lib, config, inputs, ... }:
 {
     wayland.windowManager.hyprland.settings = {
+        general = {
+            gaps_in = 10;
+            gaps_out = 20;
+        };
         monitor = [
             "HDMI-A-1,3440x1440@100,0x0,1,bitdepth,10"
             "HDMI-A-1,addreserved,80,0,0,0"

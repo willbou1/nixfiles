@@ -21,4 +21,26 @@ with config.lib.stylix.colors.withHashtag; {
         (defvar color14 "${base14}")
         (defvar color15 "${base15}")
     '';
+    xdg.configFile."stylix/colors.scss".text = ''
+        $background: ${base00};
+        $foreground: ${base07};
+
+        // Colors
+        $color0: ${base00};
+        $color1: ${base01};
+        $color2: ${base02};
+        $color3: ${base03};
+        $color4: ${base04};
+        $color5: ${base05};
+        $color6: ${base06};
+        $color7: ${base07};
+        $color8: ${base08};
+        $color9: ${base09};
+        $color10: ${base10};
+        $color11: ${base11};
+        $color12: ${base12};
+        $color13: ${base13};
+        $color14: ${base14};
+        $color15: ${base15};
+    '';
 }
