@@ -28,6 +28,10 @@ rec {
             ".mozilla/firefox"
             ".config/Element"
         ];
+        files = [
+            ".config/deluge/hostlist.conf"
+            ".config/deluge/gtk3ui.conf"
+        ];
         allowOther = true;
     };
     home.file.".home-manager".source =

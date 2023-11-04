@@ -21,7 +21,13 @@
         ];
     };
     services = {
-		deluge.web.enable = true;
+		deluge = {
+            web = {
+                enable = true;
+                openFirewall = true;
+            };
+            config.download_location = "/data/torrents";
+        };
         jellyfin = {
             enable = true;
             openFirewall = true;

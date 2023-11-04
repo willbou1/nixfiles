@@ -113,8 +113,6 @@ ${config.sops.placeholder."expressvpn/password"}
     };
     environment = {
         persistence."/persist".directories = [
-            "/var/lib/deluge"
-            "/srv/torrents"
             "/cat_installer"
         ];
         etc."NetworkManager/system-connections/maman.nmconnection".source = config.sops.templates."maman.nmconnection".path;
@@ -151,14 +149,6 @@ ${config.sops.placeholder."expressvpn/password"}
 	};
 	services = {
 		expressvpn.enable = true;
-		deluge = {
-            enable = true;
-            config = {
-                download_location = "/srv/torrents";
-                incoming_interface = "tun0";
-                outcoming_interface = "tun0";
-            };
-        };
         avahi = {
             enable = true;
             nssmdns = true;

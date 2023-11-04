@@ -10,6 +10,7 @@
 		./users.nix
         ./virtualisation
         ./boot.nix
+        ./deluge.nix
 		inputs.impermanence.nixosModules.impermanence
 		];
 
