@@ -1,6 +1,6 @@
-{ lib, inputs, config, pkgs, ... }:
-
-{
+{ lib, inputs, config, pkgs, ... }: let
+win11 = pkgs.writeText "win11.xml" (builtins.readFile ./win11.xml);
+in {
     boot.extraModulePackages = lib.mkBefore (with config.boot.kernelPackages; [
         vendor-reset
     ]);
@@ -41,6 +41,9 @@
     };
 
     environment.etc."libvirt/vbios/RX5700XT.rom".source = ../../resources/RTX4080.rom;
+    system.activationScripts.win11.text = ''
+        yes | cp -f ${win11} /var/lib/libvirt
+    '';
 
     systemd.tmpfiles.rules = [
         "f /dev/shm/looking-glass2 0660 william qemu-libvirtd -"

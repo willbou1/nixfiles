@@ -1,7 +1,14 @@
 { inputs, config, pkgs, ... }: let
 win11 = pkgs.writeText "win11.xml" (builtins.readFile ./win11.xml);
 in {
-    boot.kernelParams = [ "intel_iommu=on" "default_hugepagesz=1G" "hugepagesz=1G" "hugepages=24" "kvm-intel.enable_apicv=y" "vfio-pci.ids=10de:27a0,10de:22bc" ];
+    boot.kernelParams = [
+        "intel_iommu=on"
+        "default_hugepagesz=1G"
+        "hugepagesz=1G"
+        "hugepages=24"
+        "kvm-intel.enable_apicv=y"
+        "vfio-pci.ids=10de:27a0,10de:22bc"
+    ];
 
     virtualisation = {
         libvirtd = {
@@ -23,6 +30,6 @@ in {
 
     environment.etc."libvirt/vbios/RTX4080.rom".source = ../../resources/RTX4080.rom;
     system.activationScripts.win11.text = ''
-	yes | cp -f ${win11} /var/lib/libvirt/
+        yes | cp -f ${win11} /var/lib/libvirt/
     '';
 }
