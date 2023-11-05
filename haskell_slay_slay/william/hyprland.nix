@@ -37,5 +37,4 @@ in {
             "$mod,M,exec,${hyprrotate}/bin/hyprrotate"
         ];
     };
-};
 }

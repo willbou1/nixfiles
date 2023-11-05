@@ -3,5 +3,5 @@
         ./pm.nix
         ./kanshi.nix
     ];
-    services.dunst.global.settings.offset = "20x22";
+    services.dunst.settings.global.offset = "20x22";
 }

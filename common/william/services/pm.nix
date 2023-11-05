@@ -1,6 +1,5 @@
 { config, pkgs, inputs, ... }: let
 swaylock = "${config.programs.swaylock.package}/bin/swaylock";
-brillo = "${pkgs.brillo}/bin/brillo";
 in {
     services.swayidle = {
         enable = true;
