@@ -50,7 +50,7 @@ with config.lib.stylix.colors; {
                 sensitivity = 1;
                 border_size = 3;
                 "col.inactive_border" = lib.mkForce "0x${hexOpacity + base03}";
-                "col.active_border" = lib.mkForce "0x${hexOpacity + base04}";
+                "col.active_border" = lib.mkForce "0x${hexOpacity + base0A}";
                 "col.group_border" = lib.mkForce "0x${hexOpacity + base0E}";
             };
 

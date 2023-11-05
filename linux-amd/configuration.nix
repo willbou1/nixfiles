@@ -1,3 +1,5 @@
+{ pkgs, ... }:
+
 {
 	imports = [
 		./boot.nix
@@ -7,5 +9,15 @@
 	];
     environment.shellAliases = {
         "nr" = "sudo nixos-rebuild --flake /etc/nixos#linux-amd switch";
+    };
+    programs.i3lock = {
+      enable = true;  
+      package = pkgs.i3lock-color;
+    };
+    services.xserver = {
+        enable = true;
+        layout = "ca";
+        xkbVariant = "multix";
+        displayManager.startx.enable = true;
     };
 }

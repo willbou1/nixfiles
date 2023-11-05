@@ -1,21 +1,28 @@
-{ config, pkgs, inputs, ... }:
+{ lib, config, pkgs, inputs, ... }:
 
-rec {
-    home.packages = with pkgs; [
-        kime
-    ];
-    wayland.windowManager.hyprland.settings = {
-        env = [
-            "GTK_IM_MODULE,kime"
-            "QT_IM_MODULE,kime"
-            "DefaultIMModule,kime"
-            "XMODIFIERS,@im=kime"
-            "XMODIFIER,@im=kime"
-        ];
-        exec = [ "kime" ];
+{
+    options.i18n.inputMethod.kime.translationLayer = lib.mkOption {
+        type = lib.types.str;
+        default = "null";
     };
-    xdg.configFile."kime/config.yaml".text = ''
+    config = {
+        home = {
+            packages = with pkgs; [
+                kime
+            ];
+            sessionVariables = {
+                GTK_IM_MODULE = "kime";
+                QT_IM_MODULE = "kime";
+                DefaultIMModule = "kime";
+                XMODIFIERS = "@im=kime";
+                XMODIFIER = "@im=kime";
+            };
+        };
+        wayland.windowManager.hyprland.settings.exec = [ "kime" ];
+        xsession.windowManager.herbstluftwm.extraConfig = "kime";
+        xdg.configFile."kime/config.yaml".text = ''
 engine:
+  translation_layer: ${config.i18n.inputMethod.kime.translationLayer}
   global_hotkeys:
     AltR:
       behavior: Ignore
@@ -25,5 +32,6 @@ engine:
       - Hangul
       - Latin
       result: Consume
-'';
+        '';
+    };
 }

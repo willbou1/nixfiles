@@ -4,6 +4,10 @@
     imports = [
         ./hyprland.nix
         ./theme.nix
+        ./ime.nix
+        ./herbstluftwm.nix
+        ./picom.nix
+        ./i3lock.nix
     ];
 
     services.dunst.settings.global.offset = "20x100";
