@@ -4,16 +4,15 @@ rec {
     imports = [
         ./mpv.nix
         ./theme.nix
-        ./hyprland.nix
-        ./wofi.nix
         ./spotify.nix
-        ./services
         ./cli
         ./xdg.nix
         ./virtualisation.nix
         ./zathura.nix
         ./ime.nix
         ./qutebrowser.nix
+        ./dunst.nix
+        ./wayland
     ];
     home.username = "william";
     home.homeDirectory = "/home/william";
@@ -61,6 +60,15 @@ rec {
         firefox.enable = true;
         
         kitty = import ./kitty.nix;
+    };
+
+    services = {
+        udiskie = {
+            enable = true;
+            tray = "never";
+        };
+        ssh-agent.enable = true;
+        easyeffects.enable = true;
     };
 
     # Wallpapers

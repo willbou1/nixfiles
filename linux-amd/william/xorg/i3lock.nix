@@ -6,7 +6,7 @@ rgba = color: color + hexOpacity;
 inside = rgba base01-hex;
 outside = rgba base01-hex;
 ring = rgba base05-hex;
-text = rgba base05-hex;
+text = base05-hex;
 positive = rgba base0B-hex;
 negative = rgba base08-hex;
 i3lockCustom = pkgs.writeShellScriptBin "i3lock-custom" ''
@@ -17,6 +17,7 @@ i3lockCustom = pkgs.writeShellScriptBin "i3lock-custom" ''
        --keyhl-color=${positive} --bshl-color=${negative} \
        --line-color=${config.lib.stylix.colors.base00}ff --separator-color=00000000 \
        --time-color=${text} --date-color=${text} --greeter-color=${text} \
+       --verif-color=${text} --wrong-color=${text} --modif-color=${text} \
        --radius 130 --ring-width 10 -B 7
 '';
 in {
@@ -25,5 +26,10 @@ in {
         lockCmd = "${i3lockCustom}/bin/i3lock-custom";
         xss-lock.screensaverCycle = 1000;
     };
+    # fix bug with session_id and xss-lock
+#    systemd.user.services.xss-lock.Service.ExecStart = lib.mkForce
+#            (lib.concatStringsSep " "
+#            ([ "${cfg.xss-lock.package}/bin/xss-lock" ]
+#              ++ cfg.xss-lock.extraOptions ++ [ "-- ${cfg.lockCmd}" ]));
     home.packages = [ i3lockCustom ];
 }

@@ -139,7 +139,7 @@ in with config.lib.stylix.colors.withHashtag; {
                 "${mod}-Shift-m" = "set_attr clients.focus.minimized true";
                 "${mod}-Control-m" = "jumpto last-minimized";
                 "${mod}-p" = "pseudotile toggle";
-                "${mod}-space" = "or , and . compare tags.focus.curframe_wcount = 2 . cycle_layout +1 vertical horizontal max vertical grid , cycle_layout +1";
+                "${mod}-t" = "or , and . compare tags.focus.curframe_wcount = 2 . cycle_layout +1 vertical horizontal max vertical grid , cycle_layout +1";
             } // (with builtins; listToAttrs (concatLists (genList (i: [
                 { name = "${mod}-${toString (i + 1)}";
                   value = "use_index ${toString i}"; }
@@ -150,6 +150,8 @@ in with config.lib.stylix.colors.withHashtag; {
                 ${hc} set_monitors 3440x1440+0+0 3440x1440+3440+0
                 ${pkgs.imagemagick}/bin/convert -flop "${config.stylix.image}" - | feh --bg-fill "${config.stylix.image}" -
                 systemctl --user start picom
+                systemctl --user start polybar
+                pkill '.*glava.*'; glava --desktop &
             '' + flatten "${hc} attr " attributes;
         };
     };

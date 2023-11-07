@@ -29,7 +29,11 @@
         ];
 
         opacityRules = [
-            "93:class_g = 'qutebrowser'"
+            "93:class_g = 'qutebrowser' && fullscreen = 0"
+            "85:class_g = 'Element-'"
+            "90:class_g = 'firefox' && fullscreen = 0"
+            "90:class_g = 'easyeffects'"
+            "90:class_g = 'spotify'"
         ];
     };
 }
