@@ -5,5 +5,6 @@
         ./herbstluftwm.nix
         ./glava
         ./polybar
+        ./rofi
     ];
 }

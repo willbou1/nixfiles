@@ -1,9 +1,11 @@
 { config, pkgs, lib, ...}: let
-qutebrowser = pkgs.qutebrowser.override {
-    enableWideVine = true;
-};
-fontSize = config.stylix.fonts.sizes.terminal;
+    qutebrowser = pkgs.qutebrowser.override {
+        enableWideVine = true;
+    };
 in {
+    imports = [
+        ./qutebrowser-theme.nix
+    ];
     xdg.mimeApps.defaultApplications = {
       "text/html" = "org.qutebrowser.qutebrowser.desktop";
       "x-scheme-handler/http" = "org.qutebrowser.qutebrowser.desktop";
@@ -71,11 +73,6 @@ in {
             auto_save.session = true;
             colors.webpage.darkmode.enabled = true;
             spellcheck.languages = [ "en-US" "fr-FR" ];
-            fonts = {
-                default_size = "${toString fontSize}pt";
-                downloads = "${toString (fontSize - 3)}pt default_family";
-                hints = "bold ${toString (fontSize + 3)}pt default_family";
-            };
             statusbar = {
                 show = "in-mode";
                 position = "bottom";
@@ -97,7 +94,8 @@ in {
             };
         };
         searchEngines = {
-            "DEFAULT" = "https://search.ourmiraculous.com/searx/search?q={}";
+            #"DEFAULT" = "https://search.ourmiraculous.com/searx/search?q={}";
+            "DEFAULT" = "https://duckduckgo.com/?q={}";
             "!w" = "https://en.wikipedia.org/wiki/Special:Search?search={}&amp;go=Go&amp;ns0=1";
             "!g" = "https://www.google.ca/search?q={}";
             "!d" = "https://duckduckgo.com/?q={}";

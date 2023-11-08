@@ -6,7 +6,7 @@ backlight = pkgs.writeShellScript "backlight.sh"
     (builtins.readFile ./backlight.sh);
 in with config.lib.stylix.colors; {
     systemd.user.services.polybar.Service.Environment = with pkgs; (lib.mkForce ''
-        PATH=${polybar}/bin:${xorg.xrandr}/bin:${gnugrep}/bin:${coreutils-full}/bin:${bc}/bin:${systemd}/bin:${gawk}/bin:${imagemagick}/bin:/run/wrappers/bin
+        PATH=${polybar}/bin:${xorg.xrandr}/bin:${gnugrep}/bin:${coreutils-full}/bin:${bc}/bin:${systemd}/bin:${gawk}/bin:${imagemagick}/bin:${pkgs.xclip}/bin:/run/wrappers/bin
     '');
     services.polybar = {
         enable = true;

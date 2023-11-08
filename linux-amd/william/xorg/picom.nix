@@ -30,8 +30,9 @@
 
         opacityRules = [
             "93:class_g = 'qutebrowser' && fullscreen = 0"
-            "85:class_g = 'Element-'"
-            "90:class_g = 'firefox' && fullscreen = 0"
+            "93:class_g = 'firefox' && fullscreen = 0"
+            "93:class_g = 'Tor Browser' && fullscreen = 0"
+            "85:class_g = 'Element'"
             "90:class_g = 'easyeffects'"
             "90:class_g = 'spotify'"
         ];
