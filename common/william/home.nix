@@ -1,6 +1,6 @@
 { config, pkgs, inputs, ... }:
 
-rec {
+{
     imports = [
         ./mpv.nix
         ./theme.nix
@@ -12,6 +12,7 @@ rec {
         ./ime.nix
         ./qutebrowser.nix
         ./dunst.nix
+        ./kitty.nix
         ./wayland
     ];
     home.username = "william";
@@ -58,8 +59,6 @@ rec {
 
     programs = {
         firefox.enable = true;
-        
-        kitty = import ./kitty.nix;
     };
 
     services = {

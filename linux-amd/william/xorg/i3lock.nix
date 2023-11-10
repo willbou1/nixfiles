@@ -26,10 +26,5 @@ in {
         lockCmd = "${i3lockCustom}/bin/i3lock-custom";
         xss-lock.screensaverCycle = 1000;
     };
-    # fix bug with session_id and xss-lock
-#    systemd.user.services.xss-lock.Service.ExecStart = lib.mkForce
-#            (lib.concatStringsSep " "
-#            ([ "${cfg.xss-lock.package}/bin/xss-lock" ]
-#              ++ cfg.xss-lock.extraOptions ++ [ "-- ${cfg.lockCmd}" ]));
     home.packages = [ i3lockCustom ];
 }

@@ -45,9 +45,8 @@ in with config.lib.stylix.colors; {
                 module-margin = 1;
                 separator = "";
                 separator-foreground = "\${colors.disabled}";
-                font-0 = "monospace;2";
-                font-1 = "JoyPixels:scale=10;";
-                font-2 = "RobotoMono Nerd Font:pixelsize=10;2";
+                font-0 = "${config.stylix.fonts.monospace.name}:pixelsize=${toString config.stylix.fonts.sizes.desktop};0";
+                font-1 = "${config.stylix.fonts.emoji.name}:scale=${toString config.stylix.fonts.sizes.desktop};1";
                 modules-left = "uname xworkspaces layout xwindow";
                 modules-right = "filesystem pulseaudio bluetooth memory cpu vpn wlan backlight date-seoul date";
                 cursor-click = "pointer";

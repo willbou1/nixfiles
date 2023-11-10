@@ -5,12 +5,6 @@ with config.lib.stylix.colors.withHashtag; {
         image = ../../resources/wallpapers/space.jpg;
         polarity = "dark";
         targets.vim.enable = false;
-        fonts.sizes = {
-            applications = 13;
-            desktop = 13;
-            popups = 15;
-            terminal = 17;
-        };
         opacity = {
             applications = 0.93;
             desktop = 0.75;

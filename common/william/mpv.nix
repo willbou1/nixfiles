@@ -44,8 +44,6 @@ in {
             hwdec-codecs = "all";
             dscale = "mitchell";
             cscale = "spline64";
-            glsl-shaders = "~/.config/mpv/shaders/film/FSRCNNX_x2_8-0-4-1.glsl:~/.config/mpv/shaders/film/SSimDownscaler.glsl:~/.config/mpv/shaders/film/KrigBilateral.glsl";
-            #glsl-shaders = "~/.config/mpv/shaders/film/FSRCNNX_x2_8-0-4-1.glsl:~/.config/mpv/shaders/film/SSimDownscaler.glsl";
             input-ipc-server = "/tmp/mpvsocket";
             hr-seek-framedrop = false;
             resume-playback = false;
@@ -61,11 +59,16 @@ in {
         bindings = {
             "ALT+k" = "add sub-scale +0.1";
             "ALT+j" = "add sub-scale -0.1";
-            "CTRL+0" = "no-osd change-list glsl-shaders set \"\"";
+            "CTRL+c" = "no-osd change-list glsl-shaders set \"\"";
+            "CTRL+5" = "no-osd change-list glsl-shaders set \"~~/shaders/anime4k/Restore/Anime4K_Clamp_Highlights.glsl:~~/shaders/anime4k/Restore/Anime4K_Restore_CNN_VL.glsl:~~/shaders/anime4k/Upscale/Anime4K_Upscale_CNN_x2_VL.glsl:~~/shaders/anime4k/Upscale/Anime4K_AutoDownscalePre_x2.glsl:~~/shaders/anime4k/Upscale/Anime4K_AutoDownscalePre_x4.glsl:~~/shaders/anime4k/Upscale/Anime4K_Upscale_CNN_x2_M.glsl\"; show-text \"Anime4K: Mode A (HQ)\"";
+            "CTRL+6" = "no-osd change-list glsl-shaders set \"~~/shaders/anime4k/Restore/Anime4K_Clamp_Highlights.glsl:~~/shaders/anime4k/Restore/Anime4K_Restore_CNN_Soft_VL.glsl:~~/shaders/anime4k/Upscale/Anime4K_Upscale_CNN_x2_VL.glsl:~~/shaders/anime4k/Upscale/Anime4K_AutoDownscalePre_x2.glsl:~~/shaders/anime4k/Upscale/Anime4K_AutoDownscalePre_x4.glsl:~~/shaders/anime4k/Upscale/Anime4K_Upscale_CNN_x2_M.glsl\"; show-text \"Anime4K: Mode B (HQ)\"";
+            "CTRL+7" = "no-osd change-list glsl-shaders set \"~~/shaders/anime4k/Restore/Anime4K_Clamp_Highlights.glsl:~~/shaders/anime4k/Upscale/Anime4K_Upscale_Denoise_CNN_x2_VL.glsl:~~/shaders/anime4k/Upscale/Anime4K_AutoDownscalePre_x2.glsl:~~/shaders/anime4k/Upscale/Anime4K_AutoDownscalePre_x4.glsl:~~/shaders/anime4k/Upscale/Anime4K_Upscale_CNN_x2_M.glsl\"; show-text \"Anime4K: Mode C (HQ)\"";
+            "CTRL+8" = "no-osd change-list glsl-shaders set \"~~/shaders/anime4k/Restore/Anime4K_Clamp_Highlights.glsl:~~/shaders/anime4k/Restore/Anime4K_Restore_CNN_VL.glsl:~~/shaders/anime4k/Upscale/Anime4K_Upscale_CNN_x2_VL.glsl:~~/shaders/anime4k/Restore/Anime4K_Restore_CNN_M.glsl:~~/shaders/anime4k/Upscale/Anime4K_AutoDownscalePre_x2.glsl:~~/shaders/anime4k/Upscale/Anime4K_AutoDownscalePre_x4.glsl:~~/shaders/anime4k/Upscale/Anime4K_Upscale_CNN_x2_M.glsl\"; show-text \"Anime4K: Mode A+A (HQ)\"";
+            "CTRL+9" = "no-osd change-list glsl-shaders set \"~~/shaders/anime4k/Restore/Anime4K_Clamp_Highlights.glsl:~~/shaders/anime4k/Restore/Anime4K_Restore_CNN_Soft_VL.glsl:~~/shaders/anime4k/Upscale/Anime4K_Upscale_CNN_x2_VL.glsl:~~/shaders/anime4k/Upscale/Anime4K_AutoDownscalePre_x2.glsl:~~/shaders/anime4k/Upscale/Anime4K_AutoDownscalePre_x4.glsl:~~/shaders/anime4k/Restore/Anime4K_Restore_CNN_Soft_M.glsl:~~/shaders/anime4k/Upscale/Anime4K_Upscale_CNN_x2_M.gls\"; show-text \"Anime4K: Mode B+B (HQ)\"";
+            "CTRL+0" = "no-osd change-list glsl-shaders set \"~~/shaders/anime4k/Restore/Anime4K_Clamp_Highlights.glsl:~~/shaders/anime4k/Upscale/Anime4K_Upscale_Denoise_CNN_x2_VL.glsl:~~/shaders/anime4k/Upscale/Anime4K_AutoDownscalePre_x2.glsl:~~/shaders/anime4k/Upscale/Anime4K_AutoDownscalePre_x4.glsl:~~/shaders/anime4k/Restore/Anime4K_Restore_CNN_M.glsl:~~/shaders/anime4k/Upscale/Anime4K_Upscale_CNN_x2_M.glsl\"; show-text \"Anime4K: Mode C+A (HQ)\"";
         };
     };
 
-    # Get MPV shaders
     xdg.configFile = {
         "mpv/shaders/anime4k".source = pkgs.fetchFromGitHub {
             owner = "bloc97";
@@ -73,11 +76,5 @@ in {
             rev = "8e39551ce96ed172605c89b7dd8be855b5502cc9";
             hash = "sha256-01js/vr+kpFAm2Hfj64ad+odZKYiC9TZiTTj6mwAFd8=";
         } + "/glsl";
-        "mpv/shaders/film".source = pkgs.fetchFromGitHub {
-            owner =  "classicjazz";
-            repo =  "mpv-config";
-            rev =  "90eebbbc8e1edaab233cafb2412d644cb4c7877d";
-            hash =  "sha256-ReXiDCAsWNWBrk48VyNWqSoR2Ic09Zw/TPvWRcG8xvA=";
-        } + "/shaders";
     };
 }

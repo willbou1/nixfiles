@@ -157,7 +157,7 @@ ${config.sops.placeholder."expressvpn/password"}
 			enable = true;
 			settings = {
 				PermitRootLogin = "no";
-				AllowUsers = "william";
+				AllowUsers =  "william" ;
 			};
 		};
         openvpn.servers = expressvpnServers [

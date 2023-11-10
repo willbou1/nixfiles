@@ -135,7 +135,17 @@
 		hostPlatform = lib.mkDefault "x86_64-linux";
 		config.joypixels.acceptLicense = true;
 		config.allowUnfree = true;
+# For LTO overlay
+#        overlays = [
+#            (final: prev: {
+#                stdenv = prev.stdenvAdapters.addAttrsToDerivation {
+#                NIX_CFLAGS_COMPILE = "-pipe -march=native -O2";
+#                NIX_LDFLAGS = "";
+#                } prev.stdenv;
+#            })
+#        ];
 	};
+
     xdg = {
         autostart.enable = true;
         portal = {

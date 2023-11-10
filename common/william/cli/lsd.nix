@@ -5,7 +5,11 @@
         settings = {
             date = "+%b %d %H:%M %y";
             indicators = true;
-            sorting.dir-grouping = "first";
+            sorting = {
+                column = "time";
+                reverse = true;
+                dir-grouping = "first";
+            };
         };
     };
 }

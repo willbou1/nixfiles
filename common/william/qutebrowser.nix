@@ -38,7 +38,7 @@ in {
         package = qutebrowser;
         settings = {
             window.transparent = true;
-            editor.command = ["kitty" "nvim" "{file}" "-c" "normal {line}G{column0}l"];
+            editor.command = ["${config.home.terminal}" "nvim" "{file}" "-c" "normal {line}G{column0}l"];
             zoom.default = "135%";
             content = {
              autoplay = false;

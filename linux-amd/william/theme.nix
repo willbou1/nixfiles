@@ -1,6 +1,12 @@
 { config, pkgs, inputs, lib, ... }:
 
 with config.lib.stylix.colors.withHashtag; {
+   stylix.fonts.sizes = {
+        applications = 15;
+        desktop = 15;
+        popups = 17;
+        terminal = 19;
+   }; 
     xdg.configFile."stylix/colors.yuck".text = ''
         (defvar background "${base00}")
         (defvar foreground "${base07}")

@@ -1,28 +1,29 @@
-{ pkgs, lib, config, inputs, ... }: let
-hexOpacity =  lib.toHexString ((((builtins.ceil (config.stylix.opacity.desktop * 100)) * 255) / 100));
-hyprlandPackage = pkgs.hyprland.overrideAttrs (o: {
-    #patches = (o.patches or []) ++ [ ./hyprland.patch ];
-});
-colors = config.lib.stylix.colors.withHashtag;
-hyprcap = pkgs.writeShellScriptBin "hyprcap" (''
-    slurp_args="-b "${colors.base00 + hexOpacity}" -B "${colors.base00 + hexOpacity}" -c "${colors.base04 + hexOpacity}""
+{ pkgs, lib, config, inputs, ... }:
+with builtins;
+with config.lib.stylix.colors;
+let
+    hexOpacity =  lib.toHexString ((((ceil (config.stylix.opacity.desktop * 100)) * 255) / 100));
+    hyprlandPackage = pkgs.hyprland.overrideAttrs (o: {
+        #patches = (o.patches or []) ++ [ ./hyprland.patch ];
+    });
+    hyprcap = pkgs.writeShellScriptBin "hyprcap" (''
+        slurp_args="-b "${withHashtag.base00 + hexOpacity}" -B "${withHashtag.base00 + hexOpacity}" -c "${withHashtag.base04 + hexOpacity}""
 
-    #${pkgs.grim}/bin/grim -l 1 ~/.cache/hyprland/screenfreeze
-    #${pkgs.feh}/bin/feh --title screenfreeze ~/.cache/hyprland/screenfreeze &
+        #${pkgs.grim}/bin/grim -l 1 ~/.cache/hyprland/screenfreeze
+        #${pkgs.feh}/bin/feh --title screenfreeze ~/.cache/hyprland/screenfreeze &
 
-    [[ "$1" != "monitor" ]] && dims="$(${pkgs.slurp}/bin/slurp $slurp_args -w 3)"
-    [[ "$1" == "monitor" ]] && dims="$(${pkgs.slurp}/bin/slurp $slurp_args -o)"
+        [[ "$1" != "monitor" ]] && dims="$(${pkgs.slurp}/bin/slurp $slurp_args -w 3)"
+        [[ "$1" == "monitor" ]] && dims="$(${pkgs.slurp}/bin/slurp $slurp_args -o)"
 
-    ${pkgs.grim}/bin/grim -g "$dims" - | ${pkgs.wl-clipboard}/bin/wl-copy
+        ${pkgs.grim}/bin/grim -g "$dims" - | ${pkgs.wl-clipboard}/bin/wl-copy
 
-    #${pkgs.killall}/bin/killall feh
-'');
-dic = pkgs.writeShellScriptBin "dic" (''
-    qutebrowser --target window 'https://korean.dict.naver.com/koendict/#/main'
-    qutebrowser --target tab 'https://koreanhanja.app/'
-'');
-in
-with config.lib.stylix.colors; {
+        #${pkgs.killall}/bin/killall feh
+    '');
+    dic = pkgs.writeShellScriptBin "dic" (''
+        qutebrowser --target window 'https://korean.dict.naver.com/koendict/#/main'
+        qutebrowser --target tab 'https://koreanhanja.app/'
+    '');
+in {
     home.packages = with pkgs; [
         qt5.qtwayland
         slurp
@@ -169,8 +170,8 @@ with config.lib.stylix.colors; {
 
                 "$mod SHIFT,S,togglespecialworkspace,secret"
                 "$mod SHIFT,B,exec,qutebrowser ':open -p'"
-            ] ++ builtins.concatLists (builtins.genList (x :
-            let xs = builtins.toString (x + 1); in [
+            ] ++ concatLists (genList (x :
+            let xs = toString (x + 1); in [
                 "$mod,${xs},workspace,${xs}"
                 "$mod SHIFT,${xs},movetoworkspace,${xs}"
             ]) 9);

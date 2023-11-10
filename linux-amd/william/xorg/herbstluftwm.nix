@@ -19,15 +19,6 @@ in with config.lib.stylix.colors.withHashtag; {
         default = {};
     };
     config = {
-        home.file.".xinitrc".text = ''
-            ${pkgs.dbus}/bin/dbus-update-activation-environment --systemd DISPLAY WAYLAND_DISPLAY HYPRLAND_INSTANCE_SIGNATURE XDG_CURRENT_DESKTOP
-            "DEFAULT" = "https://duckduckgo.com/?q={}";
-            xrandr --output DisplayPort-0 --mode 3440x1440 --rate 99.98 --set TearFree on --output HDMI-A-0 --mode 3440x1440 --rate 99.98 --set TearFree on --left-of DisplayPort-0
-            xset s on
-            xset s 1200
-            xset s blank
-            exec herbstluftwm
-        '';
         xsession.windowManager.herbstluftwm = rec {
             enable = true;
             settings = {
@@ -91,7 +82,7 @@ in with config.lib.stylix.colors.withHashtag; {
                 "${mod}-q" = "spawn i3lock-custom";
                 "${mod}-Shift-r" = "reload";
                 "${mod}-Shift-c" = "close";
-                "${mod}-Return" = "spawn kitty";
+                "${mod}-Return" = "spawn ${config.home.terminal}";
 
                 "${mod}-b" = "spawn qutebrowser";
                 "${mod}-Shift-b" = "spawn qutebrowser ':open -p'";

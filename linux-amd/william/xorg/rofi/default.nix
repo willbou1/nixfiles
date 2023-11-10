@@ -16,7 +16,7 @@ finalFile = config.lib.stylix.colors {
 in {
     programs.rofi = {
         enable = true;
-        terminal = "${pkgs.kitty}/bin/kitty";
+        terminal = "${config.home.terminal}";
         extraConfig = {
             modi = "window,run,ssh,drun,combi";
             window-thumbnail = true;
