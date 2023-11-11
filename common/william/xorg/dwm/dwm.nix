@@ -16,6 +16,9 @@ let
         };
     })).override {
         conf = ''
+static const unsigned int borderpx  = ${toString config.home.borderSize};
+static const unsigned int gappx     = ${toString config.home.gapSize};
+static const unsigned int edgepx    = ${toString (config.home.gapSize * 1.5)};
 static const char *fonts[] = {
     "${fonts.monospace.name}:size=${toString fonts.sizes.desktop}",
     "${fonts.emoji.name}:pixelsize=${toString fonts.sizes.desktop}:antialias=true:autohint=true"

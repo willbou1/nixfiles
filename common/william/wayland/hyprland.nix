@@ -1,7 +1,9 @@
 { pkgs, lib, config, inputs, ... }:
 with builtins;
+with lib;
 with config.lib.stylix.colors;
 let
+    monitors = map (m: "${m.name},${toString m.width}x${toString m.height}@${toString m.rate},${toString m.x}x${toString m.y},${toString (trivial.max m.hScale m.vScale)},bitdepth,10") config.home.monitors;
     hexOpacity =  lib.toHexString ((((ceil (config.stylix.opacity.desktop * 100)) * 255) / 100));
     hyprlandPackage = pkgs.hyprland.overrideAttrs (o: {
         #patches = (o.patches or []) ++ [ ./hyprland.patch ];
@@ -38,6 +40,7 @@ in {
         xwayland.enable = true;
         #enableNvidiaPatches = true;
         settings = {
+            monitors = monitors ++ [",disable"];
             input = {
                 kb_layout = "ca";
                 kb_variant = "multix";
@@ -48,8 +51,10 @@ in {
                 };
             };
             general = {
+                gaps_in = config.home.gapSize;
+                gaps_out = config.home.gapSize * 1.5;
                 sensitivity = 1;
-                border_size = 3;
+                border_size = config.home.borderSize;
                 "col.inactive_border" = lib.mkForce "0x${hexOpacity + base03}";
                 "col.active_border" = lib.mkForce "0x${hexOpacity + base0A}";
                 "col.group_border" = lib.mkForce "0x${hexOpacity + base0E}";
@@ -162,7 +167,7 @@ in {
                 ",XF86AudioMute,exec,pactl set-sink-mute @DEFAULT_SINK@ toggle"
                 ",XF86MonBrightnessDown,exec, brillo -u 150000 -U 5"
                 ",XF86MonBrightnessUp,exec, brillo -u 150000 -A 5"
-                ",XF86AudioPlay,exec,playerctl play"
+                ",XF86AudioPlay,exec,playerctl play-pause"
                 ",XF86AudioPause,exec,playerctl pause"
                 ",XF86AudioStop,exec,playerctl pause"
                 ",XF86AudioPrev,exec,playerctl previous"

@@ -19,10 +19,6 @@ in {
         hyprrotate
     ];
     wayland.windowManager.hyprland.settings = {
-        general = {
-            gaps_in = 5;
-            gaps_out = 10;
-        };
         "device:elan2097:00-04f3:2a15" = {
             transform = 0;
             output = "eDP-1";

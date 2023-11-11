@@ -184,8 +184,8 @@ in with config.lib.stylix.colors; {
                 interval = 0;
                 format-prefix = "🐧 ";
                 exec = "uname -r | awk '/.*git.*/ {print \"git\"} /.*lts.*/ {print \"lts\"} /.*rt.*/ {print \"rt\"} /.*zen.*/ {print \"zen\"}'";
-                click-left = "alacritty";
-                click-middle = "firefox-beta";
+                click-left = "${config.home.terminal}";
+                click-middle = "${pkgs.qutebrowser}/bin/qutebrowser";
                 click-right = "light-locker-command -l";
             };
         };

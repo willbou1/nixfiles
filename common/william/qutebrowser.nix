@@ -75,7 +75,7 @@ in {
             spellcheck.languages = [ "en-US" "fr-FR" ];
             statusbar = {
                 show = "in-mode";
-                position = "bottom";
+                position = "top";
             };
             tabs = {
                 show = "multiple";

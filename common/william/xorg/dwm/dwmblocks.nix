@@ -37,7 +37,7 @@ static char delim[] = "  ";
 static unsigned int delimLen = 2;
 static unsigned int padding = 2;
 
-static double timeout = 0.1;
+static double timeout = 0.15;
         '';
     };
 in {

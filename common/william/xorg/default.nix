@@ -1,6 +1,8 @@
-{ pkgs, ... }:
-
-{
+{ pkgs, lib, config, ... }:
+with builtins;
+let
+    monitors = concatStringsSep " " (map (m: "--output ${m.name} --mode ${toString m.width}x${toString m.height} --rate ${toString m.rate} --scale ${toString (1.0 / m.hScale)}x${toString (1.0 / m.vScale)} --pos ${toString m.x}x${toString m.y}") config.home.monitors);
+in {
     imports = [
         ./picom.nix
         ./i3lock.nix
@@ -13,7 +15,7 @@
 
     home.file.".xinitrc".source = pkgs.writeShellScript ".xinitrc" ''
         ${pkgs.dbus}/bin/dbus-update-activation-environment --systemd DISPLAY WAYLAND_DISPLAY HYPRLAND_INSTANCE_SIGNATURE XDG_CURRENT_DESKTOP XAUTHORITY XDG_SESSION_ID
-        xrandr --output DisplayPort-0 --mode 3440x1440 --rate 99.98 --set TearFree on --output HDMI-A-0 --mode 3440x1440 --rate 99.98 --set TearFree on --left-of DisplayPort-0
+        xrandr ${monitors}
         ${pkgs.kime}/bin/kime -D &
         xset s on
         xset s 1200

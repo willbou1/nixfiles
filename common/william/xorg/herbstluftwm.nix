@@ -1,11 +1,17 @@
-{ lib, config, pkgs, ... }: let
+{ lib, config, pkgs, ... }:
+with builtins;
+let
+cfg = config.xsession.windowManager.herbstluftwm;
+scaledWidth = m: ceil (m.width * (1.0 / m.hScale));
+scaledHeight = m: ceil (m.height * (1.0 / m.vScale));
+monitors = concatStringsSep " " (map (m: "${toString (scaledWidth m)}x${toString (scaledHeight m)}+${toString m.x}+${toString m.y}") config.home.monitors);
 mod = "Mod4";
 resizeStep = "0.02";
-opacity = builtins.ceil (config.stylix.opacity.desktop * 100);
+opacity = ceil (config.stylix.opacity.desktop * 100);
 hexOpacity =  lib.toHexString (opacity * 255 / 100);
 rgba = color: color + hexOpacity;
 hc = "herbstclient";
-flattenInternal = with builtins; lineStart: position: attrs:
+flattenInternal = lineStart: position: attrs:
     concatStringsSep "\n" (
         attrValues (mapAttrs (n: v: 
             if typeOf v == "set"
@@ -28,24 +34,24 @@ in with config.lib.stylix.colors.withHashtag; {
                 frame_bg_active_color = base0A;
                 frame_active_opacity = opacity;
                 frame_normal_opacity = opacity;
-                frame_border_width = "2";
-                always_show_frame = "0";
-                frame_bg_transparent = "1";
-                frame_transparent_width = "1";
-                window_gap = "20";
-                window_border_inner_width = "0";
-                frame_padding = "0";
-                frame_gap = "10";
-                smart_window_surroundings = "0";
-                smart_frame_surroundings = "1";
-                mouse_recenter_gap = "0";
-                update_dragged_clients = "1";
-                hide_covered_windows = "1";
+                frame_border_width = config.home.borderSize / 2;
+                always_show_frame = 0;
+                frame_bg_transparent = 1;
+                frame_transparent_width = 1;
+                window_gap = config.home.gapSize;
+                window_border_inner_width = 0;
+                frame_padding = 0;
+                frame_gap = config.home.gapSize / 2;
+                smart_window_surroundings = 0;
+                smart_frame_surroundings = 1;
+                mouse_recenter_gap = 0;
+                update_dragged_clients = 1;
+                hide_covered_windows = 1;
                 tree_style = "╾│ ├└╼─┐";
             };
             attributes.theme = {
                 floating = {
-                    border_width = 4;
+                    border_width = config.home.borderSize;
                     outer_width = 1;
                     outer_color = "black";
                 };
@@ -58,7 +64,7 @@ in with config.lib.stylix.colors.withHashtag; {
                 urgent.color = rgba base07;
                 inner_width = 1;
                 inner_color = "black";
-                border_width = 3;
+                border_width = config.home.borderSize;
                 background_color = base00;
             };
             rules = [
@@ -133,15 +139,15 @@ in with config.lib.stylix.colors.withHashtag; {
                 "${mod}-Control-m" = "jumpto last-minimized";
                 "${mod}-p" = "pseudotile toggle";
                 "${mod}-t" = "or , and . compare tags.focus.curframe_wcount = 2 . cycle_layout +1 vertical horizontal max vertical grid , cycle_layout +1";
-            } // (with builtins; listToAttrs (concatLists (genList (i: [
+            } // (listToAttrs (concatLists (genList (i: [
                 { name = "${mod}-${toString (i + 1)}";
                   value = "use_index ${toString i}"; }
                 { name = "${mod}-Shift-${toString (i + 1)}";
                   value = "move_index ${toString i}"; }
             ]) (length tags))));
             extraConfig = ''
-                ${hc} set_monitors 3440x1440+0+0 3440x1440+3440+0
                 ${pkgs.imagemagick}/bin/convert -flop "${config.stylix.image}" - | feh --bg-fill "${config.stylix.image}" -
+                ${hc} monitors ${monitors}
                 systemctl --user start picom
                 systemctl --user start polybar
                 pkill '.*glava.*'; glava --desktop &

@@ -1,9 +1,6 @@
 /* See LICENSE file for copyright and license details. */
 
 /* appearance */
-static const unsigned int borderpx  = 3;        /* border pixel of windows */
-static const unsigned int gappx     = 15;       /* size of the gap between windows */
-static const unsigned int edgepx    = 25;
 static const unsigned int snap      = 0;       /* snap pixel */
 static const unsigned int swallowfloating = 1;
 static const int showbar            = 1;        /* 0 means no bar */

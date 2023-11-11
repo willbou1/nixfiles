@@ -1,4 +1,4 @@
-{ config, ... }: let
+{ config, lib, ... }: let
 opacity = builtins.toString config.stylix.opacity.desktop;
 in {
     programs.waybar = {
@@ -85,14 +85,17 @@ done
                     format-source-muted = "";
                     format-icons.default = ["" "" ""];
                 };
-                temperature.format = "󰔏  {temperature}°C";
+                temperature = {
+			format = "󰔏  {temperatureC}°C";
+			thermal-zone = 8;
+		};
                 backlight = {
                     format = "{icon}  {percent}%";
                     format-icons = [ "󰃜" "󰃛" "󰃚" ];
                 };
             };
         };
-        style = ''
+        style = lib.mkAfter ''
             * {
                 border-radius: 20px;
             }

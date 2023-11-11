@@ -14,10 +14,4 @@
       enable = true;  
       package = pkgs.i3lock-color;
     };
-    services.xserver = {
-        enable = true;
-        layout = "ca";
-        xkbVariant = "multix";
-        displayManager.startx.enable = true;
-    };
 }

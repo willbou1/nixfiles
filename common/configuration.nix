@@ -41,6 +41,9 @@
 
 	environment = {
 		systemPackages = with pkgs; [
+            sysstat
+            lm_sensors
+            vlock
             file
             unzip
             lsof
@@ -161,5 +164,11 @@
         extraBackends = [ pkgs.sane-airscan ];
     };
 
-  services.udisks2.enable = true;
+    services.udisks2.enable = true;
+    services.xserver = {
+        enable = true;
+        layout = "ca";
+        xkbVariant = "multix";
+        displayManager.startx.enable = true;
+    };
 }
