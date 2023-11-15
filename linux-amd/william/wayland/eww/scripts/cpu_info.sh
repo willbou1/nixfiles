@@ -1,5 +1,3 @@
-#!/bin/sh
-
 case $1 in
     "-1")
         mpstat -o JSON -P ALL 1 1 | jq -a '.sysstat.hosts[0].statistics[0][\"cpu-load\"] | map(100 - .idle | floor) | .[1:9]'

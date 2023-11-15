@@ -17,22 +17,22 @@
 (defpoll b1
   :initial "70"
   :interval "0ms"
-  "scripts/brightness_info -1")
+  "scripts/brightness_info.sh -1")
 
 (defpoll b2
   :initial "70"
   :interval "0ms"
-  "scripts/brightness_info -2")
+  "scripts/brightness_info.sh -2")
 
 (defpoll audio_sink_volume
   :initial "70"
   :interval "1s"
-  "scripts/audio_info --sink --volume")
+  "scripts/audio_info.sh --sink --volume")
 
 (defpoll audio_source_volume
   :initial "70"
   :interval "1s"
-  "scripts/audio_info --source --volume")
+  "scripts/audio_info.sh --source --volume")
 
 (defwindow bar_controls
 :stacking "fg"
@@ -40,10 +40,10 @@
   :wm-ignore true
   :monitor 1
   :geometry (geometry
-  :width "560"
-  :height "60"
-  :x "840"
-  :y "20")
+  :width "@bar_controls_width@"
+  :height "@bar_height@"
+  :x "${@out_gap@ + @bar_wm_width@ + @in_gap@ + @bar_music_width@ + @in_gap@}"
+  :y "@bar_y@")
   (eventbox
     :class "bars"
     (box 

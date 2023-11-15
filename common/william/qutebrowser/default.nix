@@ -4,7 +4,8 @@
     };
 in {
     imports = [
-        ./qutebrowser-theme.nix
+        ./theme.nix
+        ./bitwarden.nix
     ];
     xdg.mimeApps.defaultApplications = {
       "text/html" = "org.qutebrowser.qutebrowser.desktop";
@@ -13,26 +14,17 @@ in {
       "x-scheme-handler/about" = "org.qutebrowser.qutebrowser.desktop";
       "x-scheme-handler/unknown" = "org.qutebrowser.qutebrowser.desktop";
     };
-    home.packages = with pkgs; [
-        bitwarden-cli
-        keyutils
-    ];
     home.persistence."/persist/home/william" = {
         directories = [
             ".local/share/qutebrowser"
         ];
         files = [
             ".config/qutebrowser/quickmarks"
-            ".config/Bitwarden CLI/data.json"
         ];
     };
-    home.activation = {
-        qutebrowser = lib.hm.dag.entryAfter ["writeBoundary"] (
-            builtins.concatStringsSep "\n" (builtins.map (n: "${config.programs.qutebrowser.package}/share/qutebrowser/scripts/dictcli.py install ${n}") config.programs.qutebrowser.settings.spellcheck.languages)
-        );
-        # Fix a bug with keyutils
-        keyutils = "${pkgs.keyutils}/bin/keyctl link @u @s";
-    };
+    home.activation.qutebrowser = lib.hm.dag.entryAfter ["writeBoundary"] (
+        builtins.concatStringsSep "\n" (builtins.map (n: "${config.programs.qutebrowser.package}/share/qutebrowser/scripts/dictcli.py install ${n}") config.programs.qutebrowser.settings.spellcheck.languages)
+    );
     programs.qutebrowser = {
         enable = true;
         package = qutebrowser;
@@ -113,8 +105,6 @@ in {
             normal = {
                 ",m" = "spawn mpv {url}";
                 ",M" = "hint --rapid links spawn mpv {hint-url}";
-                ",B" = "open https://vault.ourmiraculous.com";
-                ",b" = "spawn --userscript qute-bitwarden --dmenu-invocation 'wofi --dmenu' --password-prompt-invocation 'wofi --dmenu --password --lines=1'";
             };
         };
         extraConfig = ''

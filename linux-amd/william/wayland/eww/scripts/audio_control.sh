@@ -1,5 +1,3 @@
-#!/bin/bash
-
 bi="$(wpctl status | awk 'BEGIN {f = 0} /bluez5/ {bn = $3; f = 1} (f == 1 && match($0, bn ".*vol")) {gsub(/\./, "", $0); if ($2 == "*") {print $3} else {print $2}}')"
 
 case $1 in

@@ -1,5 +1,3 @@
-#!/bin/sh
-
 case $1 in
     "--cpu")
 	case $2 in

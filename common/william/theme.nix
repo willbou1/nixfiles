@@ -1,6 +1,7 @@
 { config, pkgs, inputs, lib, ... }:
-
-with config.lib.stylix.colors.withHashtag; {
+with lib;
+with config.lib.stylix.colors.withHashtag;
+{
     stylix = {
         image = ../../resources/wallpapers/space.jpg;
         polarity = "dark";

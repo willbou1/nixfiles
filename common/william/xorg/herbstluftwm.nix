@@ -147,7 +147,7 @@ in with config.lib.stylix.colors.withHashtag; {
             ]) (length tags))));
             extraConfig = ''
                 ${pkgs.imagemagick}/bin/convert -flop "${config.stylix.image}" - | feh --bg-fill "${config.stylix.image}" -
-                ${hc} monitors ${monitors}
+                ${hc} set_monitors ${monitors}
                 systemctl --user start picom
                 systemctl --user start polybar
                 pkill '.*glava.*'; glava --desktop &

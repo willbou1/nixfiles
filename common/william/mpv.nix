@@ -1,4 +1,4 @@
-{ inputs, pkgs, ... }: let
+{ config, inputs, pkgs, ... }: let
 mpv-unwrapped = pkgs.mpv-unwrapped.override {
     vapoursynthSupport = true;
     ffmpeg_5 = pkgs.ffmpeg_5-full;
@@ -15,6 +15,7 @@ mpv = pkgs.wrapMpv mpv-unwrapped {
     ];
 };
 in {
+    home.packages = [ pkgs.svp ];
     programs.mpv = {
         enable = true;
         package = mpv;
@@ -67,6 +68,19 @@ in {
             "CTRL+9" = "no-osd change-list glsl-shaders set \"~~/shaders/anime4k/Restore/Anime4K_Clamp_Highlights.glsl:~~/shaders/anime4k/Restore/Anime4K_Restore_CNN_Soft_VL.glsl:~~/shaders/anime4k/Upscale/Anime4K_Upscale_CNN_x2_VL.glsl:~~/shaders/anime4k/Upscale/Anime4K_AutoDownscalePre_x2.glsl:~~/shaders/anime4k/Upscale/Anime4K_AutoDownscalePre_x4.glsl:~~/shaders/anime4k/Restore/Anime4K_Restore_CNN_Soft_M.glsl:~~/shaders/anime4k/Upscale/Anime4K_Upscale_CNN_x2_M.gls\"; show-text \"Anime4K: Mode B+B (HQ)\"";
             "CTRL+0" = "no-osd change-list glsl-shaders set \"~~/shaders/anime4k/Restore/Anime4K_Clamp_Highlights.glsl:~~/shaders/anime4k/Upscale/Anime4K_Upscale_Denoise_CNN_x2_VL.glsl:~~/shaders/anime4k/Upscale/Anime4K_AutoDownscalePre_x2.glsl:~~/shaders/anime4k/Upscale/Anime4K_AutoDownscalePre_x4.glsl:~~/shaders/anime4k/Restore/Anime4K_Restore_CNN_M.glsl:~~/shaders/anime4k/Upscale/Anime4K_Upscale_CNN_x2_M.glsl\"; show-text \"Anime4K: Mode C+A (HQ)\"";
         };
+        scriptOpts = {
+            uosc = {
+                scale = 1.3;
+                ui_scale = 1.3;
+                scale_fullscreen = 1.3;
+            };
+            thumbfast = {
+                max_height = 450;
+                max_width = 450;
+                hwdec = true;
+                network = true;
+            };
+        };
     };
 
     xdg.configFile = {
@@ -77,4 +91,7 @@ in {
             hash = "sha256-01js/vr+kpFAm2Hfj64ad+odZKYiC9TZiTTj6mwAFd8=";
         } + "/glsl";
     };
+    home.persistence."/persist/home/william".directories = [
+        ".local/share/SVP4"
+    ];
 }

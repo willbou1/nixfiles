@@ -1,4 +1,4 @@
-(deflisten launch_media_info "scripts/media_info")
+(deflisten launch_media_info "scripts/media_info.sh")
 
 (defvar media_bar_class "bar_normal")
 (defvar music_reveal false)
@@ -18,10 +18,10 @@
   :wm-ignore true
   :monitor 1
   :geometry (geometry
-  :width "320"
-  :height "60"
-  :x "500"
-  :y "20"
+  :width "@bar_music_width@"
+  :height "@bar_height@"
+  :x "${@out_gap@ + @bar_wm_width@ + @in_gap@}"
+  :y "@bar_y@"
               )
   (eventbox
     (box 
@@ -49,7 +49,7 @@
           :halign "start"
           :tooltip "${title} by ${artist}"
           (button
-            :onclick "scripts/popup_music"
+            :onclick "scripts/popup_music.sh"
             (image
               :class "media_art"
               :path cover
@@ -84,21 +84,21 @@
               :cursor "pointer"
               (button 
                 :class "prev_button"
-                :onclick "scripts/media_control --prev" 
+                :onclick "scripts/media_control.sh --prev" 
                 :tooltip "Previous"
                 ""))
             (eventbox 
               :cursor "pointer"
               (button 
                 :class "toggle_button"
-                :onclick "scripts/media_control --toggle" 
+                :onclick "scripts/media_control.sh --toggle" 
                 :tooltip "Play/Pause"
                 "${media_status}"))
             (eventbox
               :cursor "pointer"
               (button 
                 :class "next_button"
-                :onclick "scripts/media_control --next" 
+                :onclick "scripts/media_control.sh --next" 
                 :tooltip "Next"
                 ""))))
         (box 

@@ -1,8 +1,8 @@
 { pkgs, ... }:
 
 {
-    home.persistence."/persist/home/william".files = [
-        ".local/share/fish/fish_history"
+    home.persistence."/persist/home/william".directories = [
+        ".local/share/fish"
     ];
     programs.fish = {
         enable = true;
@@ -19,6 +19,7 @@
             "sc" = "sudo systemctl";
             "uc" = "systemctl --user";
             "nd" = "nix develop --command fish";
+            "mpv" = "SVPManager";
         };
         functions = {
 #fastfetch | lolcat -a -s 1000 -d 8

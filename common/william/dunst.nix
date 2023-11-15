@@ -1,3 +1,5 @@
+{ config, ... }:
+
 {
     services.dunst = {
         enable = true;
@@ -9,7 +11,7 @@
                 notification_limit = 3;
                 padding = 16;
                 horizontal_padding = 24;
-                frame_width = 3;
+                frame_width = config.home.borderSize;
                 transparency = 30;
                 corner_radius = 20;
                 follow = "none";

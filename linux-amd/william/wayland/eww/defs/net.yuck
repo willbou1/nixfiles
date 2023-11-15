@@ -3,27 +3,27 @@
 (defpoll wifi_strength
   :interval "1s"
   :initial 0.0
-  "scripts/net_info --strength")
+  "scripts/net_info.sh --strength")
 
 (defpoll wifi_name
   :interval "1s"
   :initial 0.0
-  "scripts/net_info --name")
+  "scripts/net_info.sh --name")
 
 (defpoll net_ip
   :interval "1s"
   :initial 0.0
-  "scripts/net_info --ip")
+  "scripts/net_info.sh --ip")
 
 (defpoll net_vpn
   :interval "1s"
   :initial ""
-  "scripts/net_info --vpn")
+  "scripts/net_info.sh --vpn")
 
 (defpoll net_bandwidth
   :interval "1s"
   :initial 0.0
-  "scripts/net_info --bandwidth")
+  "scripts/net_info.sh --bandwidth")
 
 (defwindow bar_net
   :stacking "fg"
@@ -31,10 +31,10 @@
   :wm-ignore true
   :monitor 1
   :geometry (geometry
-  :width "390"
-  :height "60"
-  :x "2510"
-  :y "20")
+  :width "@bar_net_width@"
+  :height "@bar_height@"
+  :x "${@width@ - @out_gap@ - @bar_right_width@ - @in_gap@ - @bar_net_width@}"
+  :y "@bar_y@")
   (eventbox
     :class "bars"
     (eventbox

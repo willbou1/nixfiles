@@ -1,5 +1,3 @@
-#!/bin/sh
-
 case $1 in
 	"--canada")
 		case $2 in

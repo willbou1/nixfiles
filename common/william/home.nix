@@ -11,7 +11,7 @@ with lib;
         ./virtualisation.nix
         ./zathura.nix
         ./ime.nix
-        ./qutebrowser.nix
+        ./qutebrowser
         ./dunst.nix
         ./kitty.nix
         ./wayland

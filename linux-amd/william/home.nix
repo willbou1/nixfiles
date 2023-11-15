@@ -1,5 +1,5 @@
-{ pkgs, ... }:
-
+{ pkgs, lib, ... }:
+with lib;
 {
     imports = [
         ./theme.nix
@@ -14,4 +14,5 @@
         gapSize = 20;
         borderSize = 5;
     };
+    programs.qutebrowser.settings.zoom.default = mkForce "175%";
 }

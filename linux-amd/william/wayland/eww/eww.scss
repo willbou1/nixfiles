@@ -1,5 +1,3 @@
-@import "/home/william/.config/stylix/colors.scss";
-
 @import "styles/scale";
 @import "styles/music";
 @import "styles/controls";
@@ -12,7 +10,7 @@
 .bars {
 	background-color: rgba($background, 0.5);
 	border-radius: 20px;
-	border: solid 3px rgba($color1, 0.5);
+	border: solid @border@px rgba($color3, 0.5);
 }
 
 .workspace_buttons {
@@ -95,7 +93,7 @@
 }
 
 .wm_button_close:hover {
-	background-color: rgba($color2, 0.75);
+	background-color: rgba($color8, 0.75);
 }
 
 .net_side_info {

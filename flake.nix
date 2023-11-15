@@ -24,31 +24,32 @@
 	};
 
 	outputs = { self, nixpkgs, home-manager, ... } @ inputs: let
-    commonNixosModules = [
-        inputs.nur.nixosModules.nur
-        {
-            nixpkgs.overlays = [ 
-                (import ./pkgs).overlay
-                inputs.neovim-nightly-overlay.overlay
-            ];
-        }
-        inputs.stylix.nixosModules.stylix
-        inputs.sops-nix.nixosModules.sops
-		inputs.hosts.nixosModule
-        ./common/configuration.nix
-        home-manager.nixosModules.home-manager
-        {
-            home-manager.extraSpecialArgs = {inherit inputs;};
-            home-manager.useGlobalPkgs = true;
-            home-manager.useUserPackages = true;
-            home-manager.sharedModules = [
-                inputs.impermanence.nixosModules.home-manager.impermanence
-                inputs.sops-nix.homeManagerModules.sops
-                inputs.nixvim.homeManagerModules.nixvim
-            ];
-            home-manager.users.william = import ./common/william/home.nix;
-        }
-    ];
+        commonNixosModules = [
+            inputs.nur.nixosModules.nur
+            {
+                nixpkgs.overlays = [ 
+                    (import ./pkgs).overlay
+                    inputs.neovim-nightly-overlay.overlay
+                ];
+            }
+            inputs.stylix.nixosModules.stylix
+            inputs.sops-nix.nixosModules.sops
+            inputs.hosts.nixosModule
+            ./common/configuration.nix
+            home-manager.nixosModules.home-manager
+            {
+                home-manager.extraSpecialArgs = {inherit inputs;};
+                home-manager.useGlobalPkgs = true;
+                home-manager.useUserPackages = true;
+                home-manager.sharedModules = [
+                    inputs.impermanence.nixosModules.home-manager.impermanence
+                    inputs.sops-nix.homeManagerModules.sops
+                    inputs.nixvim.homeManagerModules.nixvim
+                    inputs.nur.hmModules.nur
+                ];
+                home-manager.users.william = import ./common/william/home.nix;
+            }
+        ];
     in rec {
 		nixosConfigurations = {
 			haskell_slay_slay = nixpkgs.lib.nixosSystem {

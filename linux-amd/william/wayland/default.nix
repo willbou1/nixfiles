@@ -3,6 +3,7 @@
 {
     imports = [
         ./hyprland.nix
+        ./eww
     ];
 
     home.packages = with pkgs; [
@@ -11,5 +12,4 @@
         jq
         lm_sensors
     ];
-    xdg.configFile."eww".source = ./eww;
 }

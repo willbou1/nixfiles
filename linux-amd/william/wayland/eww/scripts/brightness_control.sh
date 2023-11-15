@@ -1,5 +1,3 @@
-#!/bin/bash
-
 case $1 in
 	"-1")
 		ddcutil -b 5 setvcp 10 "$2"

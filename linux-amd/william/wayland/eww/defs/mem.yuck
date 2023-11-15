@@ -4,26 +4,26 @@
 (defpoll ram_used
   :interval "1s" 
   :initial 0.0
-  "scripts/ram_info --used")
+  "scripts/ram_info.sh --used")
 
 (defpoll ram_all
   :interval "1s"
   :initial 0.0
-  "scripts/ram_info --all")
+  "scripts/ram_info.sh --all")
 
-(defpoll ram_parsed :interval "1s" "scripts/ram_info --parsed")
+(defpoll ram_parsed :interval "1s" "scripts/ram_info.sh --parsed")
 
 (defpoll swap_used
   :interval "1s" 
   :initial 0.0
-  "scripts/swap_info --used")
+  "scripts/swap_info.sh --used")
 
 (defpoll swap_all
   :interval "1s"
   :initial 0.0
-  "scripts/swap_info --all")
+  "scripts/swap_info.sh --all")
 
-(defpoll swap_parsed :interval "1s" "scripts/swap_info --parsed")
+(defpoll swap_parsed :interval "1s" "scripts/swap_info.sh --parsed")
 
 (defwindow bar_mem
   :stacking "fg"
@@ -31,10 +31,10 @@
   :wm-ignore true
   :monitor 0
   :geometry (geometry
-    :width "380"
-    :height "60"
-    :x "1330"
-    :y "20")
+    :width "@bar_mem_width@"
+    :height "@bar_height@"
+    :x "${@out_gap@ + @bar_wm_width@ + @in_gap@ + @bar_cpu_width@ + @in_gap@}"
+    :y "@bar_y@")
   (eventbox
     :class "bars"
     (box 

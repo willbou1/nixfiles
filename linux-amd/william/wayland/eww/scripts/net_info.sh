@@ -1,5 +1,3 @@
-#!/bin/sh
-
 case $1 in
 	"--ip")
 		nmcli dev show wlp6s0 | awk '/IP4.ADDRESS/ {print $2}'

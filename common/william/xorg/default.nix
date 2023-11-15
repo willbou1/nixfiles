@@ -1,7 +1,7 @@
 { pkgs, lib, config, ... }:
 with builtins;
 let
-    monitors = concatStringsSep " " (map (m: "--output ${m.name} --mode ${toString m.width}x${toString m.height} --rate ${toString m.rate} --scale ${toString (1.0 / m.hScale)}x${toString (1.0 / m.vScale)} --pos ${toString m.x}x${toString m.y}") config.home.monitors);
+    monitors = concatStringsSep " " (map (m: "--output ${m.xrandrName} --mode ${toString m.width}x${toString m.height} --rate ${toString m.rate} --scale ${toString (1.0 / m.hScale)}x${toString (1.0 / m.vScale)} --pos ${toString m.x}x${toString m.y}") config.home.monitors);
 in {
     imports = [
         ./picom.nix

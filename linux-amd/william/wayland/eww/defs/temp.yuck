@@ -4,22 +4,22 @@
 (defpoll temp_cpu_curr
   :interval "1s" 
   :initial 0.0
-  "scripts/temp_info --cpu --curr")
+  "scripts/temp_info.sh --cpu --curr")
 
 (defpoll temp_cpu_crit
   :interval "1s"
   :initial 0.0
-  "scripts/temp_info --cpu --crit")
+  "scripts/temp_info.sh --cpu --crit")
 
 (defpoll temp_gpu_curr
   :interval "1s" 
   :initial 0.0
-  "scripts/temp_info --gpu --curr")
+  "scripts/temp_info.sh --gpu --curr")
 
 (defpoll temp_gpu_crit
   :interval "1s"
   :initial 0.0
-  "scripts/temp_info --gpu --crit")
+  "scripts/temp_info.sh --gpu --crit")
 
 (defwindow bar_temp 
   :stacking "fg"
@@ -27,10 +27,10 @@
   :wm-ignore true
   :monitor 0
   :geometry (geometry
-    :width "380"
-    :height "60"
-    :x "1730"
-    :y "20")
+    :width "@bar_temp_width@"
+    :height "@bar_height@"
+    :x "${@out_gap@ + @bar_wm_width@ + @in_gap@ + @bar_cpu_width@ + @in_gap@ + @bar_mem_width@ + @in_gap@}"
+    :y "@bar_y@")
   (eventbox
     :class "bars"
     (box 

@@ -1,5 +1,3 @@
-(include '/home/william/.config/stylix/colors.yuck')
-
 (include 'defs/music.yuck')
 (include 'defs/cpu.yuck')
 (include 'defs/mem.yuck')
@@ -13,15 +11,15 @@
 (defvar date_canada_reveal false)
 (defvar date_sk_reveal false)
 
-(defpoll canada_hour :interval "1s" "scripts/time_info --canada --hour")
-(defpoll canada_minutes :interval "1s" "scripts/time_info --canada --minutes")
-(defpoll canada_type :interval "1s" "scripts/time_info --canada --type")
-(defpoll canada_date :interval "1s" "scripts/time_info --canada --date")
+(defpoll canada_hour :interval "1s" "scripts/time_info.sh --canada --hour")
+(defpoll canada_minutes :interval "1s" "scripts/time_info.sh --canada --minutes")
+(defpoll canada_type :interval "1s" "scripts/time_info.sh --canada --type")
+(defpoll canada_date :interval "1s" "scripts/time_info.sh --canada --date")
 
-(defpoll sk_hour :interval "1s" "scripts/time_info --sk --hour")
-(defpoll sk_minutes :interval "1s" "scripts/time_info --sk --minutes")
-(defpoll sk_type :interval "1s" "scripts/time_info --sk --type")
-(defpoll sk_date :interval "1s" "scripts/time_info --sk --date")
+(defpoll sk_hour :interval "1s" "scripts/time_info.sh --sk --hour")
+(defpoll sk_minutes :interval "1s" "scripts/time_info.sh --sk --minutes")
+(defpoll sk_type :interval "1s" "scripts/time_info.sh --sk --type")
+(defpoll sk_date :interval "1s" "scripts/time_info.sh --sk --date")
 
 (defwindow bar_right_mon1
   :stacking "fg"
@@ -29,10 +27,10 @@
   :wm-ignore true
   :monitor 1
   :geometry (geometry
-  :width "500"
-  :height "60"
-  :x "2920"
-  :y "20"
+  :width "@bar_right_width@"
+  :height "@bar_height@"
+  :x "${@width@ - @out_gap@ - @bar_right_width@}"
+  :y "@bar_y@"
               )
   (eventbox
       :class "bars"
@@ -50,10 +48,10 @@
   :wm-ignore true
   :monitor 0
   :geometry (geometry
-  :width "500"
-  :height "60"
-  :x "2920"
-  :y "20"
+  :width "@bar_right_width@"
+  :height "@bar_height@"
+  :x "${@width@ - @out_gap@ - @bar_right_width@}"
+  :y "@bar_y@"
               )
   (eventbox
       :class "bars"

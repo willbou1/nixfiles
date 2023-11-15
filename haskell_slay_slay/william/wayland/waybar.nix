@@ -109,7 +109,7 @@ done
             }
             .modules-left, .modules-center, .modules-right {
                 background-color: alpha(@base00, ${opacity});
-                border: solid alpha(@base03, ${opacity}) 3px;
+                border: solid alpha(@base03, ${opacity}) ${config.home.borderSize}px;
                 padding: 0 10px 0 10px;
             }
             .modules-center {

@@ -54,7 +54,7 @@
 			nix-prefetch-github
 			miniupnpc
             acpi
-            config.nur.repos.xddxdd.svp
+            exfat
 		];
 		persistence."/persist" = {
 			hideMounts = true;

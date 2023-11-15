@@ -1,5 +1,3 @@
-#!/bin/sh
-
 case $1 in
 	"-1")
 		ddcutil -t -b 5 getvcp 10 | cut -d ' ' -f 4

@@ -1,5 +1,5 @@
-(deflisten launch_workspaces_mon1 "scripts/workspaces 1")
-(deflisten launch_workspaces_mon2 "scripts/workspaces 2")
+(deflisten launch_workspaces_mon1 "scripts/workspaces.sh 1")
+(deflisten launch_workspaces_mon2 "scripts/workspaces.sh 2")
 
 (defvar wm_reveal false)
 
@@ -35,10 +35,10 @@
   :wm-ignore true
   :monitor 1
   :geometry (geometry
-  :width "460"
-  :height "60"
-  :x "20"
-  :y "20"
+  :width "@bar_wm_width@"
+  :height "@bar_height@"
+  :x "@out_gap@"
+  :y "@bar_y@"
               )
   (eventbox
       :class "bars"
@@ -55,10 +55,10 @@
   :wm-ignore true
   :monitor 0
   :geometry (geometry
-  :width "460"
-  :height "60"
-  :x "20"
-  :y "20"
+  :width "@bar_wm_width@"
+  :height "@bar_height@"
+  :x "@out_gap@"
+  :y "@bar_y@"
               )
   (eventbox
       :class "bars"

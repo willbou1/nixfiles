@@ -3,13 +3,13 @@ with builtins;
 with lib;
 with config.lib.stylix.colors;
 let
-    monitors = map (m: "${m.name},${toString m.width}x${toString m.height}@${toString m.rate},${toString m.x}x${toString m.y},${toString (trivial.max m.hScale m.vScale)},bitdepth,10") config.home.monitors;
+    monitors = map (m: "${m.wlrName},${toString m.width}x${toString m.height}@${toString m.rate},${toString m.x}x${toString m.y},${toString (trivial.max m.hScale m.vScale)}") config.home.monitors;
     hexOpacity =  lib.toHexString ((((ceil (config.stylix.opacity.desktop * 100)) * 255) / 100));
     hyprlandPackage = pkgs.hyprland.overrideAttrs (o: {
         #patches = (o.patches or []) ++ [ ./hyprland.patch ];
     });
     hyprcap = pkgs.writeShellScriptBin "hyprcap" (''
-        slurp_args="-b "${withHashtag.base00 + hexOpacity}" -B "${withHashtag.base00 + hexOpacity}" -c "${withHashtag.base04 + hexOpacity}""
+        slurp_args="-b "${withHashtag.base00 + hexOpacity}" -B "${withHashtag.base00 + hexOpacity}" -c "${withHashtag.base0A + hexOpacity}""
 
         #${pkgs.grim}/bin/grim -l 1 ~/.cache/hyprland/screenfreeze
         #${pkgs.feh}/bin/feh --title screenfreeze ~/.cache/hyprland/screenfreeze &
@@ -40,7 +40,7 @@ in {
         xwayland.enable = true;
         #enableNvidiaPatches = true;
         settings = {
-            monitors = monitors ++ [",disable"];
+            monitor = monitors ++ [",disable"];
             input = {
                 kb_layout = "ca";
                 kb_variant = "multix";

@@ -24,6 +24,7 @@ in with config.lib.stylix.colors.withHashtag; {
         colorscheme = "base16-stylix";
         package = pkgs.neovim-nightly;
         plugins = {
+            #rainbow-delimiters.enable = true;
             lualine = {
                 enable = true;
                 theme = {

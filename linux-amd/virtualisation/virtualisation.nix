@@ -25,7 +25,7 @@ in {
     virtualisation = {
         libvirtd = {
             hooks.qemu = {
-                win11 = ./win11.sh;
+                #win11 = ./win11.sh;
             };
         };
 #        kvmfr = {

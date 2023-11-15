@@ -1,5 +1,3 @@
-#! /bin/bash
-
 mon="$([ $1 -eq 1 ] && echo "HDMI-A-1" || echo "DP-1")"
 
 while true; do

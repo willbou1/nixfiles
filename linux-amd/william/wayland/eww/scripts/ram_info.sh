@@ -1,5 +1,3 @@
-#!/bin/sh
-
 case $1 in
     "--used")
         free -m | grep Mem | awk '{printf $3/100}'

@@ -22,10 +22,10 @@
   :wm-ignore true
   :monitor 0
   :geometry (geometry
-  :width "810"
-  :height "60"
-  :x "500"
-  :y "20"
+  :width "@bar_cpu_width@"
+  :height "@bar_height@"
+  :x "${@out_gap@ + @bar_wm_width@ + @in_gap@}"
+  :y "@bar_y@"
               )
   (eventbox
       :class "bars"
