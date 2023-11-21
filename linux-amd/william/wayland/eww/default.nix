@@ -14,8 +14,8 @@ let
         "@bar_right_width@" = "500";
         "@bar_wm_width@" = "460";
         "@bar_music_width@" = "320";
-        "@bar_controls_width@" = "560";
-        "@bar_net_width@" = "390";
+        "@bar_controls_width@" = "530";
+        "@bar_net_width@" = "380";
         "@bar_cpu_width@" = "810";
         "@bar_mem_width@" = "380";
         "@bar_temp_width@" = "380";
@@ -72,6 +72,7 @@ in {
             eww-wayland
             jq
             ddcutil
+            python3
         ];
         
         xdg.configFile = (listToAttrs (map (n: {

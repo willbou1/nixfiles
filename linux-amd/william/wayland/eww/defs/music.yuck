@@ -2,7 +2,7 @@
 
 (defvar media_bar_class "bar_normal")
 (defvar music_reveal false)
-(defvar cover "images/music.png")
+(defvar cover "music.png")
 (defvar media_status "")
 (defvar artist "No artist")
 (defvar artist_parsed "No artist") 
@@ -114,6 +114,7 @@
             (scale
               :active false
               :min 0
+              :class "bar_music"
               :max length
               :value position
               :orientation "h"

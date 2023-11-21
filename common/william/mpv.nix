@@ -1,21 +1,34 @@
 { config, inputs, pkgs, ... }: let
-mpv-unwrapped = pkgs.mpv-unwrapped.override {
-    vapoursynthSupport = true;
-    ffmpeg_5 = pkgs.ffmpeg_5-full;
-};
-mpv = pkgs.wrapMpv mpv-unwrapped {
-    extraMakeWrapperArgs = [
-        "--prefix" "LD_LIBRARY_PATH" ":" "${pkgs.vapoursynth-mvtools}/lib/vapoursynth"
-    ];
-    scripts = [
-        pkgs.mpvScripts.uosc
-        pkgs.mpvScripts.mpris
-        pkgs.mpvScripts.thumbfast
-        pkgs.mpvScripts.sponsorblock
-    ];
-};
+    mpv-unwrapped = pkgs.mpv-unwrapped.override {
+        vapoursynthSupport = true;
+        ffmpeg_5 = pkgs.ffmpeg_5-full;
+    };
+    mpv = pkgs.wrapMpv mpv-unwrapped {
+        extraMakeWrapperArgs = [
+            "--prefix" "LD_LIBRARY_PATH" ":" "${pkgs.vapoursynth-mvtools}/lib/vapoursynth"
+        ];
+        scripts = [
+            pkgs.mpvScripts.uosc
+            pkgs.mpvScripts.mpris
+            pkgs.mpvScripts.thumbfast
+            pkgs.mpvScripts.sponsorblock
+        ];
+    };
+    svpWrapper = pkgs.writeShellScriptBin "svp" ''
+        regex='(https?|ftp|file)://[-[:alnum:]\+&@#/%?=~_|!:,.;]*[-[:alnum:]\+&@#/%=~_|]'
+        mpvfile='/tmp/mpvfile.webm'
+        if [[ $1 =~ $regex ]]
+        then 
+            rm -f $mpvfile
+            mkfifo $mpvfile
+            ${pkgs.yt-dlp}/bin/yt-dlp -o - $1 > $mpvfile &
+            SVPManager $mpvfile
+        else
+            SVPManager $1
+        fi
+    '';
 in {
-    home.packages = [ pkgs.svp ];
+    home.packages = [ pkgs.svp svpWrapper ];
     programs.mpv = {
         enable = true;
         package = mpv;

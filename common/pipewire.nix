@@ -1,6 +1,8 @@
 { inputs, config, pkgs, ... }:
 
 {
+	hardware.bluetooth.enable = true;
+
 	sound.enable = true;
 	hardware.pulseaudio.enable = false;
 	security.rtkit.enable = true;
@@ -16,11 +18,11 @@
 #            rule = {
 #                matches = {
 #                    {
-#                        { "node.name", "equals", "bluez_output.00_1B_66_C0_52_BD.a2dp-sink" },
+#                        { "device.name", "matches", "bluez_card.*" },
 #                    }
 #                },
 #                apply_properties = {
-#                    ["api.bluez5.codec"] = "aptx_ll",
+#                    ["bluez5.codecs"] = "[ aptx_ll aptx aac sbc ]",
 #                },
 #            }
 #            table.insert(bluez_monitor.rules, rule)

@@ -66,7 +66,7 @@ in {
             colors.webpage.darkmode.enabled = true;
             spellcheck.languages = [ "en-US" "fr-FR" ];
             statusbar = {
-                show = "in-mode";
+                show = "always";
                 position = "top";
             };
             tabs = {

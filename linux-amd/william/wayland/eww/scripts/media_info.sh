@@ -19,9 +19,10 @@ select_player () {
 }	
 
 update_cover () {
+    rm -f "$imgdir/currmedia.png"
 	if [[ -z $newimg ]] 
     then
-		newimg="$imgdir/music.png"
+		newimg="$imgdir/images/music.png"
 		cp "$newimg" "$imgdir/currmedia.png"
 		echo "Image is unknown, using template"
 	elif [[ `echo $newimg | grep -c "file://"` -gt 0 ]]
@@ -37,8 +38,8 @@ update_cover () {
 }
 
 
-imgdir="$HOME/.config/eww/images"
-parse_jp="$HOME/.config/eww/scripts/parse_jp"
+imgdir="$HOME/.config/eww"
+parse_jp="python $HOME/.config/eww/scripts/parse_jp.py"
 lastimg="none"
 eww="eww"
 

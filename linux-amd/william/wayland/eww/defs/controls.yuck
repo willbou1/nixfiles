@@ -64,7 +64,7 @@
     :hexpand false
     (button
       :timeout "2000ms"
-      :onclick "scripts/brightness_control --toggle"
+      :onclick "scripts/brightness_control.sh --toggle"
       (image
         :class "center_icons"
         :path "images/brightness.png"
@@ -97,7 +97,7 @@
             :hexpand false
             (eventbox
               :cursor "pointer"
-              :onhover "${eww} update bs_bar_class=bar_highlighted; ${eww} update onchange_brightness_bar=\"scripts/brightness_control\""
+              :onhover "${eww} update bs_bar_class=bar_highlighted; ${eww} update onchange_brightness_bar=\"scripts/brightness_control.sh\""
               :onhoverlost "${eww} update bs_bar_class=bar_normal; ${eww} update onchange_brightness_bar=\"true\""
               (scale
                 :active true
@@ -123,7 +123,7 @@
             :hexpand false
             (eventbox
               :cursor "pointer"
-              :onhover "${eww} update b1_bar_class=bar_highlighted; ${eww} update onchange_brightness_bar=\"scripts/brightness_control\""
+              :onhover "${eww} update b1_bar_class=bar_highlighted; ${eww} update onchange_brightness_bar=\"scripts/brightness_control.sh\""
               :onhoverlost "${eww} update b1_bar_class=bar_normal; ${eww} update onchange_brightness_bar=\"true\""
               (scale
                 :style "margin-bottom: 0"
@@ -141,7 +141,7 @@
             :hexpand false
             (eventbox
               :cursor "pointer"
-              :onhover "${eww} update b2_bar_class=bar_highlighted; ${eww} update onchange_brightness_bar=\"scripts/brightness_control\""
+              :onhover "${eww} update b2_bar_class=bar_highlighted; ${eww} update onchange_brightness_bar=\"scripts/brightness_control.sh\""
               :onhoverlost "${eww} update b2_bar_class=bar_normal; ${eww} update onchange_brightness_bar=\"true\""
               (scale
                 :active true
@@ -162,7 +162,7 @@
     :vexpand "false"
     :hexpand "false"
     (button
-      :onclick "scripts/audio_control --toggle"
+      :onclick "scripts/audio_control.sh --toggle"
       (image
         :class "center_icons"
         :path "images/sink_volume.png"
@@ -195,7 +195,7 @@
             :hexpand false
             (eventbox
               :cursor "pointer"
-              :onhover "${eww} update audio_sink_bar_class=bar_highlighted; ${eww} update onchange_audio_sink_bar=\"scripts/audio_control\""
+              :onhover "${eww} update audio_sink_bar_class=bar_highlighted; ${eww} update onchange_audio_sink_bar=\"scripts/audio_control.sh\""
               :onhoverlost "${eww} update audio_sink_bar_class=bar_normal; ${eww} update onchange_audio_sink_bar=\"true\""
               (scale
                 :active true
@@ -217,7 +217,7 @@
           (eventbox
             :cursor "pointer"
             (button
-              :onclick "scripts/audio_control --sink --card"
+              :onclick "scripts/audio_control.sh --sink --card"
               :class audio_sink_choice_card_class
               (image
                 :path "images/sound_card.png"
@@ -226,7 +226,7 @@
           (eventbox
             :cursor "pointer"
             (button
-              :onclick "scripts/audio_control --sink --monitor"
+              :onclick "scripts/audio_control.sh --sink --monitor"
               :class audio_sink_choice_monitor_class
               (image
                 :path "images/monitor.png"
@@ -235,7 +235,7 @@
           (eventbox
             :cursor "pointer"
             (button
-              :onclick "scripts/audio_control --sink --bluetooth"
+              :onclick "scripts/audio_control.sh --sink --bluetooth"
               :class audio_sink_choice_bluetooth_class
               (image
                 :path "images/bluetooth.png"
@@ -251,7 +251,7 @@
     :vexpand "false"
     :hexpand "false"
     (button
-      :onclick "scripts/audio_control --toggle"
+      :onclick "scripts/audio_control.sh --toggle"
       (image
         :class "center_icons"
         :path "images/microphone.png"
@@ -284,7 +284,7 @@
             :hexpand false
             (eventbox
               :cursor "pointer"
-              :onhover "${eww} update audio_source_bar_class=bar_highlighted; ${eww} update onchange_audio_source_bar=\"scripts/audio_control\""
+              :onhover "${eww} update audio_source_bar_class=bar_highlighted; ${eww} update onchange_audio_source_bar=\"scripts/audio_control.sh\""
               :onhoverlost "${eww} update audio_source_bar_class=bar_normal; ${eww} update onchange_audio_source_bar=\"true\""
               (scale
                 :active true
@@ -306,7 +306,7 @@
           (eventbox
             :cursor "pointer"
             (button
-              :onclick "scripts/audio_control --sink --card"
+              :onclick "scripts/audio_control.sh --sink --card"
               :class audio_sink_choice_card_class
               (image
                 :path "images/sound_card.png"
@@ -315,7 +315,7 @@
           (eventbox
             :cursor "pointer"
             (button
-              :onclick "scripts/audio_control --sink --monitor"
+              :onclick "scripts/audio_control.sh --sink --monitor"
               :class audio_sink_choice_monitor_class
               (image
                 :path "images/monitor.png"
@@ -324,7 +324,7 @@
           (eventbox
             :cursor "pointer"
             (button
-              :onclick "scripts/audio_control --sink --bluetooth"
+              :onclick "scripts/audio_control.sh --sink --bluetooth"
               :class audio_sink_choice_bluetooth_class
               (image
                 :path "images/bluetooth.png"

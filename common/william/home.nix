@@ -14,6 +14,7 @@ with lib;
         ./qutebrowser
         ./dunst.nix
         ./kitty.nix
+        ./audio.nix
         ./wayland
     ];
     options.home = {
@@ -84,6 +85,27 @@ with lib;
             };
             ssh-agent.enable = true;
             easyeffects.enable = true;
+        };
+
+        # default to aptx_ll for my bluetooth headphones
+        home.file.".local/state/wireplumber/default-profile".text = ''
+            [default-profile]
+            bluez_card.00_1B_66_C0_52_BD=a2dp-sink-aptx_ll
+        '';
+        dconf.settings = {
+            "org/virt-manager/virt-manager/connections" = {
+                autoconnect = [ "qemu:///system" ];
+                uris = [ "qemu:///system" ];
+            };
+            "org/virt-manager/virt-manager/urls" = {
+                isos = [ "/home/william/priv/downloads/" ];
+            };
+            "org/virt-manager/virt-manager/confirm" = {
+                forcepoweroff = false;
+            };
+            "org/virt-manager/virt-manager" = {
+                xmleditor-enabled = true;
+            };
         };
     };
 }

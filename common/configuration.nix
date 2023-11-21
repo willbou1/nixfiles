@@ -3,6 +3,7 @@
 {
 	imports =
 		[ 
+        ./mouse.nix
         ./security.nix
         ./specialisations
 		./networking.nix
@@ -29,8 +30,6 @@
 
 	hardware.enableRedistributableFirmware = true;
 	hardware.enableAllFirmware = true;
-
-	hardware.bluetooth.enable = true;
 
 	time.timeZone = "America/Toronto";
 	i18n.defaultLocale = "en_CA.UTF-8";

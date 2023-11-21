@@ -24,7 +24,7 @@ in {
 	};
 
 	boot.initrd.availableKernelModules = [ "nvme" "xhci_pci" "ahci" "usbhid" "usb_storage" "sd_mod" ];
-	boot.extraModulePackages = [ ];
+    boot.kernelModules = [ "i2c-dev" ];
 
 	boot.initrd.luks.devices = let
         luksDevice = uuid: {
