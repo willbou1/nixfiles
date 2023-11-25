@@ -3,8 +3,8 @@
 
 	inputs = {
 		nixpkgs.url = "nixpkgs/nixos-unstable";
-        nixos-stable.url = "github:NixOS/nixpkgs/nixos-23.05";
-        sops-nix.url = github:Mic92/sops-nix;
+		nixos-stable.url = "github:NixOS/nixpkgs/nixos-23.05";
+		sops-nix.url = github:Mic92/sops-nix;
 		home-manager = {
 			url = github:nix-community/home-manager;
 			inputs.nixpkgs.follows = "nixpkgs";
@@ -16,11 +16,17 @@
 		impermanence.url = github:nix-community/impermanence;
 		hosts.url = github:StevenBlack/hosts;
 		spicetify-nix.url = github:the-argus/spicetify-nix;
-        neovim-nightly-overlay.url = github:nix-community/neovim-nightly-overlay;
+		neovim-nightly-overlay.url = github:nix-community/neovim-nightly-overlay;
 
-        stylix.url = github:danth/stylix;
+		stylix.url = github:danth/stylix;
 
-        nur.url = github:nix-community/NUR;
+		nur.url = github:nix-community/NUR;
+
+		hyprland.url = github:hyprwm/Hyprland;
+		hyprgrass = {
+			url = github:horriblename/hyprgrass;
+			inputs.hyprland.follows = "hyprland"; # IMPORTANT
+		};
 	};
 
 	outputs = { self, nixpkgs, home-manager, ... } @ inputs: let

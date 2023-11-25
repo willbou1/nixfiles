@@ -92,6 +92,7 @@ in {
             "!g" = "https://www.google.ca/search?q={}";
             "!d" = "https://duckduckgo.com/?q={}";
             "!i" = "https://invidious.asir.dev/search?q={}";
+            "!p" = "https://piped.video/results?search_query={}";
             "!y" = "http://www.youtube.com/results?search_query={}&page={{startPage?}}&utm_source=opensearch";
             "!m" = "https://mydramalist.com/search?q={}";
             "!nf" = "https://netflix.com/search?q={}";

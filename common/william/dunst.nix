@@ -1,11 +1,14 @@
 { config, ... }:
-
-{
+with builtins;
+let
+    offset = toString (ceil (config.home.gapSize * 3.5));
+in {
     services.dunst = {
         enable = true;
         settings = {
             global = {
-                origin = "top-right";
+                offset = "${offset}x${offset}";
+                origin = "bottom-right";
                 width = "(0,700)";
                 height = 300;
                 notification_limit = 3;

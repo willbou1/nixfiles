@@ -5,9 +5,6 @@ with config.lib.stylix.colors;
 let
     monitors = map (m: "${m.wlrName},${toString m.width}x${toString m.height}@${toString m.rate},${toString m.x}x${toString m.y},${toString (trivial.max m.hScale m.vScale)}") config.home.monitors;
     hexOpacity =  lib.toHexString ((((ceil (config.stylix.opacity.desktop * 100)) * 255) / 100));
-    hyprlandPackage = pkgs.hyprland.overrideAttrs (o: {
-        #patches = (o.patches or []) ++ [ ./hyprland.patch ];
-    });
     hyprcap = pkgs.writeShellScriptBin "hyprcap" (''
         slurp_args="-b "${withHashtag.base00 + hexOpacity}" -B "${withHashtag.base00 + hexOpacity}" -c "${withHashtag.base0A + hexOpacity}""
 
@@ -35,12 +32,22 @@ in {
         hyprcap
     ];
     wayland.windowManager.hyprland = {
-        package = hyprlandPackage;
+        package = inputs.hyprland.packages.${pkgs.system}.default;
         enable = true;
         xwayland.enable = true;
         #enableNvidiaPatches = true;
+        plugins = [
+            inputs.hyprgrass.packages.${pkgs.system}.default
+        ];
         settings = {
             monitor = monitors ++ [",disable"];
+            plugin = {
+                touch_gestures = {
+                    sensitivity = 1.0;
+                    workspace_swipe_fingers = 3;
+                    experimental.send_cancel = 0;
+                };
+            };
             input = {
                 kb_layout = "ca";
                 kb_variant = "multix";
@@ -50,16 +57,24 @@ in {
                     disable_while_typing = true;
                 };
             };
+            gestures = {
+                workspace_swipe = true;
+                workspace_swipe_forever = true;
+                workspace_swipe_direction_lock = false;
+            };
             general = {
                 gaps_in = config.home.gapSize;
-                gaps_out = config.home.gapSize * 1.5;
+                gaps_out = ceil (config.home.gapSize * 1.5);
                 sensitivity = 1;
                 border_size = config.home.borderSize;
                 "col.inactive_border" = lib.mkForce "0x${hexOpacity + base03}";
                 "col.active_border" = lib.mkForce "0x${hexOpacity + base0A}";
-                "col.group_border" = lib.mkForce "0x${hexOpacity + base0E}";
             };
-
+            group = {
+                "col.border_inactive" = lib.mkForce "0x${hexOpacity + base06}";
+                "col.border_active" = lib.mkForce "0x${hexOpacity + base0D}";
+                "col.border_locked_active" = lib.mkForce "0x${hexOpacity + base06}";
+            };
             decoration = {
                 rounding = 20;
                 blur = {
@@ -167,7 +182,7 @@ in {
                 ",XF86AudioMute,exec,pactl set-sink-mute @DEFAULT_SINK@ toggle"
                 ",XF86MonBrightnessDown,exec, brillo -u 150000 -U 5"
                 ",XF86MonBrightnessUp,exec, brillo -u 150000 -A 5"
-                ",XF86AudioPlay,exec,playerctl play-pause"
+                ",XF86AudioPlay,exec,playerctl play"
                 ",XF86AudioPause,exec,playerctl pause"
                 ",XF86AudioStop,exec,playerctl pause"
                 ",XF86AudioPrev,exec,playerctl previous"

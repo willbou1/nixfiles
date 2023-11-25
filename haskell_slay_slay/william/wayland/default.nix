@@ -6,5 +6,4 @@
         ./waybar.nix
         ./hyprland.nix
     ];
-    services.dunst.settings.global.offset = "20x22";
 }

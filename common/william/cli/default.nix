@@ -43,6 +43,7 @@
     };
 
     home.packages = with pkgs; [
+        yt-dlp
         p7zip
         ncpamixer
         fastfetch

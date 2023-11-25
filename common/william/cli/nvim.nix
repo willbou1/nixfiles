@@ -111,7 +111,7 @@ in with config.lib.stylix.colors.withHashtag; {
                 };
             };
             lspkind.enable = true;
-            null-ls = {
+            none-ls = {
                 enable = true;
                 sources.formatting.nixfmt.enable = true;
             };
@@ -145,34 +145,26 @@ in with config.lib.stylix.colors.withHashtag; {
             as = "asm";
         };
         globals.mapleader = " ";
-	maps = {
-            normal = {
-                "<C-h>".action = "<C-w>h";
-                "<C-j>".action = "<C-w>j";
-                "<C-k>".action = "<C-w>k";
-                "<C-l>".action = "<C-w>l";
-            };
-        };
-#        keymaps = [
-#            {
-#                key = "<C-h>";
-#                action = "<C-w>h";
-#            }
-#            {
-#                key = "<C-j>";
-#                action = "<C-w>j";
-#            }
-#            {
-#                key = "<C-k>";
-#                action = "<C-w>k";
-#            }
-#            {
-#                key = "<C-l>";
-#                action = "<C-w>l";
-#            }
-#        ];
+        keymaps = [
+            {
+                key = "<C-h>";
+                action = "<C-w>h";
+            }
+            {
+                key = "<C-j>";
+                action = "<C-w>j";
+            }
+            {
+                key = "<C-k>";
+                action = "<C-w>k";
+            }
+            {
+                key = "<C-l>";
+                action = "<C-w>l";
+            }
+        ];
         globals.tpipeline_restore = 1;
-# Firenvim
+        # Firenvim
         globals.firenvim_config = {
             globalSettings.alt = "all";
             localSettings = {

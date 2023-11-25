@@ -1,14 +1,16 @@
-{ config, lib, ... }: let
-opacity = builtins.toString config.stylix.opacity.desktop;
+{ config, lib, ... }:
+with builtins;
+let
+    opacity = toString config.stylix.opacity.desktop;
 in {
     programs.waybar = {
         enable = true;
         settings = {
             waybar = {
                 spacing = 8;
-                margin-top = 6;
-                margin-left = 10;
-                margin-right = 10;
+                margin-top = ceil (config.home.gapSize / 2);
+                margin-left = ceil (config.home.gapSize * 1.5);
+                margin-right = ceil (config.home.gapSize * 1.5);
                 layer = "top";
                 position = "top";
                 output = [
@@ -109,7 +111,7 @@ done
             }
             .modules-left, .modules-center, .modules-right {
                 background-color: alpha(@base00, ${opacity});
-                border: solid alpha(@base03, ${opacity}) ${config.home.borderSize}px;
+                border: solid alpha(@base03, ${opacity}) ${toString config.home.borderSize}px;
                 padding: 0 10px 0 10px;
             }
             .modules-center {

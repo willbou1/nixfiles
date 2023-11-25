@@ -5,7 +5,7 @@
 		[ 
         ./mouse.nix
         ./security.nix
-        ./specialisations
+        #./specialisations
 		./networking.nix
 		./pipewire.nix
 		./users.nix
@@ -154,10 +154,12 @@
            enable = true;
            extraPortals = [
                pkgs.xdg-desktop-portal
-                pkgs.xdg-desktop-portal-hyprland
+               pkgs.xdg-desktop-portal-hyprland
            ];
+           config.common.default = "*";
         };
     };
+
     hardware.sane = {
         enable = true;
         extraBackends = [ pkgs.sane-airscan ];

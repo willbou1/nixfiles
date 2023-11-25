@@ -106,6 +106,12 @@ let
     name = "SVPManager";
     targetPkgs = pkgs: libraries;
     runScript = "${svp-dist}/opt/SVPManager";
+extraBwrapArgs = [
+        "--setenv __NV_PRIME_RENDER_OFFLOAD 1"
+        "--setenv __NV_PRIME_RENDER_OFFLOAD_PROVIDER NVIDIA-G0"
+        "--setenv __GLX_VENDOR_LIBRARY_NAME nvidia"
+        "--setenv __VK_LAYER_NV_optimus NVIDIA_only"
+    ];
     unshareUser = false;
     unshareIpc = false;
     unsharePid = false;

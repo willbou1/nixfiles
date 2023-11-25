@@ -1,7 +1,7 @@
 { config, inputs, pkgs, ... }: let
     mpv-unwrapped = pkgs.mpv-unwrapped.override {
         vapoursynthSupport = true;
-        ffmpeg_5 = pkgs.ffmpeg_5-full;
+        ffmpeg = pkgs.ffmpeg_6-full;
     };
     mpv = pkgs.wrapMpv mpv-unwrapped {
         extraMakeWrapperArgs = [
@@ -73,6 +73,8 @@ in {
         bindings = {
             "ALT+k" = "add sub-scale +0.1";
             "ALT+j" = "add sub-scale -0.1";
+            "ALT-v" = "vf toggle vflip";
+            "ALT+h" = "vf toggle hflip";
             "CTRL+c" = "no-osd change-list glsl-shaders set \"\"";
             "CTRL+5" = "no-osd change-list glsl-shaders set \"~~/shaders/anime4k/Restore/Anime4K_Clamp_Highlights.glsl:~~/shaders/anime4k/Restore/Anime4K_Restore_CNN_VL.glsl:~~/shaders/anime4k/Upscale/Anime4K_Upscale_CNN_x2_VL.glsl:~~/shaders/anime4k/Upscale/Anime4K_AutoDownscalePre_x2.glsl:~~/shaders/anime4k/Upscale/Anime4K_AutoDownscalePre_x4.glsl:~~/shaders/anime4k/Upscale/Anime4K_Upscale_CNN_x2_M.glsl\"; show-text \"Anime4K: Mode A (HQ)\"";
             "CTRL+6" = "no-osd change-list glsl-shaders set \"~~/shaders/anime4k/Restore/Anime4K_Clamp_Highlights.glsl:~~/shaders/anime4k/Restore/Anime4K_Restore_CNN_Soft_VL.glsl:~~/shaders/anime4k/Upscale/Anime4K_Upscale_CNN_x2_VL.glsl:~~/shaders/anime4k/Upscale/Anime4K_AutoDownscalePre_x2.glsl:~~/shaders/anime4k/Upscale/Anime4K_AutoDownscalePre_x4.glsl:~~/shaders/anime4k/Upscale/Anime4K_Upscale_CNN_x2_M.glsl\"; show-text \"Anime4K: Mode B (HQ)\"";

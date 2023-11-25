@@ -3,18 +3,6 @@ with lib;
 let
     colors = config.services.polybar.settings.colors;
 in {
-    home.monitors = [
-        {
-            name = "eDP-1";
-            width = 3840;
-            height = 2400;
-            rate = 60;
-            x = 0;
-            y = 0;
-            hScale = 2;
-            vScale = 2;
-        }
-    ];
     xsession.windowManager.herbstluftwm.settings.window_gap = mkForce 10;
     services.polybar.settings = {
         "bar/example" = {

@@ -23,6 +23,7 @@ in {
             transform = 0;
             output = "eDP-1";
         };
+        "device:sof-soundwire-headset-jack".enabled = false;
         env = [
             "WLR_DRM_DEVICE,/dev/dri/by-path/pci-0000:00:02.0-card"
         ];
