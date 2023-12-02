@@ -19,7 +19,6 @@
             "sc" = "sudo systemctl";
             "uc" = "systemctl --user";
             "nd" = "nix develop --command fish";
-            "mpv" = "SVPManager";
         };
         functions = {
 #fastfetch | lolcat -a -s 1000 -d 8

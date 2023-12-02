@@ -20,6 +20,7 @@
   xdg-utils,
   xorg,
   mpvScripts,
+  ffmpeg_6-full,
   ...
 }:
 ################################################################################
@@ -31,6 +32,7 @@ let
     wrapMpv
     (mpv-unwrapped.override {
       vapoursynthSupport = true;
+      ffmpeg = ffmpeg_6-full;
     })
     {
       extraMakeWrapperArgs = [
@@ -38,6 +40,18 @@ let
         "LD_LIBRARY_PATH"
         ":"
         "/run/opengl-driver/lib"
+        "--set"
+        "__NV_PRIME_RENDER_OFFLOAD"
+        "1"
+        "--set"
+        "__NV_PRIME_RENDER_OFFLOAD_PROVIDER"
+        "NVIDIA-G0"
+        "--set"
+        "__GLX_VENDOR_LIBRARY_NAME"
+        "nvidia"
+        "--set"
+        "__VK_LAYER_NV_optimus"
+        "NVIDIA_only"
       ];
     scripts = [
         mpvScripts.uosc
@@ -106,12 +120,6 @@ let
     name = "SVPManager";
     targetPkgs = pkgs: libraries;
     runScript = "${svp-dist}/opt/SVPManager";
-extraBwrapArgs = [
-        "--setenv __NV_PRIME_RENDER_OFFLOAD 1"
-        "--setenv __NV_PRIME_RENDER_OFFLOAD_PROVIDER NVIDIA-G0"
-        "--setenv __GLX_VENDOR_LIBRARY_NAME nvidia"
-        "--setenv __VK_LAYER_NV_optimus NVIDIA_only"
-    ];
     unshareUser = false;
     unshareIpc = false;
     unsharePid = false;

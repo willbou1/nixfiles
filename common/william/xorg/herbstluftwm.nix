@@ -84,6 +84,15 @@ in with config.lib.stylix.colors.withHashtag; {
                 "${mod}-Button3" = "resize";
             };
             keybinds = {
+                "XF86AudioRaiseVolume" = "spawn ${pkgs.pulseaudio}/bin/pactl set-sink-volume @DEFAULT_SINK@ +5%";
+                "XF86AudioLowerVolume" = "spawn ${pkgs.pulseaudio}/bin/pactl set-sink-volume @DEFAULT_SINK@ -5%";
+                "XF86AudioMute" = "spawn ${pkgs.pulseaudio}/bin/pactl set-sink-mute @DEFAULT_SINK@ toggle";
+                "XF86AudioPlay" = "spawn ${pkgs.playerctl}/bin/playerctl play-pause";
+                "XF86AudioPause" = "spawn ${pkgs.playerctl}/bin/playerctl pause";
+                "XF86AudioStop" = "spawn ${pkgs.playerctl}/bin/playerctl pause";
+                "XF86AudioPrev" = "spawn ${pkgs.playerctl}/bin/playerctl previous";
+                "XF86AudioNext" = "spawn ${pkgs.playerctl}/bin/playerctl next";
+
                 "${mod}-Shift-q" = "quit";
                 "${mod}-q" = "spawn i3lock-custom";
                 "${mod}-Shift-r" = "reload";
@@ -94,7 +103,6 @@ in with config.lib.stylix.colors.withHashtag; {
                 "${mod}-Shift-b" = "spawn qutebrowser ':open -p'";
                 "${mod}-d" = "spawn rofi -show combi";
                 "${mod}-e" = "spawn emacsclient -c";
-                "${mod}-m" = "spawn element-desktop";
 
                 "${mod}-h" = "focus left";
                 "${mod}-j" = "focus down";
@@ -111,7 +119,7 @@ in with config.lib.stylix.colors.withHashtag; {
                 "${mod}-Control-Shift-j" = "mirror vertical";
                 "${mod}-Control-Shift-k" = "mirror vertical";
 
-                "${mod}-a" = "or , and . compare monitors.count = 3 . set_monitors 3440x1440+0+0 3440x1440+3440+0 , set_monitors 3440x1440+0+0 1720x1440+3440+0 1720x1";
+                #"${mod}-a" = "or , and . compare monitors.count = 3 . set_monitors 3440x1440+0+0 3440x1440+3440+0 , set_monitors 3440x1440+0+0 1720x1440+3440+0 1720x1";
 
                 "${mod}-u" = "split bottom 0.5";
                 "${mod}-o" = "split right 0.5";
@@ -147,7 +155,6 @@ in with config.lib.stylix.colors.withHashtag; {
             ]) (length tags))));
             extraConfig = ''
                 ${pkgs.imagemagick}/bin/convert -flop "${config.stylix.image}" - | feh --bg-fill "${config.stylix.image}" -
-                ${hc} set_monitors ${monitors}
                 systemctl --user start picom
                 systemctl --user start polybar
                 pkill '.*glava.*'; glava --desktop &

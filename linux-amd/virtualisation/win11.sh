@@ -1,5 +1,3 @@
-#!/bin/bash
-
 if [[ $1 == "win11" ]]; then
   if [[ $2 == "prepare" ]]; then
       systemctl set-property --runtime -- system.slice AllowedCPUs=6-11,18-23

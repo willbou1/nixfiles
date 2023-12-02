@@ -22,6 +22,8 @@ let
         qutebrowser --target window 'https://korean.dict.naver.com/koendict/#/main'
         qutebrowser --target tab 'https://koreanhanja.app/'
     '');
+    wallpaper = pkgs.writeShellScript "wallpaper.sh" ''
+    '';
 in {
     home.packages = with pkgs; [
         qt5.qtwayland
@@ -36,9 +38,6 @@ in {
         enable = true;
         xwayland.enable = true;
         #enableNvidiaPatches = true;
-        plugins = [
-            inputs.hyprgrass.packages.${pkgs.system}.default
-        ];
         settings = {
             monitor = monitors ++ [",disable"];
             plugin = {
@@ -120,14 +119,14 @@ in {
                 "$mod,mouse:273,resizewindow"
             ];
             exec-once = [
-                "${pkgs.swww}/bin/swww init"
                 "SVPManager"
                 "element-desktop"
                 "spotify"
                 "qutebrowser"
-            ];
-            exec = [
-                "${pkgs.swww}/bin/swww img ${config.stylix.image}"
+                "${wallpaper}"
+                "${pkgs.swww}/bin/swww init && sleep 2 && ${pkgs.swww}/bin/swww img ${config.stylix.image}"
+                # Make sure to clean up after xorg session
+                "${pkgs.dbus}/bin/dbus-update-activation-environment --systemd XAUTHORITY XDG_SESSION_ID"
             ];
             windowrule = [
                 "idleinhibit fullscreen,.*"
@@ -180,9 +179,7 @@ in {
                 ",XF86AudioRaiseVolume,exec,pactl set-sink-volume @DEFAULT_SINK@ +5%"
                 ",XF86AudioLowerVolume,exec,pactl set-sink-volume @DEFAULT_SINK@ -5%"
                 ",XF86AudioMute,exec,pactl set-sink-mute @DEFAULT_SINK@ toggle"
-                ",XF86MonBrightnessDown,exec, brillo -u 150000 -U 5"
-                ",XF86MonBrightnessUp,exec, brillo -u 150000 -A 5"
-                ",XF86AudioPlay,exec,playerctl play"
+                ",XF86AudioPlay,exec,playerctl play-pause"
                 ",XF86AudioPause,exec,playerctl pause"
                 ",XF86AudioStop,exec,playerctl pause"
                 ",XF86AudioPrev,exec,playerctl previous"
