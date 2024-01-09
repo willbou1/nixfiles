@@ -1,27 +1,7 @@
 { config, inputs, pkgs, ... }: let
-themeFile = config.lib.stylix.colors {
-    templateRepo = pkgs.fetchFromGitHub {
-        owner = "chriskempson";
-        repo = "base16-vim";
-        rev = "6191622d5806d4448fa2285047936bdcee57a098";
-        sha256 = "6FsT87qcl9GBxgxrPx2bPULIMA/O8TRxHaN49qMM4uM=";
-    };
-};
-themePlugin = pkgs.vimUtils.buildVimPlugin {
-    name = "stylix";
-    pname = "stylix";
-
-    src = themeFile;
-    dontUnpack = true;
-
-    buildPhase = ''
-        install -D $src $out/colors/base16-stylix.vim
-        '';
-};
 in with config.lib.stylix.colors.withHashtag; {
     programs.nixvim = {
         enable = true;
-        colorscheme = "base16-stylix";
         package = pkgs.neovim-nightly;
         plugins = {
             #rainbow-delimiters.enable = true;
@@ -118,9 +98,8 @@ in with config.lib.stylix.colors.withHashtag; {
         };
         extraPlugins = with pkgs.vimPlugins; [
             firenvim
-                vim-tpipeline
-                themePlugin
-                vim-gas
+            vim-tpipeline
+            vim-gas
         ];
         options = {
             termguicolors = true;

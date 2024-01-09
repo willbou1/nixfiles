@@ -151,7 +151,7 @@ ${config.sops.placeholder."expressvpn/password"}
 		expressvpn.enable = true;
         avahi = {
             enable = true;
-            nssmdns = true;
+            nssmdns4 = true;
         };
 		openssh = {
 			enable = true;

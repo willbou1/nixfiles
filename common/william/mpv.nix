@@ -53,8 +53,8 @@ in {
             load-osd-console = true;
             osd-duration = 2000;
 
-            profile = "gpu-hq";
             hwdec = "auto-copy";
+            profile = "gpu-hq";
             hwdec-codecs = "all";
             dscale = "mitchell";
             cscale = "spline64";

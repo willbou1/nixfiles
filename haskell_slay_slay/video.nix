@@ -1,7 +1,11 @@
 { lib, inputs, config, pkgs, ... }:
 
 {
-    services.xserver.videoDrivers = ["nvidia"];
+    environment.systemPackages = [ pkgs.displaylink ];
+    boot.kernelModules = [ "evdi" ];
+    services.xserver.videoDrivers = [
+        "nvidia"
+    ];
     hardware = {
         brillo.enable = true;
         nvidia = {

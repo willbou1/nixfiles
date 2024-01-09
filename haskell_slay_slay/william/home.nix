@@ -4,6 +4,7 @@
         ./theme.nix
         ./wayland
         ./xorg.nix
+        ./cli.nix
     ];
     home.persistence."/persist/home/william".directories = [
         "priv"
