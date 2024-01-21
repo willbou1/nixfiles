@@ -1,9 +1,10 @@
-{ config, pkgs, lib, ...}:
+{ lib, config, pkgs,  ...}:
 with config.lib.stylix.colors;
+with lib;
 let
     fontSize = config.stylix.fonts.sizes.terminal;
     opacity = builtins.ceil (config.stylix.opacity.applications * 100);
-    hexOpacity =  lib.toHexString (opacity * 255 / 100);
+    hexOpacity =  toHexString (opacity * 255 / 100);
     info = "#${hexOpacity}${base0B}";
     secondary-info = "#${hexOpacity}${base0C}";
     secondary-background = "#${hexOpacity}${base01}";
@@ -16,92 +17,93 @@ in {
         window.transparent = true;
         colors = {
             completion = {
-                odd.bg = lib.mkForce secondary-background;
-                even.bg = lib.mkForce background;
+                odd.bg = mkForce secondary-background;
+                even.bg = mkForce background;
                 category = {
-                    bg = lib.mkForce background;
-                    border.top = lib.mkForce background;
-                    border.bottom = lib.mkForce background;
+                    bg = mkForce background;
+                    border.top = mkForce background;
+                    border.bottom = mkForce background;
                 };
                 item.selected = {
-                    bg = lib.mkForce selection-background;
-                    border.top = lib.mkForce selection-background;
-                    border.bottom = lib.mkForce selection-background;
+                    bg = mkForce selection-background;
+                    border.top = mkForce selection-background;
+                    border.bottom = mkForce selection-background;
                 };
                 scrollbar = {
-                    bg = lib.mkForce background;
+                    bg = mkForce background;
                 };
             };
             contextmenu = {
-                disabled.bg = lib.mkForce secondary-background;
-                menu.bg = lib.mkForce background;
-                selected.bg = lib.mkForce selection-background;
+                disabled.bg = mkForce secondary-background;
+                menu.bg = mkForce background;
+                selected.bg = mkForce selection-background;
             };
             downloads = {
-                bar.bg = lib.mkForce background;
-                start.bg = lib.mkForce info;
-                stop.bg = lib.mkForce secondary-info;
-                error.bg = lib.mkForce error;
+                bar.bg = mkForce background;
+                start.bg = mkForce info;
+                stop.bg = mkForce secondary-info;
+                error.bg = mkForce error;
             };
             messages = {
                 error = {
-                    bg = lib.mkForce error;
-                    border = lib.mkForce error;
+                    bg = mkForce error;
+                    border = mkForce error;
                 };
                 warning = {
-                    bg = lib.mkForce warning;
-                    border = lib.mkForce warning;
+                    bg = mkForce warning;
+                    border = mkForce warning;
                 };
                 info = {
-                    bg = lib.mkForce info;
-                    border = lib.mkForce info;
+                    bg = mkForce info;
+                    border = mkForce info;
                 };
             };
             prompts = {
-                bg = lib.mkForce background;
-                border = lib.mkForce background;
-                selected.bg = lib.mkForce secondary-background;
+                bg = mkForce background;
+                border = mkForce background;
+                selected.bg = mkForce secondary-background;
             };
             statusbar = {
-                normal.bg = lib.mkForce background;
-                insert.bg = lib.mkForce info;
-                passthrough.bg = lib.mkForce secondary-info;
-                private.bg = lib.mkForce secondary-background;
+                normal.bg = mkForce background;
+                insert.bg = mkForce info;
+                passthrough.bg = mkForce secondary-info;
+                private.bg = mkForce secondary-background;
                 command = {
-                    bg = lib.mkForce background;
-                    private.bg = lib.mkForce secondary-background;
+                    bg = mkForce background;
+                    private.bg = mkForce secondary-background;
                 };
                 caret = {
-                    bg = lib.mkForce selection-background;
-                    selection.bg = lib.mkForce selection-background;
+                    bg = mkForce selection-background;
+                    selection.bg = mkForce selection-background;
                 };
-                progress.bg = lib.mkForce info;
+                progress.bg = mkForce info;
             };
             tabs = {
-                bar.bg = lib.mkForce background;
+                bar.bg = mkForce background;
                 indicator = {
-                    start = lib.mkForce secondary-info;
-                    stop = lib.mkForce info;
-                    error = lib.mkForce error;
+                    start = mkForce secondary-info;
+                    stop = mkForce info;
+                    error = mkForce error;
                 };
-                odd.bg = lib.mkForce background;
-                even.bg = lib.mkForce secondary-background;
+                odd.bg = mkForce background;
+                even.bg = mkForce secondary-background;
                 pinned = {
-                    even.bg = lib.mkForce info;
-                    odd.bg = lib.mkForce secondary-info;
+                    even.bg = mkForce info;
+                    odd.bg = mkForce secondary-info;
                     selected = {
-                        even.bg = lib.mkForce selection-background;
-                        odd.bg = lib.mkForce selection-background;
+                        even.bg = mkForce selection-background;
+                        odd.bg = mkForce selection-background;
                     };
                 };
                 selected = {
-                    even.bg = lib.mkForce selection-background;
-                    odd.bg = lib.mkForce selection-background;
+                    even.bg = mkForce selection-background;
+                    odd.bg = mkForce selection-background;
                 };
             };
         };
         fonts = {
-            default_size = "${toString fontSize}pt";
+            default_size = mkForce "${toString fontSize}pt";
+            web.size.default = mkForce fontSize;
             downloads = "${toString (fontSize - 3)}pt default_family";
             hints = "bold ${toString (fontSize + 3)}pt default_family";
         };

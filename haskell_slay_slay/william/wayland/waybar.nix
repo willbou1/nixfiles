@@ -86,6 +86,7 @@ done
                     format-source = " {volume}%";
                     format-source-muted = "";
                     format-icons.default = ["" "" ""];
+                    ignored-sinks = [ "Easy Effects Sink" ];
                 };
                 temperature = {
 			format = "󰔏  {temperatureC}°C";

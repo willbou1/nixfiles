@@ -1,4 +1,4 @@
-{ config, pkgs, ... }:
+{ config, inputs, pkgs, ... }:
 with builtins;
 with config.lib.stylix.colors.withHashtag;
 let
@@ -53,6 +53,6 @@ static const char worddelimiters[] = " ";
 in {
     home.packages = with pkgs; [
         myDmenu
-        j4-dmenu-desktop
+        stable.j4-dmenu-desktop
     ];
 }

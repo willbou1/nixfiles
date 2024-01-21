@@ -152,6 +152,7 @@ in {
                 "$mod,B,exec,qutebrowser"
                 "$mod SHIFT,D,exec,${dic}/bin/dic"
                 "$mod,Return,exec,MESA_LOADER_DRIVER_OVERRIDE=iris __EGL_VENDOR_LIBRARY_FILENAMES=${pkgs.mesa_drivers}/share/glvnd/egl_vendor.d/50_mesa.json kitty"
+                "$mod,N,exec,MESA_LOADER_DRIVER_OVERRIDE=iris __EGL_VENDOR_LIBRARY_FILENAMES=${pkgs.mesa_drivers}/share/glvnd/egl_vendor.d/50_mesa.json kitty ncpamixer"
                 "$mod,D,exec,wofi --show drun"
                 "$mod,W,exec,looking-glass-client -f /dev/shm/looking-glass1"
                 "$mod,C,exec,${hyprcap}/bin/hyprcap"

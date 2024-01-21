@@ -3,7 +3,7 @@
 
 	inputs = {
 		nixpkgs.url = "nixpkgs/nixos-unstable";
-		nixos-stable.url = "github:NixOS/nixpkgs/nixos-23.05";
+		stable.url = "github:NixOS/nixpkgs/nixos-23.05";
 		sops-nix.url = github:Mic92/sops-nix;
 		home-manager = {
 			url = github:nix-community/home-manager;
@@ -36,6 +36,9 @@
                 nixpkgs.overlays = [ 
                     (import ./pkgs).overlay
                     inputs.neovim-nightly-overlay.overlay
+                    (final: prev: {
+                        stable = import inputs.stable { system = final.system; };
+                    })
                 ];
             }
             inputs.stylix.nixosModules.stylix

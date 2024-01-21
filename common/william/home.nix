@@ -10,11 +10,11 @@ with lib;
         ./xdg.nix
         ./virtualisation.nix
         ./zathura.nix
-        ./ime.nix
         ./qutebrowser
         ./dunst.nix
         ./kitty.nix
         ./audio.nix
+        ./ime.nix
         ./wayland
     ];
     options.home = {

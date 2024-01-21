@@ -95,6 +95,7 @@
 			"vim" = "nvim";
 			"se" = "sudoedit";
 			"s" = ''sudo SSH_AUTH_SOCK="$SSH_AUTH_SOCK" '';
+            "nu" = "sudo nix flake update";
 		};
 		sessionVariables.NIXOS_OZONE_WL = "1";
 	};
