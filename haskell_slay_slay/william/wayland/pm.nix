@@ -15,10 +15,6 @@ in {
                 command = "${pkgs.hyprland}/bin/hyprctl dispatch dpms off";
                 resumeCommand = "${pkgs.hyprland}/bin/hyprctl dispatch dpms on";
             }
-            {
-                timeout = 800;
-                command = "systemctl suspend";
-            }
         ];
     };
 }

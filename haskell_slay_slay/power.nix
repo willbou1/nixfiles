@@ -5,6 +5,10 @@
     services = {
         logind = {
             powerKey = "suspend";
+            extraConfig = ''
+                IdleActionSec=1200
+                IdleAction=suspend
+            '';
         };
         thermald.enable = true;
         auto-cpufreq = {

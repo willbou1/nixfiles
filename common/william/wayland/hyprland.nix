@@ -112,6 +112,8 @@ in {
                 allow_session_lock_restore = true;
                 background_color = lib.mkForce base00;
                 vfr = false;
+                mouse_move_enables_dpms = true;
+                key_press_enables_dpms = true;
             };
             "$mod" = "SUPER";
             bindm = [
