@@ -29,12 +29,12 @@
   :stacking "fg"
   :windowtype "normal"
   :wm-ignore true
-  :monitor 1
+  :monitor 0
   :geometry (geometry
   :width "@bar_net_width@"
   :height "@bar_height@"
   :x "${@width@ - @out_gap@ - @bar_right_width@ - @in_gap@ - @bar_net_width@}"
-  :y "@bar_y@")
+  :y "@bar_y_main@")
   (eventbox
     :class "bars"
     (eventbox

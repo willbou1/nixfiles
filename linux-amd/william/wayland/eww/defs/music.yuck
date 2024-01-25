@@ -16,12 +16,12 @@
   :stacking "fg"
   :windowtype "normal"
   :wm-ignore true
-  :monitor 1
+  :monitor 0
   :geometry (geometry
   :width "@bar_music_width@"
   :height "@bar_height@"
   :x "${@out_gap@ + @bar_wm_width@ + @in_gap@}"
-  :y "@bar_y@"
+  :y "@bar_y_main@"
               )
   (eventbox
     (box 

@@ -103,7 +103,7 @@ in {
                 pseudotile = true;
                 preserve_split = true;
                 force_split = 2;
-                special_scale_factor = 0.9;
+                special_scale_factor = 0.95;
             };
             misc = {
                 enable_swallow = true;

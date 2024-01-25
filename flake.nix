@@ -30,8 +30,11 @@
 	};
 
 	outputs = { self, nixpkgs, home-manager, ... } @ inputs: let
+        mkLib = nixpkgs:
+            nixpkgs.lib.extend
+            (self: super: {mine = import ./lib {lib = self;};});
+        lib = mkLib inputs.nixpkgs;
         commonNixosModules = [
-            inputs.nur.nixosModules.nur
             {
                 nixpkgs.overlays = [ 
                     (import ./pkgs).overlay
@@ -41,6 +44,7 @@
                     })
                 ];
             }
+            inputs.nur.nixosModules.nur
             inputs.stylix.nixosModules.stylix
             inputs.sops-nix.nixosModules.sops
             inputs.hosts.nixosModule
@@ -63,7 +67,7 @@
 		nixosConfigurations = {
 			haskell_slay_slay = nixpkgs.lib.nixosSystem {
 				system = "x86_64-linux";
-				specialArgs = { inherit inputs; };
+				specialArgs = { inherit inputs; inherit lib; };
 				modules = [
 					./haskell_slay_slay/configuration.nix
                     {home-manager.sharedModules = [
@@ -73,7 +77,7 @@
 			};
 			linux-amd = nixpkgs.lib.nixosSystem {
 				system = "x86_64-linux";
-				specialArgs = { inherit inputs; };
+				specialArgs = { inherit inputs; inherit lib; };
 				modules = [
 					./linux-amd/configuration.nix
                     {home-manager.sharedModules = [

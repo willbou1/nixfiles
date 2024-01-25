@@ -2,10 +2,13 @@
 with builtins;
 {
     # default to aptx_ll for my bluetooth headphones
-    home.file.".local/state/wireplumber/default-profile".text = ''
-        [default-profile]
-        bluez_card.00_1B_66_C0_52_BD=a2dp-sink-aptx_ll
-    '';
+    home.file.".local/state/wireplumber/default-profile" = {
+        force = true;
+        text = ''
+            [default-profile]
+            bluez_card.00_1B_66_C0_52_BD=a2dp-sink-aptx_ll
+        '';
+    };
 
     xdg.configFile."easyeffects/output/mono.json".text = toJSON {
         output = {

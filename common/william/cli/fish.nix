@@ -19,6 +19,8 @@
             "sc" = "sudo systemctl";
             "uc" = "systemctl --user";
             "nd" = "nix develop --command fish";
+            "w" = "curl -s wttr.in | less -RS";
+            "ns" = "nix-shell --run fish";
         };
         functions = {
 #fastfetch | lolcat -a -s 1000 -d 8

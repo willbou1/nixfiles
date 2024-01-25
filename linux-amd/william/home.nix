@@ -3,7 +3,6 @@ with lib;
 {
     imports = [
         ./theme.nix
-        ./ime.nix
         ./wayland
         ./mpv.nix
         ./xorg.nix
@@ -13,5 +12,11 @@ with lib;
         gapSize = 20;
         borderSize = 5;
     };
+
+    # little adjustments
     programs.qutebrowser.settings.zoom.default = mkForce "175%";
+    services.dunst.settings.global = {
+        monitor = mkForce 1;
+        origin = mkForce "top-right";
+    };
 }

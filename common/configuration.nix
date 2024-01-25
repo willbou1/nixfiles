@@ -13,7 +13,7 @@
         ./boot.nix
         ./deluge.nix
 		inputs.impermanence.nixosModules.impermanence
-		];
+    ];
 
     stylix = {
         image = ../resources/wallpapers/space.jpg;
@@ -93,7 +93,7 @@
 			"vs" = "virsh";
 			"vpn" = "expressvpn";
 			"vim" = "nvim";
-			"se" = "sudoedit";
+			"se" = "command sudo -E -s nvim";
 			"s" = ''sudo SSH_AUTH_SOCK="$SSH_AUTH_SOCK" '';
             "nu" = "sudo nix flake update";
 		};
@@ -110,6 +110,7 @@
 		fuse.userAllowOther = true;
 		neovim = {
 			enable = true;
+			package = pkgs.neovim-nightly;
 			defaultEditor = true;
 			viAlias = true;
 			vimAlias = true;

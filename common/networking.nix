@@ -146,6 +146,12 @@ ${config.sops.placeholder."expressvpn/password"}
             # allowedTCPPorts = [ ... ];
             # allowedUDPPorts = [ ... ];
         };
+
+        #hostnames of all the computers I use on my LANs
+        extraHosts = ''
+            10.0.0.160 linux-amd
+            10.0.0.161 haskell_slay_slay
+        '';
 	};
 	services = {
 		expressvpn.enable = true;

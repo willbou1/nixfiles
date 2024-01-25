@@ -19,6 +19,14 @@ with config.lib.stylix.colors.withHashtag;
             };
         };
     };
+
+    # Fonts
+    fonts.fontconfig.enable = true;
+    home.packages = with pkgs; [
+        baekmuk-ttf
+        nerdfonts
+    ];
+
     home.pointerCursor = 
     let 
       getFrom = url: hash: name: {

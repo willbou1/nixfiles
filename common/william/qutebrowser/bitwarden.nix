@@ -16,12 +16,18 @@
     '';
 in {
     home.packages = with pkgs; [
+        bitwarden
         bitwarden-cli
         keyutils
     ];
-    home.persistence."/persist/home/william".files = [
-        ".config/Bitwarden CLI/data.json"
-    ];
+    home.persistence."/persist/home/william" = {
+        directories = [
+            ".config/Bitwarden"
+        ];
+        files = [
+            ".config/Bitwarden CLI/data.json"
+        ];
+    };
     # Fix a bug with keyutils
     home.activation.keyutils = "${pkgs.keyutils}/bin/keyctl link @u @s";
 

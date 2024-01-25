@@ -1,15 +1,24 @@
 { lib, inputs, config, pkgs, ... }:
 
 {
+    
     sops = {
         defaultSopsFile = ../secrets.yaml;
         age.sshKeyPaths = [ "/persist/etc/ssh/ssh_host_ed25519_key" ];
         gnupg.sshKeyPaths = [ "/persist/etc/ssh/ssh_host_rsa_key" ];
     };
 
-    environment.persistence."/persist".directories = [
-        "/etc/ssh"
-    ];
+    system.activationScripts.sops.text = ''
+        mkdir -p /root/.config/sops/age
+        ${pkgs.ssh-to-age}/bin/ssh-to-age -private-key -i /persist/etc/ssh/ssh_host_ed25519_key > /root/.config/sops/age/keys.txt
+    '';
+
+    environment = {
+        persistence."/persist".directories = [
+            "/etc/ssh"
+        ];
+        systemPackages = [ pkgs.sops ];
+    };
 
     programs = {
         gnupg.agent = {

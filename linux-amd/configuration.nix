@@ -6,6 +6,7 @@
 		./networking.nix
 		./video.nix
         ./virtualisation
+        ./minecraft.nix
 	];
     environment.shellAliases = {
         "nr" = "sudo nixos-rebuild --flake /etc/nixos#linux-amd switch";

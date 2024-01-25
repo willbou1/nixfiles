@@ -8,7 +8,7 @@
         ./fish.nix
         ./starship.nix
         ./mail.nix
-        ./tmux.nix
+
     ];
     home.persistence."/persist/home/william".directories = [
         ".local/share/zoxide"
@@ -44,6 +44,7 @@
 
     home.packages = with pkgs; [
         yt-dlp
+        qpdf
         p7zip
         ncpamixer
         fastfetch

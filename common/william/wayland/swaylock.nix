@@ -9,6 +9,11 @@ in {
                 timeout = 600;
                 command = "${swaylock} -F";
             }
+            {
+                timeout = 700;
+                command = "${pkgs.hyprland}/bin/hyprctl dispatch dpms off";
+                resumeCommand = "${pkgs.hyprland}/bin/hyprctl dispatch dpms on";
+            }
         ];
         events = [
             {

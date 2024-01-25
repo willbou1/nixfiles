@@ -16,6 +16,7 @@ with lib;
         ./audio.nix
         ./ime.nix
         ./wayland
+        ./minecraft.nix
     ];
     options.home = {
         terminal = mkOption {
@@ -64,13 +65,8 @@ with lib;
             swww
             dconf
             helvum
-
-            # Fonts
-            baekmuk-ttf
-            nerdfonts
+            steam
         ];
-
-        fonts.fontconfig.enable = true;
 
         home.stateVersion = "23.05";
 

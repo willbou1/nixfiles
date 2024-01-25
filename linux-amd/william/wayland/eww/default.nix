@@ -7,7 +7,8 @@ let
         "@border@" = toString config.home.borderSize;
         "@out_gap@" = toString (config.home.gapSize * 1.5);
         "@in_gap@" = toString config.home.gapSize;
-        "@bar_y@" = toString (config.home.gapSize / 2);
+        "@bar_y_secondary@" = toString (config.home.gapSize / 2);
+        "@bar_y_main@" = toString (1440 - config.home.gapSize / 2 - config.home.ewwHeight);
         "@bar_height@" = toString config.home.ewwHeight;
         "@width@" = "3440";
         "@height@" = "1440";
