@@ -2,6 +2,8 @@
 with lib;
 {
     imports = [
+        ./element.nix
+        ./nix.nix
         ./mpv.nix
         ./theme.nix
         ./spotify.nix
@@ -44,7 +46,6 @@ with lib;
                 ".gnupg"
                 ".ssh"
                 ".mozilla/firefox"
-                ".config/Element"
             ];
             files = [
                 ".config/deluge/hostlist.conf"
@@ -58,7 +59,6 @@ with lib;
         home.packages = with pkgs; [
             home-manager
             libreoffice-fresh
-            element-desktop
             gimp
             playerctl
             hyprpaper
@@ -66,6 +66,7 @@ with lib;
             dconf
             helvum
             steam
+            wally-cli
         ];
 
         home.stateVersion = "23.05";

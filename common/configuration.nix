@@ -6,6 +6,7 @@
         ./mouse.nix
         ./security.nix
         #./specialisations
+        ./udev.nix
 		./networking.nix
 		./pipewire.nix
 		./users.nix
@@ -54,6 +55,7 @@
 			miniupnpc
             acpi
             exfat
+            wget
 		];
 		persistence."/persist" = {
 			hideMounts = true;
@@ -157,6 +159,7 @@
            extraPortals = [
                pkgs.xdg-desktop-portal
                pkgs.xdg-desktop-portal-hyprland
+               pkgs.xdg-desktop-portal-gtk
            ];
            config.common.default = "*";
         };
