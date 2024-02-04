@@ -1,15 +1,12 @@
-{ pkgs, ... }:
-
+{ pkgs, lib, ... }:
+with lib;
 {
-	imports = [
-		./boot.nix
-		./networking.nix
-		./video.nix
-        ./virtualisation
-        ./minecraft.nix
-	];
+    imports = mine.autoInclude ./. [
+        ./william
+    ];
+
     environment.shellAliases = {
-        "nr" = "sudo nixos-rebuild --flake /etc/nixos#linux-amd switch";
+        "nr" = "sudo nixos-rebuild --show-trace --flake /etc/nixos#linux-amd switch";
     };
     programs.i3lock = {
       enable = true;  

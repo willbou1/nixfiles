@@ -1,18 +1,11 @@
 { lib, inputs, config, pkgs, ... }:
-
+with lib;
 {
-	imports =
-		[ 
-        ./mouse.nix
-        ./security.nix
-        #./specialisations
-        ./udev.nix
-		./networking.nix
-		./pipewire.nix
-		./users.nix
-        ./virtualisation
-        ./boot.nix
-        ./deluge.nix
+    imports = (mine.autoInclude ./. [
+        ./specialisations
+        ./william
+        ./networking-alt.nix
+    ]) ++ [
 		inputs.impermanence.nixosModules.impermanence
     ];
 
@@ -98,6 +91,8 @@
 			"se" = "command sudo -E -s nvim";
 			"s" = ''sudo SSH_AUTH_SOCK="$SSH_AUTH_SOCK" '';
             "nu" = "sudo nix flake update";
+            "sc" = "sudo systemctl";
+            "jc" = "sudo journalctl --system";
 		};
 		sessionVariables.NIXOS_OZONE_WL = "1";
 	};

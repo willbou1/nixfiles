@@ -1,17 +1,10 @@
 { pkgs, lib, config, ... }:
+with lib;
 with builtins;
 let
     monitors = concatStringsSep " " (map (m: "--output ${m.xrandrName} --mode ${toString m.width}x${toString m.height} --rate ${toString m.rate} --scale ${toString (1.0 / m.hScale)}x${toString (1.0 / m.vScale)} --pos ${toString m.x}x${toString m.y}") config.home.monitors);
 in {
-    imports = [
-        ./picom.nix
-        ./i3lock.nix
-        ./herbstluftwm.nix
-        ./glava
-        ./polybar
-        ./rofi
-        ./dwm
-    ];
+    imports = mine.autoInclude ./. [];
 
     home.file.".xinitrc".source = pkgs.writeShellScript ".xinitrc" ''
         ${pkgs.dbus}/bin/dbus-update-activation-environment --systemd DISPLAY WAYLAND_DISPLAY HYPRLAND_INSTANCE_SIGNATURE XDG_CURRENT_DESKTOP XAUTHORITY XDG_SESSION_ID

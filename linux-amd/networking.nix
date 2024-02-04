@@ -1,8 +1,14 @@
 { inputs, lib, config, pkgs, ... }: 
 
 {
-	networking.networkmanager.wifiAddress = "10.0.0.160/24,10.0.0.1";
-	networking.hostName = "linux-amd";
+    networking = {
+        hostName = "linux-amd";
+        ip = "10.0.0.160";
+        subnetLength = 24;
+        subnet = "10.0.0.0";
+        gateway = "10.0.0.1";
+        mainInterface = "wlp6s0";
+    };
 	environment = {
         persistence."/persist" = {
             directories = [

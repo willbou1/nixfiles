@@ -1,10 +1,7 @@
-{ pkgs, ... }:
-
+{ pkgs, lib, ... }:
+with lib;
 {
-    imports = [
-        ./hyprland.nix
-        ./eww
-    ];
+    imports = mine.autoInclude ./. [];
 
     home.packages = with pkgs; [
         eww-wayland

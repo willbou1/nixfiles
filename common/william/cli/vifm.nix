@@ -8,7 +8,6 @@
     programs.vifm = {
         enable = true;
         vifmimg.enable = true;
-        #vifmimg.kittyIntegration = true;
         package = pkgs.vifm-full;
         config = {
             set = [
@@ -62,7 +61,9 @@
                 "S :sort<cr>"
                 "s :shell<cr>"
             ];
-            view = [ "" ];
         };
+        extraConfig = ''
+            view
+        '';
     };
 }

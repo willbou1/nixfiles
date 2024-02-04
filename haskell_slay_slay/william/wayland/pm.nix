@@ -10,6 +10,11 @@ in {
                 command = "${brillo} -O; ${brillo} -u 150000 -S 0";
                 resumeCommand = "${brillo} -u 150000 -I";
             }
+            {
+                timeout = 700;
+                command = "${pkgs.hyprland}/bin/hyprctl dispatch dpms off";
+                resumeCommand = "${pkgs.hyprland}/bin/hyprctl dispatch dpms on";
+            }
         ];
     };
 }

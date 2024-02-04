@@ -1,15 +1,10 @@
-{ pkgs, ... }:
-
+{ pkgs, lib, ... }:
+with lib;
 {
-    imports = [
-        ./vifm.nix
-        ./nvim.nix
-        ./lsd.nix
-        ./fish.nix
-        ./starship.nix
-        ./mail.nix
-
+    imports = mine.autoInclude ./. [
+        ./fastfetch
     ];
+
     home.persistence."/persist/home/william".directories = [
         ".local/share/zoxide"
     ];

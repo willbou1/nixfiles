@@ -1,9 +1,5 @@
+{ lib, ... }:
+with lib;
 {
-    imports = [
-        ./pm.nix
-        ./kanshi.nix
-        ./pm.nix
-        ./waybar.nix
-        ./hyprland.nix
-    ];
+    imports = mine.autoInclude ./. [];
 }

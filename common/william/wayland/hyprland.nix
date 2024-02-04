@@ -122,7 +122,7 @@ in {
             ];
             exec-once = [
                 "SVPManager"
-                "element-desktop"
+                "element-desktop-nightly"
                 "spotify"
                 "qutebrowser"
                 "${wallpaper}"
@@ -143,8 +143,8 @@ in {
 
                 "opacity 0.85,deluge"
 
-                "opacity 0.85,title:Spotify"
-                "workspace 6 silent,title:Spotify"
+                "opacity 0.85,title:(.*)(Spotify)(.*),title:(.*)(Spotify)(.*)"
+                "workspace 6 silent,title:(.*)(Spotify)(.*),title:(.*)(Spotify)(.*)"
 
                 "float,SVPManager"
                 "workspace 9 silent,SVPManager"
@@ -156,6 +156,8 @@ in {
                 "$mod,Return,exec,MESA_LOADER_DRIVER_OVERRIDE=iris __EGL_VENDOR_LIBRARY_FILENAMES=${pkgs.mesa_drivers}/share/glvnd/egl_vendor.d/50_mesa.json kitty"
                 "$mod,N,exec,MESA_LOADER_DRIVER_OVERRIDE=iris __EGL_VENDOR_LIBRARY_FILENAMES=${pkgs.mesa_drivers}/share/glvnd/egl_vendor.d/50_mesa.json kitty ncpamixer"
                 "$mod,D,exec,wofi --show drun"
+                "$mod,E,exec,element-desktop-nightly"
+                "$mod SHIFT,E,exec,element-desktop"
                 "$mod,W,exec,looking-glass-client -f /dev/shm/looking-glass1"
                 "$mod,C,exec,${hyprcap}/bin/hyprcap"
 

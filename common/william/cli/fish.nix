@@ -16,11 +16,11 @@
             "hlc" = "hyprctl";
             "grep" = "rg";
             "clear" = "command clear; fish_greeting";
-            "sc" = "sudo systemctl";
             "uc" = "systemctl --user";
             "nd" = "nix develop --command fish";
             "w" = "curl -s wttr.in | less -RS";
             "ns" = "nix-shell --run fish";
+            "ujc" = "journalctl --user";
         };
         functions = {
 #fastfetch | lolcat -a -s 1000 -d 8
@@ -38,6 +38,11 @@
                 '';
             killall = ''
                 pkill ".*$argv.*"
+            '';
+            bt = ''
+                for i in (seq $argv[1])
+                    cd ..
+                end
             '';
         };
         interactiveShellInit = ''

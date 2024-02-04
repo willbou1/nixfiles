@@ -1,25 +1,11 @@
 { lib, config, pkgs, inputs, ... }:
 with lib;
 {
-    imports = [
-        ./element.nix
-        ./nix.nix
-        ./mpv.nix
-        ./theme.nix
-        ./spotify.nix
-        ./cli
-        ./xorg
-        ./xdg.nix
-        ./virtualisation.nix
-        ./zathura.nix
-        ./qutebrowser
-        ./dunst.nix
-        ./kitty.nix
-        ./audio.nix
-        ./ime.nix
-        ./wayland
-        ./minecraft.nix
+    #new version
+    imports = mine.autoInclude ./. [
+        ./deprecated
     ];
+
     options.home = {
         terminal = mkOption {
             type = types.str;

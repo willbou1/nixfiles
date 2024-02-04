@@ -15,6 +15,7 @@
 		};
 		impermanence.url = github:nix-community/impermanence;
 		hosts.url = github:StevenBlack/hosts;
+        notnft.url = github:chayleaf/notnft;
 		spicetify-nix.url = github:the-argus/spicetify-nix;
 		neovim-nightly-overlay.url = github:nix-community/neovim-nightly-overlay;
 
@@ -48,7 +49,8 @@
             inputs.stylix.nixosModules.stylix
             inputs.sops-nix.nixosModules.sops
             inputs.hosts.nixosModule
-            ./common/configuration.nix
+            #inputs.notnft.nixosModules.default
+            ./common
             home-manager.nixosModules.home-manager
             {
                 home-manager.extraSpecialArgs = {inherit inputs;};
@@ -60,7 +62,7 @@
                     inputs.nixvim.homeManagerModules.nixvim
                     inputs.nur.hmModules.nur
                 ];
-                home-manager.users.william = import ./common/william/home.nix;
+                home-manager.users.william = import ./common/william;
             }
         ];
     in rec {
@@ -69,9 +71,9 @@
 				system = "x86_64-linux";
 				specialArgs = { inherit inputs; inherit lib; };
 				modules = [
-					./haskell_slay_slay/configuration.nix
+					./haskell_slay_slay
                     {home-manager.sharedModules = [
-                        ./haskell_slay_slay/william/home.nix
+                        ./haskell_slay_slay/william
                     ];}
 				] ++ commonNixosModules;
 			};
@@ -79,9 +81,9 @@
 				system = "x86_64-linux";
 				specialArgs = { inherit inputs; inherit lib; };
 				modules = [
-					./linux-amd/configuration.nix
+					./linux-amd
                     {home-manager.sharedModules = [
-                        ./linux-amd/william/home.nix
+                        ./linux-amd/william
                     ];}
 				] ++ commonNixosModules;
 			};

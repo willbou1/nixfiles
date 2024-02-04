@@ -1,7 +1,5 @@
+{ lib, ... }:
+with lib;
 {
-    imports = [
-        ./swaylock.nix
-        ./wofi.nix
-        ./hyprland.nix
-    ];
+    imports = mine.autoInclude ./. [];
 }

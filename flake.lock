@@ -702,6 +702,19 @@
     },
     "nixpkgs_5": {
       "locked": {
+        "lastModified": 1686412476,
+        "narHash": "sha256-inl9SVk6o5h75XKC79qrDCAobTD1Jxh6kVYTZKHzewA=",
+        "path": "/nix/store/5s6rf5223pjb0bhp6v7i1x0w3y1k56fq-source",
+        "rev": "21951114383770f96ae528d0ae68824557768e81",
+        "type": "path"
+      },
+      "original": {
+        "id": "nixpkgs",
+        "type": "indirect"
+      }
+    },
+    "nixpkgs_6": {
+      "locked": {
         "lastModified": 1704842529,
         "narHash": "sha256-OTeQA+F8d/Evad33JMfuXC89VMetQbsU4qcaePchGr4=",
         "owner": "NixOS",
@@ -716,7 +729,7 @@
         "type": "github"
       }
     },
-    "nixpkgs_6": {
+    "nixpkgs_7": {
       "locked": {
         "lastModified": 1686020360,
         "narHash": "sha256-Wee7lIlZ6DIZHHLiNxU5KdYZQl0iprENXa/czzI6Cj4=",
@@ -732,7 +745,7 @@
         "type": "github"
       }
     },
-    "nixpkgs_7": {
+    "nixpkgs_8": {
       "locked": {
         "lastModified": 1700856099,
         "narHash": "sha256-RnEA7iJ36Ay9jI0WwP+/y4zjEhmeN6Cjs9VOFBH7eVQ=",
@@ -769,6 +782,24 @@
       "original": {
         "owner": "nix-community",
         "repo": "nixvim",
+        "type": "github"
+      }
+    },
+    "notnft": {
+      "inputs": {
+        "nixpkgs": "nixpkgs_5"
+      },
+      "locked": {
+        "lastModified": 1700483422,
+        "narHash": "sha256-ni6niOmObnG9EVGtaeT1I7ULz5+EkEewGTJVeFuWNuc=",
+        "owner": "chayleaf",
+        "repo": "notnft",
+        "rev": "b3e6a023a13a81d70a6a30997e2f1aaf36feafb3",
+        "type": "github"
+      },
+      "original": {
+        "owner": "chayleaf",
+        "repo": "notnft",
         "type": "github"
       }
     },
@@ -825,6 +856,7 @@
         "neovim-nightly-overlay": "neovim-nightly-overlay",
         "nixpkgs": "nixpkgs_4",
         "nixvim": "nixvim",
+        "notnft": "notnft",
         "nur": "nur",
         "sops-nix": "sops-nix",
         "spicetify-nix": "spicetify-nix",
@@ -834,7 +866,7 @@
     },
     "sops-nix": {
       "inputs": {
-        "nixpkgs": "nixpkgs_5",
+        "nixpkgs": "nixpkgs_6",
         "nixpkgs-stable": "nixpkgs-stable"
       },
       "locked": {
@@ -854,7 +886,7 @@
     "spicetify-nix": {
       "inputs": {
         "flake-utils": "flake-utils_3",
-        "nixpkgs": "nixpkgs_6"
+        "nixpkgs": "nixpkgs_7"
       },
       "locked": {
         "lastModified": 1704167711,
@@ -899,7 +931,7 @@
         "base16-vim": "base16-vim",
         "flake-compat": "flake-compat_3",
         "home-manager": "home-manager_3",
-        "nixpkgs": "nixpkgs_7"
+        "nixpkgs": "nixpkgs_8"
       },
       "locked": {
         "lastModified": 1705668784,
