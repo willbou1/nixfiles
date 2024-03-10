@@ -168,8 +168,10 @@ with lib;
     services.udisks2.enable = true;
     services.xserver = {
         enable = true;
-        layout = "ca";
-        xkbVariant = "multix";
+        xkb = {
+            layout = "ca";
+            variant = "multix";
+        };
         displayManager.startx.enable = true;
     };
 }

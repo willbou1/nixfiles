@@ -32,9 +32,9 @@ in {
                     enable = true;
                     packages = [(pkgs.OVMF.override {
                             secureBoot = true;
-                            csmSupport = false;
-                            httpSupport = true;
                             tpmSupport = true;
+                            httpSupport = false;
+                            tlsSupport = false;
                             }).fd];
                 };
                 swtpm.enable = true;

@@ -66,13 +66,13 @@ in {
                 gaps_out = ceil (config.home.gapSize * 1.5);
                 sensitivity = 1;
                 border_size = config.home.borderSize;
-                "col.inactive_border" = lib.mkForce "0x${hexOpacity + base03}";
-                "col.active_border" = lib.mkForce "0x${hexOpacity + base0A}";
+                "col.inactive_border" = mkForce "0x${hexOpacity + base03}";
+                "col.active_border" = mkForce "0x${hexOpacity + base0A}";
             };
             group = {
-                "col.border_inactive" = lib.mkForce "0x${hexOpacity + base06}";
-                "col.border_active" = lib.mkForce "0x${hexOpacity + base0D}";
-                "col.border_locked_active" = lib.mkForce "0x${hexOpacity + base06}";
+                "col.border_inactive" = mkForce "0x${hexOpacity + base06}";
+                "col.border_active" = mkForce "0x${hexOpacity + base0D}";
+                "col.border_locked_active" = mkForce "0x${hexOpacity + base06}";
             };
             decoration = {
                 rounding = 20;
@@ -110,7 +110,7 @@ in {
                 swallow_regex = "^kitty$";
                 disable_hyprland_logo = true;
                 allow_session_lock_restore = true;
-                background_color = lib.mkForce base00;
+                background_color = mkForce "0x${base00}";
                 vfr = false;
                 mouse_move_enables_dpms = true;
                 key_press_enables_dpms = true;
@@ -143,8 +143,8 @@ in {
 
                 "opacity 0.85,deluge"
 
-                "opacity 0.85,title:(.*)(Spotify)(.*),title:(.*)(Spotify)(.*)"
-                "workspace 6 silent,title:(.*)(Spotify)(.*),title:(.*)(Spotify)(.*)"
+                "opacity 0.85,title:(.*)(Spotify)(.*)"
+                "workspace 6 silent,title:(.*)(Spotify)(.*)"
 
                 "float,SVPManager"
                 "workspace 9 silent,SVPManager"

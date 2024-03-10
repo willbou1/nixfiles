@@ -82,6 +82,7 @@ in {
                 # allowedUDPPorts = [ ... ];
                 extraPackages = with pkgs; [
                     iproute2
+                    ipset
                 ];
                 extraCommands = ''
                     # Clear my chains too
@@ -94,18 +95,18 @@ in {
                     iptables -I nixos-fw -p udp -m set --match-set upnp dst,dst -j ACCEPT
 
                     # Prevent server reply packets from going through the VPN
-                    ip rule flush table 128
-                    ip route flush table 128
-                    ip rule add from ${networking.ip} table 128
-                    ip route add table 128 to ${networking.subnet}/${toString networking.subnetLength} dev ${networking.mainInterface}
-                    ip route add table 128 default via ${networking.gateway}
+                    ip rule flush table 128 || true
+                    ip route flush table 128 || true
+                    ip rule add from ${networking.ip} table 128 || true
+                    ip route add table 128 to ${networking.subnet}/${toString networking.subnetLength} dev ${networking.mainInterface} || true
+                    ip route add table 128 default via ${networking.gateway} || true
 
                     # Prevent UPNP broadcast packets from going through the VPN
-                    ip rule flush table 127
-                    ip route flush table 127
-                    ip rule add to 239.255.255.250/32 dport 1900 table 127
-                    ip route add table 127 to ${networking.subnet}/${toString networking.subnetLength} dev ${networking.mainInterface}
-                    ip route add table 127 default via ${networking.gateway}
+                    ip rule flush table 127 || true
+                    ip route flush table 127 || true
+                    ip rule add to 239.255.255.250/32 dport 1900 table 127 || true
+                    ip route add table 127 to ${networking.subnet}/${toString networking.subnetLength} dev ${networking.mainInterface} || true
+                    ip route add table 127 default via ${networking.gateway} || true
                 '';
             };
 
@@ -149,7 +150,7 @@ in {
                 wantedBy = [ "timers.target" ];
                 timerConfig = {
                     OnBootSec = "5m";
-                    OnUnitActiveSec = "15m";
+                    OnUnitActiveSec = "12h";
                     Unit = "upnpc.service";
                 };
             };

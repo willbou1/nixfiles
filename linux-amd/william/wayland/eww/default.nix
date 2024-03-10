@@ -69,11 +69,14 @@ in {
     };
     config = {
         home.ewwHeight = 65;
+        # TODO find better way to provide packages
         home.packages = with pkgs; [
-            eww-wayland
+            eww
             jq
             ddcutil
             python3
+            sysstat
+            lm_sensors
         ];
         
         xdg.configFile = (listToAttrs (map (n: {

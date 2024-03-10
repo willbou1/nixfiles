@@ -23,19 +23,15 @@
             "ujc" = "journalctl --user";
         };
         functions = {
-#fastfetch | lolcat -a -s 1000 -d 8
-            fish_greeting = ''
-                fastfetch
-                '';
             cp = ''
                 command cp $argv & progress -mp $last_pid
-                '';
+            '';
             mv = ''
                 command mv $argv & progress -mp $last_pid
-                '';
+            '';
             dd = ''
                 command dd $argv & progress -mp $last_pid
-                '';
+            '';
             killall = ''
                 pkill ".*$argv.*"
             '';
@@ -43,6 +39,9 @@
                 for i in (seq $argv[1])
                     cd ..
                 end
+            '';
+            rb = ''
+                string repeat -n $argv[1] '../'
             '';
         };
         interactiveShellInit = ''

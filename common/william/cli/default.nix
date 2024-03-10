@@ -1,9 +1,7 @@
 { pkgs, lib, ... }:
 with lib;
 {
-    imports = mine.autoInclude ./. [
-        ./fastfetch
-    ];
+    imports = mine.autoInclude ./. [];
 
     home.persistence."/persist/home/william".directories = [
         ".local/share/zoxide"
@@ -19,10 +17,7 @@ with lib;
             userName = "William Boulanger";
             userEmail = "willbou2@gmail.com";
         };
-        btop = {
-            enable = true;
-            settings.color_theme = "TTY";
-        };
+        btop.enable = true;
         bat = {
             enable = true;
             config = {
@@ -42,7 +37,6 @@ with lib;
         qpdf
         p7zip
         ncpamixer
-        fastfetch
         lolcat
         progress
         fd
@@ -55,6 +49,4 @@ with lib;
         aspellDicts.en
         aspellDicts.fr
     ];
-
-    xdg.configFile."fastfetch".source = ./fastfetch;
 }

@@ -21,7 +21,7 @@ with config.lib.stylix.colors; {
 			fullAlbumDate
 			wikify
 			history
-			genre
+			#genre
 		];
 
         colorScheme = "custom";

@@ -5,39 +5,7 @@ in with config.lib.stylix.colors.withHashtag; {
         package = pkgs.neovim-nightly;
         plugins = {
             #rainbow-delimiters.enable = true;
-            lualine = {
-                enable = true;
-                theme = {
-                    normal = {
-                        a.fg = base00;
-                        a.bg = base04;
-                        b.fg = base07;
-                        b.bg = base01;
-                        c.fg = base08;
-                        c.bg = base00;
-                    };
-                    insert.a = {
-                        fg = base00;
-                        bg = base08;
-                    };
-                    visual.a = {
-                        fg = base00;
-                        bg = base02;
-                    };
-                    replace.a = {
-                        fg = base00;
-                        bg = base08;
-                    };
-                    inactive = {
-                        a.fg = base08;
-                        a.bg = base00;
-                        b.fg = base08;
-                        b.bg = base00;
-                        c.fg = base00;
-                        c.bg = base00;
-                    };
-                };
-            };
+            lualine.enable = true;
             barbar = {
                 enable = true;
                 autoHide = true;
@@ -86,6 +54,11 @@ in with config.lib.stylix.colors.withHashtag; {
                     cmake.enable = true;
                     bashls.enable = true;
                     ccls.enable = true;
+                    rust-analyzer = {
+                        enable = true;
+                        installCargo = false;
+                        installRustc = false;
+                    };
                     cssls.enable = true;
                     omnisharp.enable = true;
                 };
