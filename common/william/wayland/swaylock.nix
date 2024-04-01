@@ -4,20 +4,10 @@ in {
     services.swayidle = {
         enable = true;
         systemdTarget = "hyprland-session.target";
-        timeouts = [
-            {
-                timeout = 600;
-                command = "${swaylock} -F";
-            }
-        ];
         events = [
             {
                 event = "before-sleep";
                 command = "${pkgs.playerctl}/bin/playerctl pause";
-            }
-            {
-                event = "before-sleep";
-                command = "${swaylock} -F";
             }
         ];
     };
@@ -26,7 +16,7 @@ in {
         enable = true;
         package = pkgs.swaylock-effects;
         settings = {
-            daemonize = true;
+            daemonize = false;
             screenshots = true;
             clock = true;
             indicator = true;

@@ -18,9 +18,11 @@ in {
         ];
         exec-once = [
             "~/.config/eww/launch.sh"
+            "sleep 2; ${pkgs.swww}/bin/swww img ${config.stylix.image}"
         ];
         bind = [
             "$mod SHIFT,W,exec,looking-glass-client -f /dev/shm/looking-glass2"
+            "$mod,Q,exec,${config.programs.swaylock.package}"
         ];
     };
 }

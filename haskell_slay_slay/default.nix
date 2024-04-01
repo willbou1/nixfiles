@@ -14,6 +14,7 @@ with lib;
         subnet = "10.0.0.0";
         subnetLength = 24;
         gateway = "10.0.0.1";
+        mainInterface = "wlp0s20f3";
     };
     environment.shellAliases = {
         "nr" = "sudo nixos-rebuild --flake /etc/nixos#haskell_slay_slay switch";

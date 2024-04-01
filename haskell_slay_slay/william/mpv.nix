@@ -1,8 +1,9 @@
 { pkgs, ... }:
 
 {
-    programs.mpv = {
-        config.glsl-shaders = "~/.config/mpv/shaders/film/FSRCNNX_x2_8-0-4-1.glsl:~/.config/mpv/shaders/film/SSimDownscaler.glsl:~/.config/mpv/shaders/film/KrigBilateral.glsl";
+    programs.mpv.config = {
+        panscan = 1.0;
+       glsl-shaders = "~/.config/mpv/shaders/film/FSRCNNX_x2_8-0-4-1.glsl:~/.config/mpv/shaders/film/SSimDownscaler.glsl:~/.config/mpv/shaders/film/KrigBilateral.glsl";
     };
     xdg.configFile = {
         "mpv/shaders/film".source = pkgs.fetchFromGitHub {

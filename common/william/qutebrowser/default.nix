@@ -112,18 +112,27 @@ in {
             c.tabs.padding = {'top':5,'bottom':5,'left':10,'right':10};
         '';
     };
-#    home.file.".local/share/qutebrowser/greasemonkey/youtube-adblock.user.js".text = ''
-#// ==UserScript==
-#// @name         Youtube auto expand description
-#// @version      0.0.1
-#// @author       Adcott
-#// @match        *://*.youtube.com/*
-#// ==/UserScript==
-# 
-#document.addEventListener('load', () => {
-#	try { document.querySelector(".more-button").click() } catch {}
-#}, true);, 50)
-#    '';
+
+    # TODO: Remember to keep this up to date
+    home.file.".local/share/qutebrowser/greasemonkey/youtube-adblock.user.js".text = ''
+// ==UserScript==
+// @name Skip YouTube ads
+// @description Skips the ads in YouTube videos
+// @run-at document-start
+// @include *.youtube.com/*
+// ==/UserScript==
+
+document.addEventListener('load', () => {
+    const btn = document.querySelector('.videoAdUiSkipButton,.ytp-ad-skip-button-modern')
+    if (btn) {
+        btn.click()
+    }
+    const ad = [...document.querySelectorAll('.ad-showing')][0];
+    if (ad) {
+        document.querySelector('video').currentTime = 9999999999;
+    }
+}, true);
+    '';
     xdg.configFile."qutebrowser/stylesheets/youtube.css".text = ''
 .ytp-gradient-bottom{
    display:none !important

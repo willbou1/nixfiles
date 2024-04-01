@@ -117,6 +117,7 @@ with lib;
 
 	nix = {
 		package = pkgs.nixFlakes;
+        #allowed-users = [ "@wheel" ];
 		gc = {
 			automatic = true;
 			dates = "monthly";

@@ -39,8 +39,8 @@ with lib;
             ];
             allowOther = true;
         };
-        home.file.".home-manager".source =
-            config.lib.file.mkOutOfStoreSymlink "/etc/nixos/modules/william";
+        home.file."media".source =
+            config.lib.file.mkOutOfStoreSymlink "/run/media/william";
 
         home.packages = with pkgs; [
             home-manager

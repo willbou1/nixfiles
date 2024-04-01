@@ -37,6 +37,9 @@ in {
         directories = [
             launcherPath
         ];
+        files = [
+            ".hmcl.json"
+        ];
     };
 
     # accept licenses
@@ -60,12 +63,9 @@ in {
         mkdir -p ~/.local/share/hmcl
         ${pkgs.jq}/bin/jq ".[0] += $accountParams" ${baseAccountConfig} > ~/.local/share/hmcl/accounts.json
 
-        ln -s /persist/home/william/.hmcl.json ~/.hmcl.json
-        if [ ! -f ~/.hmcl.json ]; then 
-            cat ${baseConfig} > ~/.hmcl.json
-        else
-            ${pkgs.jq}/bin/jq -r -s '.[0] * .[1]' ~/.hmcl.json ${baseConfig} > ~/.hmcl.json
-        fi
+        [ -f ~/.hmcl.json ] || cat ${baseConfig} > ~/.hmcl.json
+        newConfig="$(${pkgs.jq}/bin/jq -r -s '.[0] * .[1]' ~/.hmcl.json ${baseConfig})"
+        echo "$newConfig" > ~/.hmcl.json
     '';
 
     home.packages = with pkgs; [

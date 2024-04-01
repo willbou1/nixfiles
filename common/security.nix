@@ -20,6 +20,7 @@
         systemPackages = [ pkgs.sops ];
     };
 
+
     programs = {
         gnupg.agent = {
             enable = true;
@@ -28,45 +29,48 @@
         };
     };
 
-    security.pam = {
-        services.swaylock.unixAuth = true;
-        loginLimits = [
-            {
-                domain = "*";
-                type = "soft";
-                item = "nproc";
-                value = "1000";
-            }
-            {
-                domain = "*";
-                type = "hard";
-                item = "nproc";
-                value = "2000";
-            }
-            {
-                domain = "william";
-                type = "soft";
-                item = "nproc";
-                value = "3000";
-            }
-            {
-                domain = "william";
-                type = "hard";
-                item = "nproc";
-                value = "4000";
-            }
-            {
-                domain = "william";
-                type = "soft";
-                item = "nofile";
-                value = "8000";
-            }
-            {
-                domain = "william";
-                type = "hard";
-                item = "nofile";
-                value = "10000";
-            }
-        ];
+    security = {
+        sudo.execWheelOnly = true;
+        pam = {
+            services.swaylock.unixAuth = true;
+            loginLimits = [
+                {
+                    domain = "*";
+                    type = "soft";
+                    item = "nproc";
+                    value = "1000";
+                }
+                {
+                    domain = "*";
+                    type = "hard";
+                    item = "nproc";
+                    value = "2000";
+                }
+                {
+                    domain = "william";
+                    type = "soft";
+                    item = "nproc";
+                    value = "3000";
+                }
+                {
+                    domain = "william";
+                    type = "hard";
+                    item = "nproc";
+                    value = "4000";
+                }
+                {
+                    domain = "william";
+                    type = "soft";
+                    item = "nofile";
+                    value = "8000";
+                }
+                {
+                    domain = "william";
+                    type = "hard";
+                    item = "nofile";
+                    value = "10000";
+                }
+            ];
+        };
     };
 }

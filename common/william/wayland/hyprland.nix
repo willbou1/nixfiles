@@ -22,8 +22,7 @@ let
         qutebrowser --target window 'https://korean.dict.naver.com/koendict/#/main'
         qutebrowser --target tab 'https://koreanhanja.app/'
     '');
-    wallpaper = pkgs.writeShellScript "wallpaper.sh" ''
-    '';
+    kitty = "MESA_LOADER_DRIVER_OVERRIDE=iris __EGL_VENDOR_LIBRARY_FILENAMES=${pkgs.mesa_drivers}/share/glvnd/egl_vendor.d/50_mesa.json kitty";
 in {
     home.packages = with pkgs; [
         qt5.qtwayland
@@ -125,8 +124,7 @@ in {
                 "element-desktop-nightly"
                 "spotify"
                 "qutebrowser"
-                "${wallpaper}"
-                "${pkgs.swww}/bin/swww init && sleep 2 && ${pkgs.swww}/bin/swww img ${config.stylix.image}"
+                "${pkgs.swww}/bin/swww init"
                 # Make sure to clean up after xorg session
                 "${pkgs.dbus}/bin/dbus-update-activation-environment --systemd XAUTHORITY XDG_SESSION_ID"
             ];
@@ -148,12 +146,14 @@ in {
 
                 "float,SVPManager"
                 "workspace 9 silent,SVPManager"
+
+                "bordercolor 0x${hexOpacity + base0E},title:private"
             ];
             bind = [
-                "$mod,Q,exec,${config.programs.swaylock.package}/bin/swaylock"
                 "$mod,B,exec,qutebrowser"
                 "$mod SHIFT,D,exec,${dic}/bin/dic"
-                "$mod,Return,exec,MESA_LOADER_DRIVER_OVERRIDE=iris __EGL_VENDOR_LIBRARY_FILENAMES=${pkgs.mesa_drivers}/share/glvnd/egl_vendor.d/50_mesa.json kitty"
+                "$mod,Return,exec,${kitty}"
+                "$mod SHIFT,Return,exec,${kitty} --title private fish --private -C 'set -x STARSHIP_CONFIG ~/.config/starship_private.toml'"
                 "$mod,N,exec,MESA_LOADER_DRIVER_OVERRIDE=iris __EGL_VENDOR_LIBRARY_FILENAMES=${pkgs.mesa_drivers}/share/glvnd/egl_vendor.d/50_mesa.json kitty ncpamixer"
                 "$mod,D,exec,wofi --show drun"
                 "$mod,E,exec,element-desktop-nightly"

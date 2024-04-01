@@ -34,6 +34,8 @@ in {
         package = mpv;
         config = {
             slang = "kor,ko,eng,en,enUS";
+            sid = "auto";
+            sub-visibility = false;
             sub-font-size = 75;
             sub-margin-y = 50;
             sub-back-color = "0.0/0.0/0.0/0.45";
@@ -72,6 +74,9 @@ in {
         };
         bindings = {
             "ALT+s" = "cycle secondary-sid";
+            "w" = "add panscan +0.1";
+            "W" = "add panscan -0.1";
+            "ALT+w" = "cycle_values panscan 0 1";
             "ALT+k" = "add sub-scale +0.1";
             "ALT+j" = "add sub-scale -0.1";
             "ALT+v" = "vf toggle vflip";
