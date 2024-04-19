@@ -37,7 +37,7 @@ in {
             }
             {
                 timeout = 600;
-                command = "${lock}";
+                command = "${lock} --grace 0";
             }
             {
                 timeout = 700;
@@ -47,16 +47,6 @@ in {
             {
                 timeout = 800;
                 command = "${systemctl} suspend";
-            }
-        ];
-        events = [
-            {
-                event = "before-sleep";
-                command = "${lock} --grace 0";
-            }
-            {
-                event = "after-resume";
-                command = "sleep 1; ${pkgs.hyprland}/bin/hyprctl dispatch dpms on";
             }
         ];
     };

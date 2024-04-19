@@ -146,6 +146,8 @@ in {
 
                 "float,SVPManager"
                 "workspace 9 silent,SVPManager"
+                
+                "opacity 0.75,udiskie"
 
                 "bordercolor 0x${hexOpacity + base0E},title:private"
             ];
