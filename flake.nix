@@ -4,7 +4,10 @@
 	inputs = {
 		nixpkgs.url = "nixpkgs/nixos-unstable";
 		stable.url = "github:NixOS/nixpkgs/nixos-23.05";
+
 		sops-nix.url = github:Mic92/sops-nix;
+		impermanence.url = github:nix-community/impermanence;
+
 		home-manager = {
 			url = github:nix-community/home-manager;
 			inputs.nixpkgs.follows = "nixpkgs";
@@ -13,7 +16,6 @@
 			url = github:nix-community/nixvim;
 			inputs.nixpkgs.follows = "nixpkgs";
 		};
-		impermanence.url = github:nix-community/impermanence;
 		hosts.url = github:StevenBlack/hosts;
         notnft.url = github:chayleaf/notnft;
 		spicetify-nix.url = github:the-argus/spicetify-nix;

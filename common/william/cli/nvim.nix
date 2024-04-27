@@ -16,7 +16,7 @@ in with config.lib.stylix.colors.withHashtag; {
             telescope = {
                 enable = true;
                 extensions = {
-                    file-browser.enable = true;
+                    file_browser.enable = true;
                     fzy-native.enable = true;
                 };
                 keymaps = {
@@ -31,20 +31,18 @@ in with config.lib.stylix.colors.withHashtag; {
                     cpptools.command = "${pkgs.vscode-extensions.ms-vscode.cpptools}/share/vscode/extensions/ms-vscode.cpptools/debugAdapters/bin/OpenDebugAD7";
                 };
             };
-            cmp = {
+            nvim-cmp = {
                 enable = true;
-                settings = {
-                    sources = [
-                        { name = "nvim_lsp"; }
-                        { name = "path"; }
-                        { name = "buffer"; }
-                        { name = "cmdline"; }
-                        { name = "vsnip"; }
-                    ];
-                    mappingPresets = [ "insert" ];
-                    mapping = {
-                        "<CR>" = "cmp.mapping.confirm({ select = false })";
-                    };
+                sources = [
+                { name = "nvim_lsp"; }
+                { name = "path"; }
+                { name = "buffer"; }
+                { name = "cmdline"; }
+                { name = "vsnip"; }
+                ];
+                mappingPresets = [ "insert" ];
+                mapping = {
+                    "<CR>" = "cmp.mapping.confirm({ select = false })";
                 };
             };
             lsp = {
@@ -76,7 +74,7 @@ in with config.lib.stylix.colors.withHashtag; {
             vim-tpipeline
             vim-gas
         ];
-        opts = {
+        options = {
             termguicolors = true;
             wildignore = "*.pyc,*_build/*,**/coverage/*,**/node_modules/*,**/android/*,**/ios/*,**/.git/*";
             number = true;

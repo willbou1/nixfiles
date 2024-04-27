@@ -12,6 +12,7 @@
             pkgs.mpvScripts.mpris
             pkgs.mpvScripts.thumbfast
             pkgs.mpvScripts.sponsorblock
+            pkgs.mpvScripts.webtorrent-mpv-hook
         ];
     };
     svpWrapper = pkgs.writeShellScriptBin "svp" ''

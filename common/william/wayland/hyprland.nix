@@ -131,7 +131,7 @@ in {
             windowrule = [
                 "idleinhibit fullscreen,.*"
 
-                "opacity 0.93,org.qutebrowser.qutebrowser"
+                "opacity 0.93 0.93 1.0,org.qutebrowser.qutebrowser"
                 "opacity 0.93,firefox"
 
                 "workspace 4,mpv"

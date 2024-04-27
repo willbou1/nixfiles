@@ -40,7 +40,7 @@ with lib;
         lolcat
         progress
         fd
-        nvtopPackages.full
+        nvtop
         ani-cli
         mkvtoolnix
 
