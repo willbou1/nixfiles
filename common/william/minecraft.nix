@@ -26,6 +26,19 @@ baseConfig = pkgs.writeText ".hmcl.json" (toJSON {
             gameDirType = 2;
         };
     });
+hmcl-setup =  pkgs.writeShellScript "hmcl-setup" ''
+    secPath="/run/user/$UID/secrets/minecraft"
+    accessToken="$(cat $secPath/access_token)"
+    refreshToken="$(cat $secPath/refresh_token)"
+    notAfter="$(cat $secPath/not_after)"
+    accountParams="{accessToken: \"$accessToken\", refreshToken: \"$refreshToken\", notAfter: \"$notAfter\"}"
+    mkdir -p ~/.local/share/hmcl
+    ${pkgs.jq}/bin/jq ".[0] += $accountParams" ${baseAccountConfig} > ~/.local/share/hmcl/accounts.json
+
+    [ -f ~/.hmcl.json ] || cat ${baseConfig} > ~/.hmcl.json
+    newConfig="$(${pkgs.jq}/bin/jq -r -s '.[0] * .[1]' ~/.hmcl.json ${baseConfig})"
+    echo "$newConfig" > ~/.hmcl.json
+'';
 in {
     sops.secrets = {
         "minecraft/access_token" = {};
@@ -54,19 +67,20 @@ in {
     };
 
     # merge real config with base config (base config has precedance)
-    home.activation.hmcl = lib.hm.dag.entryAfter ["writeBoundary"] ''
-        secPath="$XDG_RUNTIME_DIR/secrets/minecraft"
-        accessToken="$(cat $secPath/access_token)"
-        refreshToken="$(cat $secPath/refresh_token)"
-        notAfter="$(cat $secPath/not_after)"
-        accountParams="{accessToken: \"$accessToken\", refreshToken: \"$refreshToken\", notAfter: \"$notAfter\"}"
-        mkdir -p ~/.local/share/hmcl
-        ${pkgs.jq}/bin/jq ".[0] += $accountParams" ${baseAccountConfig} > ~/.local/share/hmcl/accounts.json
-
-        [ -f ~/.hmcl.json ] || cat ${baseConfig} > ~/.hmcl.json
-        newConfig="$(${pkgs.jq}/bin/jq -r -s '.[0] * .[1]' ~/.hmcl.json ${baseConfig})"
-        echo "$newConfig" > ~/.hmcl.json
-    '';
+    systemd.user.services.hmcl-setup = {
+        Unit = {
+            Description = "Generate the hmcl config with sops secrets";
+            After = [ "sops-nix.service" ];
+        };
+        Service = {
+            Type = "oneshot";
+            ExecStart = hmcl-setup;
+            Environment = "PATH=${pkgs.coreutils-full}/bin";
+        };
+        Install = {
+            WantedBy = [ "default.target" ];
+        };
+    };
 
     home.packages = with pkgs; [
         hmcl

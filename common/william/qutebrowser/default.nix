@@ -2,6 +2,9 @@
     qutebrowser = pkgs.qutebrowser.override {
         enableWideVine = true;
     };
+    qutebrowser-setup = pkgs.writeShellScript "qutebrowser-setup" (
+        builtins.concatStringsSep "\n" (builtins.map (n: "${config.programs.qutebrowser.package}/share/qutebrowser/scripts/dictcli.py install ${n}") config.programs.qutebrowser.settings.spellcheck.languages)
+    );
 in {
     imports = [
         ./theme.nix
@@ -22,9 +25,22 @@ in {
             ".config/qutebrowser/quickmarks"
         ];
     };
-    home.activation.qutebrowser = lib.hm.dag.entryAfter ["writeBoundary"] (
-        builtins.concatStringsSep "\n" (builtins.map (n: "${config.programs.qutebrowser.package}/share/qutebrowser/scripts/dictcli.py install ${n}") config.programs.qutebrowser.settings.spellcheck.languages)
-    );
+
+    systemd.user.services.qutebrowser-setup = {
+        Unit = {
+            Description = "Fetch qutebrowser dicts for my languages";
+            After = [ "network-online.target" ];
+            Wants = [ "network-online.target" ];
+        };
+        Service = {
+            Type = "oneshot";
+            ExecStart = qutebrowser-setup;
+        };
+        Install = {
+            WantedBy = [ "default.target" ];
+        };
+    };
+
     programs.qutebrowser = {
         enable = true;
         package = qutebrowser;

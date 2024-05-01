@@ -135,7 +135,7 @@ in {
                 };
             };
             openvpn.servers = expressvpnServers [
-                { name = "canada-torontoo"; fullName = "canada - toronto - 2"; autoStart = true; }
+                { name = "canada-toronto"; fullName = "canada - toronto"; autoStart = true; }
                 { name = "canada-montreal"; fullName = "canada - montreal"; autoStart = false; }
                 { name = "korea"; fullName = "south korea - 2"; autoStart = false; }
                 { name = "japan"; fullName = "japan - tokyo"; autoStart = false; }
