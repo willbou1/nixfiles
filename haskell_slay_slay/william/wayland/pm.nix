@@ -26,7 +26,7 @@ let
     '';
 in {
     wayland.windowManager.hyprland.settings.bind = [
-        "$mod,Q,exec,${brilloDim}; ${lock}"
+        "$mod,Q,exec,${brilloDim}; ${lock} --grace 0"
     ];
     services.swayidle = {
         timeouts = [

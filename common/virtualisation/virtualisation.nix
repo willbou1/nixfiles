@@ -38,7 +38,7 @@ in {
                             }).fd];
                 };
                 swtpm.enable = true;
-                runAsRoot = false;
+                runAsRoot = true;
             };
         };
 #        kvmfr = {

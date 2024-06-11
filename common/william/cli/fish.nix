@@ -7,6 +7,7 @@
     programs.fish = {
         enable = true;
         shellAliases = {
+            "za" = "zathura";
             "v" = "vifm";
             "cat" = "bat";
             "p" = "procs";

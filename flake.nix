@@ -5,7 +5,9 @@
 		nixpkgs.url = "nixpkgs/nixos-unstable";
 		stable.url = "github:NixOS/nixpkgs/nixos-23.05";
 
-		sops-nix.url = github:Mic92/sops-nix;
+        # since sops can easily break other stuff, let's pin the version for now
+		sops-nix.url = github:Mic92/sops-nix/a1c8de14f60924fafe13aea66b46157f0150f4cf;
+
 		impermanence.url = github:nix-community/impermanence;
 
 		home-manager = {
@@ -25,7 +27,7 @@
 
 		nur.url = github:nix-community/NUR;
 
-		hyprland.url = github:hyprwm/Hyprland;
+		hyprland.url = github:hyprwm/Hyprland/;
 		hyprgrass = {
 			url = github:horriblename/hyprgrass;
 			inputs.hyprland.follows = "hyprland"; # IMPORTANT
@@ -41,7 +43,7 @@
             {
                 nixpkgs.overlays = [ 
                     (import ./pkgs).overlay
-                    inputs.neovim-nightly-overlay.overlay
+                    inputs.neovim-nightly-overlay.overlays.default
                     (final: prev: {
                         stable = import inputs.stable { system = final.system; };
                     })

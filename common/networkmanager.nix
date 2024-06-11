@@ -112,10 +112,7 @@ in {
                 "ethernet.cloned-mac-address" = lib.mkForce "random";
                 "connection.stable-id" = "id=\${CONNECTION}/\${BOOT}";
             };
-            extraConfig = ''
-                [devices]
-                wifi.scan-rand-mac-address=yes
-            '';
+            settings.devices."wifi.scan-rand-mac-address" = true;
         };
     };
 }

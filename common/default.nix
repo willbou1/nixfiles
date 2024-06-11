@@ -107,7 +107,7 @@ with lib;
 		fuse.userAllowOther = true;
 		neovim = {
 			enable = true;
-			package = pkgs.neovim-nightly;
+			package = pkgs.neovim;
 			defaultEditor = true;
 			viAlias = true;
 			vimAlias = true;

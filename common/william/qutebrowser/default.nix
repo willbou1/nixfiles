@@ -118,12 +118,6 @@ in {
 
             "rd" = "https://reddit.com/r/{}";
         };
-        keyBindings = {
-            normal = {
-                ",m" = "spawn mpv {url}";
-                ",M" = "hint --rapid links spawn mpv {hint-url}";
-            };
-        };
         extraConfig = ''
             c.tabs.padding = {'top':5,'bottom':5,'left':10,'right':10};
         '';
