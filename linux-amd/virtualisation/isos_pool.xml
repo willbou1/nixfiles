@@ -1,0 +1,19 @@
+<!--
+WARNING: THIS IS AN AUTO-GENERATED FILE. CHANGES TO IT ARE LIKELY TO BE
+OVERWRITTEN AND LOST. Changes to this xml configuration should be made using:
+  virsh pool-edit data
+or other application using the libvirt API.
+-->
+
+<pool type='dir'>
+  <name>ISOs</name>
+  <uuid>326f3c3f-b87f-4b63-8811-ef1de5f3fd73</uuid>
+  <capacity unit='bytes'>0</capacity>
+  <allocation unit='bytes'>0</allocation>
+  <available unit='bytes'>0</available>
+  <source>
+  </source>
+  <target>
+  <path>/data/ISOs</path>
+  </target>
+</pool>

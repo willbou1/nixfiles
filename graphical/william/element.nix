@@ -42,7 +42,7 @@ in {
     ];
     home.packages = with pkgs; [
         element-desktop
-        element-desktop-nightly
+        nur.repos.willbou1.element-desktop-nightly
     ];
     xdg.configFile = {
         "Element/config.json".text = ''

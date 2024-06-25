@@ -22,7 +22,7 @@ in {
         ];
         bind = [
             "$mod SHIFT,W,exec,looking-glass-client -f /dev/shm/looking-glass2"
-            "$mod,Q,exec,${config.programs.swaylock.package}"
+            "$mod,Q,exec,${config.programs.swaylock.package}/bin/swaylock"
         ];
     };
 }

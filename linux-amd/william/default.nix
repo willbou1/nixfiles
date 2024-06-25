@@ -13,7 +13,7 @@ with lib;
                 width = 3440;
                 height = 1440;
                 rate = 100;
-                x = 3440;
+                x = 0;
                 y = 0;
                 hScale = 1;
                 vScale = 1;
@@ -25,7 +25,7 @@ with lib;
                 height = 1440;
                 rate = 100;
                 x = 0;
-                y = 0;
+                y = 1440;
                 hScale = 1;
                 vScale = 1;
             }

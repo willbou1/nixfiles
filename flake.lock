@@ -420,6 +420,7 @@
       "original": {
         "owner": "nix-community",
         "repo": "home-manager",
+        "rev": "2f3367769a93b226c467551315e9e270c3f78b15",
         "type": "github"
       }
     },

@@ -6,10 +6,7 @@
         builtins.concatStringsSep "\n" (builtins.map (n: "${config.programs.qutebrowser.package}/share/qutebrowser/scripts/dictcli.py install ${n}") config.programs.qutebrowser.settings.spellcheck.languages)
     );
 in {
-    imports = [
-        ./theme.nix
-        ./bitwarden.nix
-    ];
+    imports = lib.mine.autoInclude ./. [];
     xdg.mimeApps.defaultApplications = {
       "text/html" = "org.qutebrowser.qutebrowser.desktop";
       "x-scheme-handler/http" = "org.qutebrowser.qutebrowser.desktop";
@@ -55,11 +52,11 @@ in {
                     method = "both";
                     adblock.lists = [
                         "https://easylist.to/easylist/easylist.txt"
-                            "https://easylist.to/easylist/easyprivacy.txt"
-                            "https://easylist-downloads.adblockplus.org/easylistdutch.txt"
-                            "https://easylist-downloads.adblockplus.org/abp-filters-anti-cv.txt"
-                            "https://www.i-dont-care-about-cookies.eu/abp/"
-                            "https://secure.fanboy.co.nz/fanboy-cookiemonster.txt"
+                        "https://easylist.to/easylist/easyprivacy.txt"
+                        "https://easylist-downloads.adblockplus.org/easylistdutch.txt"
+                        "https://easylist-downloads.adblockplus.org/abp-filters-anti-cv.txt"
+                        "https://www.i-dont-care-about-cookies.eu/abp/"
+                        "https://secure.fanboy.co.nz/fanboy-cookiemonster.txt"
                     ];
                 };
                 user_stylesheets = [
@@ -69,8 +66,8 @@ in {
             };
             input.insert_mode.auto_load = true;
             url = {
-                default_page = "https://search.ourmiraculous.com";
-                start_pages = [ "https://search.ourmiraculous.com" ];
+                default_page = "https://startpage.com";
+                start_pages = [ "https://startpage.com" ];
                 open_base_url = true;
             };
             hints = {
@@ -103,7 +100,8 @@ in {
         };
         searchEngines = {
             #"DEFAULT" = "https://search.ourmiraculous.com/searx/search?q={}";
-            "DEFAULT" = "https://duckduckgo.com/?q={}";
+            "DEFAULT" = "https://startpage.com/do/search?q={}";
+            "!s" = "https://startpage.com/do/search?q={}";
             "!w" = "https://en.wikipedia.org/wiki/Special:Search?search={}&amp;go=Go&amp;ns0=1";
             "!g" = "https://www.google.ca/search?q={}";
             "!d" = "https://duckduckgo.com/?q={}";
@@ -114,7 +112,8 @@ in {
             "!nf" = "https://netflix.com/search?q={}";
             "!a" = "https://www.amazon.ca/s?k={}";
             "!ne" = "https://www.newegg.ca/p/pl?d={}";
-            "!s" = "https://soundcloud.com/search?q={}";
+            "!sc" = "https://soundcloud.com/search?q={}";
+            "!gm" = "https://mail.google.com/mail/u/0/#search/{}";
 
             "rd" = "https://reddit.com/r/{}";
         };

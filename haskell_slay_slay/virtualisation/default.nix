@@ -32,6 +32,6 @@ in {
 
     environment.etc."libvirt/vbios/RTX4080.rom".source = ../../resources/RTX4080.rom;
     system.activationScripts.win11.text = ''
-        yes | cp -f ${win11} /var/lib/libvirt/
+        cp -f ${win11} /var/lib/libvirt/win11.xml
     '';
 }

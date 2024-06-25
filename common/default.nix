@@ -2,25 +2,10 @@
 with lib;
 {
     imports = (mine.autoInclude ./. [
-        ./specialisations
         ./william
-        ./networking-alt.nix
     ]) ++ [
 		inputs.impermanence.nixosModules.impermanence
     ];
-
-    stylix = {
-        image = ../resources/wallpapers/space.jpg;
-        polarity = "dark";
-        homeManagerIntegration.followSystem = false;
-        targets.grub.useImage = true;
-        fonts.sizes = {
-            terminal = 48;
-            applications = 48;
-            desktop = 48;
-            popups = 48;
-        };
-    };
 
 	hardware.enableRedistributableFirmware = true;
 	hardware.enableAllFirmware = true;
@@ -40,14 +25,12 @@ with lib;
             file
             unzip
             lsof
-            pulseaudio
 			lftp
 			tmux
 			mlocate
 			nix-prefetch-github
 			miniupnpc
             acpi
-            exfat
             wget
 		];
 		persistence."/persist" = {
@@ -77,16 +60,12 @@ with lib;
 			"fgrep" = "fgrep --color=auto";
 			"egrep" = "egrep --color=auto";
 			"ip" = "ip --color=auto";
-            "b" = "bluetoothctl";
 			"c" = "clear";
 			"ftp" = "lftp";
 			"fd" = "fd -H";
 			"du" = "du -h";
 			"free" = "free -h";
 			"df" = "df -h";
-			"virsh" = "virsh -c qemu:///system";
-			"vs" = "virsh";
-			"vpn" = "expressvpn";
 			"vim" = "nvim";
 			"se" = "command sudo -E -s nvim";
 			"s" = ''sudo SSH_AUTH_SOCK="$SSH_AUTH_SOCK" '';
@@ -94,7 +73,6 @@ with lib;
             "sc" = "sudo systemctl";
             "jc" = "sudo journalctl --system";
 		};
-		sessionVariables.NIXOS_OZONE_WL = "1";
 	};
 
 	programs = {
@@ -147,32 +125,4 @@ with lib;
 #            })
 #        ];
 	};
-
-    xdg = {
-        autostart.enable = true;
-        portal = {
-           enable = true;
-           extraPortals = [
-               pkgs.xdg-desktop-portal
-               pkgs.xdg-desktop-portal-hyprland
-               pkgs.xdg-desktop-portal-gtk
-           ];
-           config.common.default = "*";
-        };
-    };
-
-    hardware.sane = {
-        enable = true;
-        extraBackends = [ pkgs.sane-airscan ];
-    };
-
-    services.udisks2.enable = true;
-    services.xserver = {
-        enable = true;
-        xkb = {
-            layout = "ca";
-            variant = "multix";
-        };
-        displayManager.startx.enable = true;
-    };
 }

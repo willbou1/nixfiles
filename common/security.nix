@@ -32,7 +32,6 @@
     security = {
         sudo.execWheelOnly = true;
         pam = {
-            services.swaylock.unixAuth = true;
             loginLimits = [
                 {
                     domain = "*";

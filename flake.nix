@@ -9,7 +9,8 @@
 		impermanence.url = github:nix-community/impermanence;
 
 		home-manager = {
-			url = github:nix-community/home-manager;
+			url = github:nix-community/home-manager/2f3367769a93b226c467551315e9e270c3f78b15;
+			#url = "git+file:///home/william/priv/code/home-manager";
 			inputs.nixpkgs.follows = "nixpkgs";
 		};
 		nixvim = {
@@ -55,6 +56,9 @@
             ./common
             home-manager.nixosModules.home-manager
             {
+                nixpkgs.overlays = [
+                    inputs.nur.overlay
+                ];
                 home-manager.extraSpecialArgs = {inherit inputs;};
                 home-manager.useGlobalPkgs = true;
                 home-manager.useUserPackages = true;
@@ -73,8 +77,10 @@
 				system = "x86_64-linux";
 				specialArgs = { inherit inputs; inherit lib; };
 				modules = [
+                    ./graphical
 					./haskell_slay_slay
                     {home-manager.sharedModules = [
+                        ./graphical/william
                         ./haskell_slay_slay/william
                     ];}
 				] ++ commonNixosModules;
@@ -83,8 +89,10 @@
 				system = "x86_64-linux";
 				specialArgs = { inherit inputs; inherit lib; };
 				modules = [
+                    ./graphical
 					./linux-amd
                     {home-manager.sharedModules = [
+                        ./graphical/william
                         ./linux-amd/william
                     ];}
 				] ++ commonNixosModules;

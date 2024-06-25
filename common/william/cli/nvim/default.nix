@@ -1,10 +1,13 @@
-{ config, inputs, pkgs, ... }: let
+{ config, inputs, pkgs, ... }:
+with builtins;
+let
 in with config.lib.stylix.colors.withHashtag; {
+    xdg.configFile."clangd/config.yaml".source = ./clangd.yaml;
     programs.nixvim = {
         enable = true;
         package = pkgs.neovim-nightly;
         plugins = {
-            #rainbow-delimiters.enable = true;
+            rainbow-delimiters.enable = true;
             lualine.enable = true;
             barbar = {
                 enable = true;
@@ -22,6 +25,7 @@ in with config.lib.stylix.colors.withHashtag; {
                 keymaps = {
                     "<leader>tf" = "find_files";
                     "<leader>tb" = "buffers";
+                    "<leader>td" = "diagnostics";
                 };
             };
             dap = {
@@ -53,7 +57,14 @@ in with config.lib.stylix.colors.withHashtag; {
                     texlab.enable = true;
                     cmake.enable = true;
                     bashls.enable = true;
-                    ccls.enable = true;
+                    clangd = {
+                        enable = true;
+                        cmd = [
+                            "clangd"
+                            "--clang-tidy"
+                            "--enable-config"
+                        ];
+                    };
                     rust-analyzer = {
                         enable = true;
                         installCargo = false;
