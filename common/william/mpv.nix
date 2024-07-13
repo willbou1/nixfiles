@@ -1,9 +1,9 @@
 { config, inputs, pkgs, ... }: let
-    mpv-unwrapped = pkgs.mpv-unwrapped.override {
-        vapoursynthSupport = true;
-        ffmpeg = pkgs.ffmpeg_6-full;
-    };
-    mpv = pkgs.wrapMpv mpv-unwrapped {
+    mpv = pkgs.mpv-unwrapped.wrapper {
+        mpv = pkgs.mpv-unwrapped.override {
+            vapoursynthSupport = true;
+            ffmpeg = pkgs.ffmpeg_6-full;
+        };
         extraMakeWrapperArgs = [
             "--prefix" "LD_LIBRARY_PATH" ":" "${pkgs.vapoursynth-mvtools}/lib/vapoursynth"
         ];

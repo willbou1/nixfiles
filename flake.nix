@@ -1,4 +1,6 @@
 {
+
+
 	description = "flake for linux-laptop";
 
 	inputs = {
@@ -27,7 +29,11 @@
 
 		nur.url = github:nix-community/NUR;
 
-		hyprland.url = github:hyprwm/Hyprland/;
+		hyprland = {
+            type = "git";
+            url = "https://github.com/hyprwm/Hyprland";
+            submodules = true;
+        };
 		hyprgrass = {
 			url = github:horriblename/hyprgrass;
 			inputs.hyprland.follows = "hyprland"; # IMPORTANT
@@ -45,7 +51,16 @@
                     (import ./pkgs).overlay
                     inputs.neovim-nightly-overlay.overlays.default
                     (final: prev: {
-                        stable = import inputs.stable { system = final.system; };
+                        stable = import inputs.stable {
+                            system = final.system;
+                            config.allowUnfree = final.config.allowUnfree;
+                        };
+                    })
+                    # Temporary LTS packages
+                    (final: prev: {
+                        #fprintd = final.stable.fprintd;
+                        #qutebrowser = final.stable.qutebrowser;
+                        #herbstluftwm = final.stable.herbstluftwm;
                     })
                 ];
             }

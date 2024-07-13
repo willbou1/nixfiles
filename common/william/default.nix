@@ -53,6 +53,7 @@ with lib;
             helvum
             steam
             wally-cli
+            vscode
         ];
 
         home.stateVersion = "23.05";
