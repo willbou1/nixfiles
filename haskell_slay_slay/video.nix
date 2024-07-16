@@ -24,16 +24,18 @@
                 };
             };
         };
-        graphics = {
+        opengl = {
             enable = true;
-            enable32Bit = true;
+            driSupport = true;
+            driSupport32Bit = true;
             extraPackages = with pkgs; [
                 intel-media-driver
                 vaapiIntel
-                vaapiVdpau
-                libvdpau-va-gl
+                    vaapiVdpau
+                    libvdpau-va-gl
             ];
             extraPackages32 = with pkgs.pkgsi686Linux; [ libva ];
+            setLdLibraryPath = true;
         };
     };
     nixpkgs.config.packageOverrides = pkgs: {

@@ -10,6 +10,7 @@ with lib;
     ];
 
     stylix = {
+        enable = true;
         image = ../resources/wallpapers/space.jpg;
         polarity = "dark";
         homeManagerIntegration.followSystem = false;
@@ -107,7 +108,6 @@ with lib;
 		fuse.userAllowOther = true;
 		neovim = {
 			enable = true;
-			package = pkgs.neovim;
 			defaultEditor = true;
 			viAlias = true;
 			vimAlias = true;

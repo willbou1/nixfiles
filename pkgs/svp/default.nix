@@ -15,6 +15,7 @@
   p7zip,
   patchelf,
   vapoursynth,
+  wrapMpv,
   writeText,
   xdg-utils,
   xorg,
@@ -28,35 +29,36 @@
 ################################################################################
 let
   mpvForSVP =
-    mpv-unwrapped.wrapper {
-        mpv = mpv-unwrapped.override {
-            vapoursynthSupport = true;
-            ffmpeg = ffmpeg_6-full;
-        };
-        extraMakeWrapperArgs = [
-            "--prefix"
-            "LD_LIBRARY_PATH"
-            ":"
-            "/run/opengl-driver/lib"
-            "--set"
-            "__NV_PRIME_RENDER_OFFLOAD"
-            "1"
-            "--set"
-            "__NV_PRIME_RENDER_OFFLOAD_PROVIDER"
-            "NVIDIA-G0"
-            "--set"
-            "__GLX_VENDOR_LIBRARY_NAME"
-            "nvidia"
-            "--set"
-            "__VK_LAYER_NV_optimus"
-            "NVIDIA_only"
-        ];
-        scripts = [
-            mpvScripts.uosc
-            mpvScripts.mpris
-            mpvScripts.thumbfast
-            mpvScripts.sponsorblock
-        ];
+    wrapMpv
+    (mpv-unwrapped.override {
+      vapoursynthSupport = true;
+      ffmpeg = ffmpeg_6-full;
+    })
+    {
+      extraMakeWrapperArgs = [
+        "--prefix"
+        "LD_LIBRARY_PATH"
+        ":"
+        "/run/opengl-driver/lib"
+        "--set"
+        "__NV_PRIME_RENDER_OFFLOAD"
+        "1"
+        "--set"
+        "__NV_PRIME_RENDER_OFFLOAD_PROVIDER"
+        "NVIDIA-G0"
+        "--set"
+        "__GLX_VENDOR_LIBRARY_NAME"
+        "nvidia"
+        "--set"
+        "__VK_LAYER_NV_optimus"
+        "NVIDIA_only"
+      ];
+    scripts = [
+        mpvScripts.uosc
+        mpvScripts.mpris
+        mpvScripts.thumbfast
+        mpvScripts.sponsorblock
+    ];
     };
 
   libraries = [

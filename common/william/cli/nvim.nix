@@ -2,7 +2,7 @@
 in with config.lib.stylix.colors.withHashtag; {
     programs.nixvim = {
         enable = true;
-        package = pkgs.neovim;
+        package = pkgs.neovim-unwrapped;
         plugins = {
             #rainbow-delimiters.enable = true;
             lualine.enable = true;

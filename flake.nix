@@ -1,41 +1,63 @@
 {
-
-
 	description = "flake for linux-laptop";
 
 	inputs = {
-		nixpkgs.url = "nixpkgs/nixos-unstable";
-		stable.url = "github:NixOS/nixpkgs/nixos-23.05";
+		#nixpkgs.url = github:NixOS/nixpkgs/nixos-24.05;
+		nixpkgs.url = "path:./devel/nixpkgs";
 
-        # since sops can easily break other stuff, let's pin the version for now
-		sops-nix.url = github:Mic92/sops-nix/a1c8de14f60924fafe13aea66b46157f0150f4cf;
+		#unstable.url = github:NixOS/nixpkgs/nixos-unstable;
+		unstable.url = "path:./devel/nixpkgs-unstable";
 
-		impermanence.url = github:nix-community/impermanence;
+		#sops-nix.url = github:Mic92/sops-nix;
+		sops-nix.url = "path:./devel/sops-nix";
+
+		#impermanence.url = github:nix-community/impermanence;
+		impermanence.url = "path:./devel/impermanence";
 
 		home-manager = {
-			url = github:nix-community/home-manager;
+			#url = github:nix-community/home-manager/release-24.05;
+			url = "path:./devel/home-manager";
 			inputs.nixpkgs.follows = "nixpkgs";
 		};
+
 		nixvim = {
-			url = github:nix-community/nixvim;
+			#url = github:nix-community/nixvim/nixos-24.05;
+			url = "path:./devel/nixvim";
 			inputs.nixpkgs.follows = "nixpkgs";
 		};
+
 		hosts.url = github:StevenBlack/hosts;
-        notnft.url = github:chayleaf/notnft;
-		spicetify-nix.url = github:the-argus/spicetify-nix;
-		neovim-nightly-overlay.url = github:nix-community/neovim-nightly-overlay;
 
-		stylix.url = github:danth/stylix;
+		#spicetify-nix.url = github:the-argus/spicetify-nix;
+		spicetify-nix.url = "path:./devel/spicetify-nix";
 
-		nur.url = github:nix-community/NUR;
+        #notnft.url = github:chayleaf/notnft;
+
+		neovim-nightly-overlay = {
+            #url = github:nix-community/neovim-nightly-overlay;
+            url = "path:.devel/neovim-nightly-overlay";
+            inputs.nixpkgs.follows = "unstable";
+        };
+
+		#stylix.url = github:danth/stylix/release-24.05;
+		stylix.url = "path:./devel/stylix";
+
+        # Build NUR packages using unstable nixpkgs
+		nur = {
+            url = github:nix-community/NUR;
+            inputs.nixpkgs.follows = "unstable";
+        };
 
 		hyprland = {
             type = "git";
-            url = "https://github.com/hyprwm/Hyprland";
+            #url = github:hyprwm/Hyprland;
+            url = "path:./devel/Hyprland";
             submodules = true;
         };
+
 		hyprgrass = {
-			url = github:horriblename/hyprgrass;
+			#url = github:horriblename/hyprgrass;
+			url = "path:./devel/hyprgrass";
 			inputs.hyprland.follows = "hyprland"; # IMPORTANT
 		};
 	};
@@ -45,23 +67,31 @@
             nixpkgs.lib.extend
             (self: super: {mine = import ./lib {lib = self;};});
         lib = mkLib inputs.nixpkgs;
+        bleedingEdgePackages = [
+            "neovim" "neovim-unwrapped"
+            "qutebrowser"
+            "mpv" "mpv-unwrapped"
+            "element-desktop"
+            "libreoffice-fresh"
+            "steam"
+        ];
+        bleedingEdgeOverlay = final: prev:
+            builtins.listToAttrs (builtins.map
+            (p: { name = p; value = final.unstable."${p}"; }) bleedingEdgePackages);
         commonNixosModules = [
             {
                 nixpkgs.overlays = [ 
+                    inputs.nur.overlay
                     (import ./pkgs).overlay
+                    (import ./pkgs).nurOverlay
                     inputs.neovim-nightly-overlay.overlays.default
                     (final: prev: {
-                        stable = import inputs.stable {
+                        unstable = import inputs.unstable {
                             system = final.system;
                             config.allowUnfree = final.config.allowUnfree;
                         };
                     })
-                    # Temporary LTS packages
-                    (final: prev: {
-                        #fprintd = final.stable.fprintd;
-                        #qutebrowser = final.stable.qutebrowser;
-                        #herbstluftwm = final.stable.herbstluftwm;
-                    })
+                    bleedingEdgeOverlay
                 ];
             }
             inputs.nur.nixosModules.nur
