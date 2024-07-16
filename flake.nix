@@ -3,61 +3,57 @@
 
 	inputs = {
 		#nixpkgs.url = github:NixOS/nixpkgs/nixos-24.05;
-		nixpkgs.url = "path:./devel/nixpkgs";
+		nixpkgs.url = "git+file:./devel/nixpkgs";
 
 		#unstable.url = github:NixOS/nixpkgs/nixos-unstable;
-		unstable.url = "path:./devel/nixpkgs-unstable";
+		unstable.url = "git+file:./devel/nixpkgs-unstable";
 
 		#sops-nix.url = github:Mic92/sops-nix;
-		sops-nix.url = "path:./devel/sops-nix";
+		sops-nix.url = "git+file:./devel/sops-nix";
 
 		#impermanence.url = github:nix-community/impermanence;
-		impermanence.url = "path:./devel/impermanence";
+		impermanence.url = "git+file:./devel/impermanence";
 
 		home-manager = {
 			#url = github:nix-community/home-manager/release-24.05;
-			url = "path:./devel/home-manager";
+			url = "git+file:./devel/home-manager";
 			inputs.nixpkgs.follows = "nixpkgs";
 		};
 
 		nixvim = {
 			#url = github:nix-community/nixvim/nixos-24.05;
-			url = "path:./devel/nixvim";
+			url = "git+file:./devel/nixvim";
 			inputs.nixpkgs.follows = "nixpkgs";
 		};
 
 		hosts.url = github:StevenBlack/hosts;
 
 		#spicetify-nix.url = github:the-argus/spicetify-nix;
-		spicetify-nix.url = "path:./devel/spicetify-nix";
+		spicetify-nix.url = "git+file:./devel/spicetify-nix";
 
         #notnft.url = github:chayleaf/notnft;
 
 		neovim-nightly-overlay = {
             #url = github:nix-community/neovim-nightly-overlay;
-            url = "path:.devel/neovim-nightly-overlay";
+            url = "git+file:./devel/neovim-nightly-overlay";
             inputs.nixpkgs.follows = "unstable";
         };
 
 		#stylix.url = github:danth/stylix/release-24.05;
-		stylix.url = "path:./devel/stylix";
+		stylix.url = "git+file:./devel/stylix";
 
-        # Build NUR packages using unstable nixpkgs
-		nur = {
-            url = github:nix-community/NUR;
-            inputs.nixpkgs.follows = "unstable";
-        };
+		nur.url = github:nix-community/NUR;
 
 		hyprland = {
             type = "git";
-            #url = github:hyprwm/Hyprland;
-            url = "path:./devel/Hyprland";
+            #url = "https://www.github.com/hyprwm/Hyprland";
+            url = "file:./devel/hyprland";
             submodules = true;
         };
 
 		hyprgrass = {
 			#url = github:horriblename/hyprgrass;
-			url = "path:./devel/hyprgrass";
+			url = "git+file:./devel/hyprgrass";
 			inputs.hyprland.follows = "hyprland"; # IMPORTANT
 		};
 	};

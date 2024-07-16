@@ -22,18 +22,24 @@
 [submodule "devel/spicetify-nix"]
 	path = devel/spicetify-nix
 	url = git@github.com:willbou1/spicetify-nix.git
-[submodule "devel/stylix"]
-	path = devel/stylix
-	url = git@github.com:willbou1/stylix.git
-[submodule "devel/neovim-nightly-overlay"]
-	path = devel/neovim-nightly-overlay
-	url = git@github.com:willbou1/stylix.git
 [submodule "devel/nixpkgs-unstable"]
 	path = devel/nixpkgs-unstable
 	url = git@github.com:willbou1/nixpkgs.git
-[submodule "devel/devel/impermanence"]
-	path = devel/devel/impermanence
-	url = git@github.com:willbou1/impermanence.git
-[submodule "devel/devel/sops-nix"]
-	path = devel/devel/sops-nix
+[submodule "devel/sops-nix"]
+	path = devel/sops-nix
 	url = git@github.com:willbou1/sops-nix.git
+[submodule "devel/impermanence"]
+	path = devel/impermanence
+	url = git@github.com:willbou1/impermanence.git
+[submodule "devel/hyprland"]
+	path = devel/hyprland
+	url = git@github.com:willbou1/hyprland.git
+[submodule "devel/stylix"]
+	path = devel/stylix
+	url = git@github.com:willbou1/stylix.git
+[submodule "devel/hyprgrass"]
+	path = devel/hyprgrass
+	url = git@github.com:willbou1/hyprgrass.git
+[submodule "devel/neovim-nightly-overlay"]
+	path = devel/neovim-nightly-overlay
+	url = git@github.com:willbou1/neovim-nightly-overlay.git
