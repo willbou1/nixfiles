@@ -31,6 +31,7 @@ in {
         feh
         wl-clipboard
         hyprcap
+        wl-gammarelay-rs
     ];
     wayland.windowManager.hyprland = {
         package = inputs.hyprland.packages.${pkgs.system}.default;

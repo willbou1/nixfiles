@@ -69,9 +69,9 @@ with lib;
 			"vim" = "nvim";
 			"se" = "command sudo -E -s nvim";
 			"s" = ''sudo SSH_AUTH_SOCK="$SSH_AUTH_SOCK" '';
-            "nu" = "sudo nix flake update";
             "sc" = "sudo systemctl";
             "jc" = "sudo journalctl --system";
+            "nu" = "sudo nix flake update /etc/nixos?submodules=1";
 		};
 	};
 
@@ -85,7 +85,6 @@ with lib;
 		fuse.userAllowOther = true;
 		neovim = {
 			enable = true;
-			package = pkgs.neovim-nightly;
 			defaultEditor = true;
 			viAlias = true;
 			vimAlias = true;

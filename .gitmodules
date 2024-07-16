@@ -1,0 +1,45 @@
+[submodule "devel/home-manager"]
+	path = devel/home-manager
+	url = git@github.com:willbou1/home-manager.git
+[submodule "devel/nixpkgs"]
+	path = devel/nixpkgs
+	url = git@github.com:willbou1/nixpkgs.git
+[submodule "devel/nur-packages"]
+	path = devel/nur-packages
+	url = git@github.com:willbou1/nur-packages.git
+[submodule "devel/dwm"]
+	path = devel/dwm
+	url = git@github.com:willbou1/dwm.git
+[submodule "devel/dmenu"]
+	path = devel/dmenu
+	url = git@github.com:willbou1/dmenu.git
+[submodule "devel/dwmblocks"]
+	path = devel/dwmblocks
+	url = git@github.com:willbou1/dwmblocks.git
+[submodule "devel/nixvim"]
+	path = devel/nixvim
+	url = git@github.com:willbou1/nixvim.git
+[submodule "devel/spicetify-nix"]
+	path = devel/spicetify-nix
+	url = git@github.com:willbou1/spicetify-nix.git
+[submodule "devel/nixpkgs-unstable"]
+	path = devel/nixpkgs-unstable
+	url = git@github.com:willbou1/nixpkgs.git
+[submodule "devel/sops-nix"]
+	path = devel/sops-nix
+	url = git@github.com:willbou1/sops-nix.git
+[submodule "devel/impermanence"]
+	path = devel/impermanence
+	url = git@github.com:willbou1/impermanence.git
+[submodule "devel/hyprland"]
+	path = devel/hyprland
+	url = git@github.com:willbou1/hyprland.git
+[submodule "devel/stylix"]
+	path = devel/stylix
+	url = git@github.com:willbou1/stylix.git
+[submodule "devel/hyprgrass"]
+	path = devel/hyprgrass
+	url = git@github.com:willbou1/hyprgrass.git
+[submodule "devel/neovim-nightly-overlay"]
+	path = devel/neovim-nightly-overlay
+	url = git@github.com:willbou1/neovim-nightly-overlay.git

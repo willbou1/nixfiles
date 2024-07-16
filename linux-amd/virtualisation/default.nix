@@ -4,13 +4,15 @@ let
     win11 = pkgs.writeText "win11.xml" (builtins.readFile ./win11.xml);
     isos_pool = pkgs.writeText "isos_pool.xml" (builtins.readFile ./isos_pool.xml);
 in {
-    boot.extraModulePackages = lib.mkBefore (with config.boot.kernelPackages; [
-        vendor-reset
-    ]);
-    boot.initrd.kernelModules = [ "vendor_reset" ];
-    system.activationScripts.vendor-reset.text = ''
-        echo 'device_specific' > /sys/bus/pci/devices/0000:10:00.0/reset_method
-    '';
+
+    # not working for the time being
+    #boot.extraModulePackages = lib.mkBefore (with config.boot.kernelPackages; [
+    #    vendor-reset
+    #]);
+    #boot.initrd.kernelModules = [ "vendor_reset" ];
+    #system.activationScripts.vendor-reset.text = ''
+    #    echo 'device_specific' > /sys/bus/pci/devices/0000:10:00.0/reset_method
+    #'';
 
     boot.kernelParams = [
         "video=efifb:off,vesafb:off"

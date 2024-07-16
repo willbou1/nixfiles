@@ -5,13 +5,12 @@ in with config.lib.stylix.colors.withHashtag; {
     xdg.configFile."clangd/config.yaml".source = ./clangd.yaml;
     programs.nixvim = {
         enable = true;
-        package = pkgs.neovim-nightly;
+        package = pkgs.neovim-unwrapped;
         plugins = {
             rainbow-delimiters.enable = true;
             lualine.enable = true;
             barbar = {
                 enable = true;
-                autoHide = true;
             };
             nvim-colorizer.enable = true;
             undotree.enable = true;
@@ -19,7 +18,7 @@ in with config.lib.stylix.colors.withHashtag; {
             telescope = {
                 enable = true;
                 extensions = {
-                    file_browser.enable = true;
+                    file-browser.enable = true;
                     fzy-native.enable = true;
                 };
                 keymaps = {
@@ -35,18 +34,20 @@ in with config.lib.stylix.colors.withHashtag; {
                     cpptools.command = "${pkgs.vscode-extensions.ms-vscode.cpptools}/share/vscode/extensions/ms-vscode.cpptools/debugAdapters/bin/OpenDebugAD7";
                 };
             };
-            nvim-cmp = {
+            cmp = {
                 enable = true;
-                sources = [
-                { name = "nvim_lsp"; }
-                { name = "path"; }
-                { name = "buffer"; }
-                { name = "cmdline"; }
-                { name = "vsnip"; }
-                ];
-                mappingPresets = [ "insert" ];
-                mapping = {
-                    "<CR>" = "cmp.mapping.confirm({ select = false })";
+                settings = {
+                    sources = [
+                        { name = "nvim_lsp"; }
+                        { name = "path"; }
+                        { name = "buffer"; }
+                        { name = "cmdline"; }
+                        { name = "vsnip"; }
+                    ];
+                    mappingPresets = [ "insert" ];
+                    mapping = {
+                        "<CR>" = "cmp.mapping.confirm({ select = false })";
+                    };
                 };
             };
             lsp = {
@@ -85,7 +86,7 @@ in with config.lib.stylix.colors.withHashtag; {
             vim-tpipeline
             vim-gas
         ];
-        options = {
+        opts = {
             termguicolors = true;
             wildignore = "*.pyc,*_build/*,**/coverage/*,**/node_modules/*,**/android/*,**/ios/*,**/.git/*";
             number = true;

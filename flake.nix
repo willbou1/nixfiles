@@ -2,33 +2,58 @@
 	description = "flake for linux-laptop";
 
 	inputs = {
-		nixpkgs.url = "nixpkgs/nixos-unstable";
-		stable.url = "github:NixOS/nixpkgs/nixos-23.05";
+		#nixpkgs.url = github:NixOS/nixpkgs/nixos-24.05;
+		nixpkgs.url = "git+file:./devel/nixpkgs";
 
-		sops-nix.url = github:Mic92/sops-nix;
-		impermanence.url = github:nix-community/impermanence;
+		#unstable.url = github:NixOS/nixpkgs/nixos-unstable;
+		unstable.url = "git+file:./devel/nixpkgs-unstable";
+
+		#sops-nix.url = github:Mic92/sops-nix;
+		sops-nix.url = "git+file:./devel/sops-nix";
+
+		#impermanence.url = github:nix-community/impermanence;
+		impermanence.url = "git+file:./devel/impermanence";
 
 		home-manager = {
-			url = github:nix-community/home-manager/2f3367769a93b226c467551315e9e270c3f78b15;
-			#url = "git+file:///home/william/priv/code/home-manager";
+			#url = github:nix-community/home-manager/release-24.05;
+			url = "git+file:./devel/home-manager";
 			inputs.nixpkgs.follows = "nixpkgs";
 		};
-		nixvim = {
-			url = github:nix-community/nixvim;
-			inputs.nixpkgs.follows = "nixpkgs";
-		};
-		hosts.url = github:StevenBlack/hosts;
-        notnft.url = github:chayleaf/notnft;
-		spicetify-nix.url = github:the-argus/spicetify-nix;
-		neovim-nightly-overlay.url = github:nix-community/neovim-nightly-overlay;
 
-		stylix.url = github:danth/stylix;
+		nixvim = {
+			#url = github:nix-community/nixvim/nixos-24.05;
+			url = "git+file:./devel/nixvim";
+			inputs.nixpkgs.follows = "nixpkgs";
+		};
+
+		hosts.url = github:StevenBlack/hosts;
+
+		#spicetify-nix.url = github:the-argus/spicetify-nix;
+		spicetify-nix.url = "git+file:./devel/spicetify-nix";
+
+        #notnft.url = github:chayleaf/notnft;
+
+		neovim-nightly-overlay = {
+            #url = github:nix-community/neovim-nightly-overlay;
+            url = "git+file:./devel/neovim-nightly-overlay";
+            inputs.nixpkgs.follows = "unstable";
+        };
+
+		#stylix.url = github:danth/stylix/release-24.05;
+		stylix.url = "git+file:./devel/stylix";
 
 		nur.url = github:nix-community/NUR;
 
-		hyprland.url = github:hyprwm/Hyprland;
+		hyprland = {
+            type = "git";
+            url = "https://www.github.com/hyprwm/Hyprland";
+            #url = "file:./devel/hyprland";
+            submodules = true;
+        };
+
 		hyprgrass = {
-			url = github:horriblename/hyprgrass;
+			#url = github:horriblename/hyprgrass;
+			url = "git+file:./devel/hyprgrass";
 			inputs.hyprland.follows = "hyprland"; # IMPORTANT
 		};
 	};
@@ -38,14 +63,31 @@
             nixpkgs.lib.extend
             (self: super: {mine = import ./lib {lib = self;};});
         lib = mkLib inputs.nixpkgs;
+        bleedingEdgePackages = [
+            "neovim" "neovim-unwrapped"
+            "qutebrowser"
+            "mpv" "mpv-unwrapped"
+            "element-desktop"
+            "libreoffice-fresh"
+            "steam"
+        ];
+        bleedingEdgeOverlay = final: prev:
+            builtins.listToAttrs (builtins.map
+            (p: { name = p; value = final.unstable."${p}"; }) bleedingEdgePackages);
         commonNixosModules = [
             {
                 nixpkgs.overlays = [ 
+                    inputs.nur.overlay
                     (import ./pkgs).overlay
-                    inputs.neovim-nightly-overlay.overlay
+                    (import ./pkgs).nurOverlay
+                    inputs.neovim-nightly-overlay.overlays.default
                     (final: prev: {
-                        stable = import inputs.stable { system = final.system; };
+                        unstable = import inputs.unstable {
+                            system = final.system;
+                            config.allowUnfree = final.config.allowUnfree;
+                        };
                     })
+                    bleedingEdgeOverlay
                 ];
             }
             inputs.nur.nixosModules.nur

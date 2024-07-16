@@ -1,6 +1,14 @@
-{ pkgs, ... }:
-
-{
+{ pkgs, config, ... }:
+let
+    nmpv = pkgs.writeShellScriptBin "nmpv" ''
+        export __NV_PRIME_RENDER_OFFLOAD=1
+        export __NV_PRIME_RENDER_OFFLOAD_PROVIDER=NVIDIA-G0
+        export __GLX_VENDOR_LIBRARY_NAME=nvidia
+        export __VK_LAYER_NV_optimus=NVIDIA_only
+        ${config.programs.mpv.package}/bin/mpv "$@"
+    '';
+in {
+    home.packages = [ nmpv ];
     programs.mpv.config = {
         panscan = 1.0;
        glsl-shaders = "~/.config/mpv/shaders/film/FSRCNNX_x2_8-0-4-1.glsl:~/.config/mpv/shaders/film/SSimDownscaler.glsl:~/.config/mpv/shaders/film/KrigBilateral.glsl";

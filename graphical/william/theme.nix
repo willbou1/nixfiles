@@ -3,6 +3,7 @@ with lib;
 with config.lib.stylix.colors.withHashtag;
 {
     stylix = {
+        enable = true;
         image = ../../resources/wallpapers/space.jpg;
         polarity = "dark";
         targets.vim.enable = false;

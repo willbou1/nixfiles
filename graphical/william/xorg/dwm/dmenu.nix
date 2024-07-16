@@ -53,6 +53,6 @@ static const char worddelimiters[] = " ";
 in {
     home.packages = with pkgs; [
         myDmenu
-        stable.j4-dmenu-desktop
+        j4-dmenu-desktop
     ];
 }

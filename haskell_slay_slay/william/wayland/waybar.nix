@@ -18,10 +18,29 @@ in {
                 ];
                 modules-left = [ "custom/nix" "hyprland/workspaces" "hyprland/window" ];
                 modules-center = [ "clock" ];
-                modules-right = [ "custom/kime" "network" "pulseaudio" "backlight" "memory" "cpu" "temperature" "battery" ];
+                modules-right = [ "custom/kime" "network" "pulseaudio" "backlight" "custom/wl-gammarelay-temperature" "memory" "cpu" "temperature" "battery" ];
                 cpu.format = "  {usage}%";
                 memory.format = "  {}%";
                 clock.format = "{:%I:%M:%p}";
+                "custom/wl-gammarelay-temperature" = {
+                    "format" = "{} ";
+                    "exec" = "wl-gammarelay-rs watch {t}";
+                    "on-scroll-up" = "busctl --user -- call rs.wl-gammarelay / rs.wl.gammarelay UpdateTemperature n +100";
+                    "on-scroll-down" = "busctl --user -- call rs.wl-gammarelay / rs.wl.gammarelay UpdateTemperature n -100";
+                    "on-click" = "busctl --user set-property rs.wl-gammarelay / rs.wl.gammarelay Temperature q 7100";
+                };
+                "custom/wl-gammarelay-brightness" = {
+                    "format" = "{}% ";
+                    "exec" = "wl-gammarelay-rs watch {bp}";
+                    "on-scroll-up" = "busctl --user -- call rs.wl-gammarelay / rs.wl.gammarelay UpdateBrightness d +0.02";
+                    "on-scroll-down" = "busctl --user -- call rs.wl-gammarelay / rs.wl.gammarelay UpdateBrightness d -0.02";
+                };
+                "custom/wl-gammarelay-gamma" = {
+                    "format" = "{}% γ";
+                    "exec" = "wl-gammarelay-rs watch {g}";
+                    "on-scroll-up" = "busctl --user -- call rs.wl-gammarelay / rs.wl.gammarelay UpdateGamma d +0.02";
+                    "on-scroll-down" = "busctl --user -- call rs.wl-gammarelay / rs.wl.gammarelay UpdateGamma d -0.02";
+                };
                 "custom/nix".format = "󱄅";
                 "custom/kime" = {
                     format = "󰌌  {}";

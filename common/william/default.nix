@@ -22,5 +22,5 @@ with lib;
         home-manager
     ];
 
-    home.stateVersion = "23.05";
+    home.stateVersion = "24.05";
 }

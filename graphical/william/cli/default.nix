@@ -7,7 +7,7 @@ with lib;
         yt-dlp
         qpdf
         ncpamixer
-        nvtop
+        nvtopPackages.full
         ani-cli
         mkvtoolnix
 

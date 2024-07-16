@@ -6,7 +6,7 @@ with lib;
     ];
 
     environment.shellAliases = {
-        "nr" = "sudo nixos-rebuild --show-trace --flake /etc/nixos#linux-amd switch";
+        "nr" = "sudo nixos-rebuild --show-trace --flake /etc/nixos?submodules=1#linux-amd switch";
     };
     programs.i3lock = {
       enable = true;  

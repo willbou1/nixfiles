@@ -82,6 +82,7 @@ in {
             "ALT+j" = "add sub-scale -0.1";
             "ALT+v" = "vf toggle vflip";
             "ALT+h" = "vf toggle hflip";
+            "M" = "af toggle lavfi=[pan=mono|c0=c1]";
             "ALT+r" = "cycle_values video-rotate 90 180 270 0";
             "CTRL+v" = "cycle secondary-sub-visibility";
             "CTRL+c" = "no-osd change-list glsl-shaders set \"\"";
