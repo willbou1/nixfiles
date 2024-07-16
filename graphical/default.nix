@@ -1,4 +1,5 @@
 { lib, inputs, config, pkgs, ... }:
+
 with lib;
 {
     imports = (mine.autoInclude ./. [
@@ -32,6 +33,8 @@ with lib;
 		};
 		sessionVariables.NIXOS_OZONE_WL = "1";
 	};
+
+    programs.steam.enable = true;
 
 	nixpkgs = {
 		config.joypixels.acceptLicense = true;
