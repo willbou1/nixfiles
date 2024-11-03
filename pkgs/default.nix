@@ -9,5 +9,5 @@ let
     in builtins.listToAttrs (map genPackage names);
 in rec {
   overlay = packageOverlay ../pkgs;
-  nurOverlay = packageOverlay ../devel/nur-packages/pkgs;
+  #nurOverlay = packageOverlay ../devel/nur-packages/pkgs;
 }

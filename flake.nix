@@ -79,7 +79,7 @@
                 nixpkgs.overlays = [ 
                     inputs.nur.overlay
                     (import ./pkgs).overlay
-                    (import ./pkgs).nurOverlay
+                    #(import ./pkgs).nurOverlay
                     inputs.neovim-nightly-overlay.overlays.default
                     (final: prev: {
                         unstable = import inputs.unstable {
@@ -139,10 +139,21 @@
                     ];}
 				] ++ commonNixosModules;
 			};
+			vps = nixpkgs.lib.nixosSystem {
+				system = "x86_64-linux";
+				specialArgs = { inherit inputs; inherit lib; };
+				modules = [
+					./vps
+                    {home-manager.sharedModules = [
+                        ./vps/william
+                    ];}
+				] ++ commonNixosModules;
+			};
 		};
 		homeConfigurations = {
 			"william@haskell_slay_slay" = nixosConfigurations.haskell_slay_slay.config.home-manager.users.william.home;
 			"william@linux-amd" = nixosConfigurations.linux-amd.config.home-manager.users.william.home;
+			"william@vps" = nixosConfigurations.vps.config.home-manager.users.william.home;
 		};
 	};
 }

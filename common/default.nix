@@ -108,7 +108,7 @@ with lib;
 		};
 	};
 
-	system.stateVersion = "23.05";
+	system.stateVersion = "24.05";
 
 	nixpkgs = {
 		hostPlatform = lib.mkDefault "x86_64-linux";
