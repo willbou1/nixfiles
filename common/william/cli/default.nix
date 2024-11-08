@@ -1,7 +1,7 @@
 { pkgs, lib, ... }:
 with lib;
 {
-    imports = mine.autoInclude ./. [ ./nvim ];
+    imports = mine.autoInclude ./. [ ];
 
     home.persistence."/persist/home/william".directories = [
         ".local/share/zoxide"

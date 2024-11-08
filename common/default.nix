@@ -72,6 +72,7 @@ with lib;
             "sc" = "sudo systemctl";
             "jc" = "sudo journalctl --system";
             "nu" = "sudo nix flake update /etc/nixos?submodules=1";
+            "shred" = "shred --remove";
 		};
 	};
 

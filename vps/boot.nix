@@ -1,59 +1,83 @@
-{ inputs, config, pkgs, ... }: let
-MAIN_UUID = "/dev/disk/by-uuid/145d4728-714c-4e5c-b7cc-02eea3e08e45";
-BTRFS_UUID = "/dev/disk/by-uuid/9454a4f2-b850-46d7-baad-696fd038ef68";
-BOOT_UUID = "/dev/disk/by-uuid/7ee8b57d-a43a-4266-9951-b0b522caff20";
-EFI_UUID = "/dev/disk/by-uuid/C52E-3DA5";
+{ inputs, config, pkgs, ... }:
+with builtins;
+let
+MAIN_UUID = "/dev/disk/by-uuid/577f2240-c659-4876-b01b-143c2bd8bf8a";
+BTRFS_UUID = "/dev/disk/by-uuid/ce29b4f5-71ab-47ae-9788-8a0c30371e90";
+BOOT_UUID = "/dev/disk/by-uuid/c885ad98-0369-4740-b553-122c477fe025";
+EFI_UUID = "/dev/disk/by-uuid/80CB-574F";
+bootNetworkConfig = {
+    ip = "185.165.171.79";
+    gateway = "185.165.171.1";
+    subnetMask = "255.255.255.128";
+    hostname = "ourmiraculous";
+    dns1 = "9.9.9.9";
+    dns2 = "8.8.8.8";
+};
+toKernelIPParam = c: "ip=${c.ip}::${c.gateway}:${c.subnetMask}:${c.hostname}::none:${c.dns1}:${c.dns2}";
 in {
     # confirm that this is good for a VM
 	boot.kernel.sysctl = { "vm.swappiness" = 10;};	
-
+    environment.persistence."/persist".directories = [
+        "/etc/secrets"
+    ];
+	
 	boot.loader.grub = {
 		enable = true;
-		device = "/dev/disk/by-id/scsi-0QEMU_QEMU_HARDDISK_drive-scsi0"; 
+		device = "/dev/vda";
 		efiSupport = false;
 		enableCryptodisk = false;
 		useOSProber = false;
+        extraConfig = ''
+            set timeout=30
+        '';
 	};
 	boot.kernelPackages = pkgs.unstable.linuxPackages_latest;
-	boot.kernelModules = [ "kvm-amd" ];
+	boot.kernelModules = [ ];
 	boot.extraModulePackages = [ ];
-	#boot.kernelParams = [ "ip=92.112.181.70::92.112.181.254:255.255.255.0:srv631436::none" ];
+	boot.kernelParams = [ (toKernelIPParam bootNetworkConfig) ];
 
 	boot.initrd = {
-		secrets."crypto_keyfile.bin" = null;
-		luks.devices."main".device = MAIN_UUID;
-		luks.devices."main".keyFile = "/crypto_keyfile.bin";
-		availableKernelModules = [ "ata_piix" "uhci_hcd" "virtio_pci" "virtio_scsi" ];
-#		network = {
-#			enable = true;
-#			ssh = {
-#				enable = true;
-#				port = 22;
-#				authorizedKeys = [ "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAICJ2b2UtfnyyWsNKR96dUK6l1iVaEUc1uTEf8X8VBZeC willbou2@gmail.com" ];
-#				hostKeys = [ "/etc/secrets/initrd/ssh_host_rsa_key" ];
-#		};
-#		};
-};
-    # Impermanence with BTRFS without RAM root and home
-#    boot.initrd.postDeviceCommands = pkgs.lib.mkBefore ''
-#        mkdir -p /mnt
-#        mount -o subvol=/ ${BTRFS_UUID} /mnt
-#
-#        btrfs subvolume list -o /mnt/@root |
-#        cut -f9 -d' ' |
-#        while read subvolume; do
-#            echo "deleting /$subvolume subvolume..."
-#            btrfs subvolume delete "/mnt/$subvolume"
-#        done &&
-#        echo "deleting /root subvolume..." &&
-#        btrfs subvolume delete /mnt/@root
-#
-#        echo "restoring blank /@root subvolume..."
-#        btrfs subvolume snapshot /mnt/@root-blank /mnt/@root
-#
-#        umount /mnt
-#    '';
+		#luks.devices."main".device = MAIN_UUID; # not needed when using ssh
+        luks.forceLuksSupportInInitrd = true;
+		availableKernelModules = [ "ata_piix" "uhci_hcd" "virtio_pci" "sr_mod" "virtio_blk" "virtio_net" ];
+		network = {
+			enable = true;
+			ssh = {
+				enable = true;
+				port = head config.services.openssh.ports;
+                authorizedKeys = config.users.users.william.openssh.authorizedKeys.keys;
+				hostKeys = [ "/etc/secrets/initrd/ssh_host_rsa_key" ];
+            };
+            postCommands = ''
+                echo 'cryptsetup luksOpen ${MAIN_UUID} main && echo > /tmp/continue || /bin/sh' >> /root/.profile
+                echo "Starting sshd"
+            '';
+		};
+        postDeviceCommands = pkgs.lib.mkBefore ''
+            echo "Waiting for boot device to be opened..."
+            mkfifo /tmp/continue
+            cat /tmp/continue
+            # decryption done
 
+            mkdir -p /mnt
+            mount -o subvol=/ ${BTRFS_UUID} /mnt
+
+            btrfs subvolume list -o /mnt/@root |
+            cut -f9 -d' ' |
+            while read subvolume; do
+                echo "deleting /$subvolume subvolume..."
+                btrfs subvolume delete "/mnt/$subvolume"
+            done &&
+            echo "deleting /root subvolume..." &&
+            btrfs subvolume delete /mnt/@root
+
+            echo "restoring blank /@root subvolume..."
+            btrfs subvolume snapshot /mnt/@root-blank /mnt/@root
+
+            umount /mnt
+        '';
+
+    };
 	fileSystems = {
 		"/" = {
 			device = BTRFS_UUID;
@@ -92,10 +116,10 @@ in {
             fsType = "btrfs";
             options = [ "subvol=/" "noatime" "compress=zstd" ];
         };
-	"/boot/efi" = {
-	    device = EFI_UUID;
-	    fsType = "vfat";
-	};
+        "/boot/efi" = {
+            device = EFI_UUID;
+            fsType = "vfat";
+        };
 	};
 
 	systemd.services.create-swapfile = {
@@ -110,6 +134,6 @@ in {
 
   swapDevices = [{
   	device = "/swap/swapfile";
-	size = 1024 * 64;
+	size = 1024 * 4;
   }];
 }

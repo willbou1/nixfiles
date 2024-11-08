@@ -70,6 +70,7 @@
             "element-desktop"
             "libreoffice-fresh"
             "steam"
+            "mautrix-meta" # CVE with libolm
         ];
         bleedingEdgeOverlay = final: prev:
             builtins.listToAttrs (builtins.map

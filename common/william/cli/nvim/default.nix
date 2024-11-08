@@ -101,6 +101,7 @@ in with config.lib.stylix.colors.withHashtag; {
             expandtab = true;
             splitbelow = true;
             splitright = true;
+            smartcase = true;
             spelllang = "en_ca";
             guifont = "Monospace:h18";
             undofile = true;
