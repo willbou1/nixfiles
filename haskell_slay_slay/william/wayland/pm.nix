@@ -29,6 +29,12 @@ in {
         "$mod,Q,exec,${brilloDim}; ${lock} --grace 0"
     ];
     services.swayidle = {
+        events = [
+            {
+                event = "before-sleep";
+                command = "${lock} --grace 0";
+            }
+        ];
         timeouts = [
             {
                 timeout = 300;

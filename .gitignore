@@ -1,0 +1,10 @@
+# Nix specific
+result/
+result-*
+*.drv
+*.tix
+*.log
+*.gc.no
+*.out
+*.swp
+*.dmg

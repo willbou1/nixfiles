@@ -42,8 +42,8 @@ in {
     ];
     home.packages = with pkgs; [
         element-desktop
-        #nur.repos.willbou1.element-desktop-nightly
-        element-desktop-nightly
+        nur.repos.willbou1.element-desktop-nightly
+        #element-desktop-nightly
     ];
     xdg.configFile = {
         "Element/config.json".text = ''

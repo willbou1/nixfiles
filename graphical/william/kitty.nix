@@ -1,9 +1,10 @@
-{ lib, pkgs, ... }:
+{ lib, pkgs, config, ... }:
 
 {
-    home.terminal = "${pkgs.kitty}/bin/kitty";
+    home.terminal = "${config.programs.kitty.package}/bin/kitty";
     programs.kitty = {
         enable = true;
+        package = pkgs.kitty;
         keybindings = {
             "ctrl+plus" = "change_font_size all +2.0";
             "ctrl+minus" = "change_font_size all -2.0";

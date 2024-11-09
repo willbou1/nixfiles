@@ -28,10 +28,13 @@ with lib;
 			lftp
 			tmux
 			mlocate
-			nix-prefetch-github
 			miniupnpc
             acpi
             wget
+            # nix-related stuff
+			nix-prefetch-github
+            nix-output-monitor
+            nix-alien
 		];
 		persistence."/persist" = {
 			hideMounts = true;
@@ -71,7 +74,7 @@ with lib;
 			"s" = ''sudo SSH_AUTH_SOCK="$SSH_AUTH_SOCK" '';
             "sc" = "sudo systemctl";
             "jc" = "sudo journalctl --system";
-            "nu" = "sudo nix flake update /etc/nixos?submodules=1";
+            "nu" = "sudo nix flake update '/etc/nixos?submodules=1'";
             "shred" = "shred --remove";
 		};
 	};
@@ -91,6 +94,7 @@ with lib;
 			vimAlias = true;
 		};
 		fish.enable = true;
+        nix-ld.enable = true;
 	};
 
 	nix = {

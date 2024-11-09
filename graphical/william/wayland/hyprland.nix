@@ -22,7 +22,6 @@ let
         qutebrowser --target window 'https://korean.dict.naver.com/koendict/#/main'
         qutebrowser --target tab 'https://koreanhanja.app/'
     '');
-    kitty = "MESA_LOADER_DRIVER_OVERRIDE=iris __EGL_VENDOR_LIBRARY_FILENAMES=${pkgs.mesa_drivers}/share/glvnd/egl_vendor.d/50_mesa.json kitty";
 in {
     home.packages = with pkgs; [
         qt5.qtwayland
@@ -34,19 +33,19 @@ in {
         wl-gammarelay-rs
     ];
     wayland.windowManager.hyprland = {
-        package = inputs.hyprland.packages.${pkgs.system}.default;
+        #package = inputs.hyprland.packages.${pkgs.system}.default;
         enable = true;
         xwayland.enable = true;
         #enableNvidiaPatches = true;
         settings = {
             monitor = monitors ++ [",disable"];
-            plugin = {
-                touch_gestures = {
-                    sensitivity = 1.0;
-                    workspace_swipe_fingers = 3;
-                    experimental.send_cancel = 0;
-                };
-            };
+            #plugin = {
+            #    touch_gestures = {
+            #        sensitivity = 1.0;
+            #        workspace_swipe_fingers = 3;
+            #        experimental.send_cancel = 0;
+            #    };
+            #};
             input = {
                 kb_layout = "ca";
                 kb_variant = "multix";
@@ -64,7 +63,6 @@ in {
             general = {
                 gaps_in = config.home.gapSize;
                 gaps_out = ceil (config.home.gapSize * 1.5);
-                sensitivity = 1;
                 border_size = config.home.borderSize;
                 "col.inactive_border" = mkForce "0x${hexOpacity + base03}";
                 "col.active_border" = mkForce "0x${hexOpacity + base0A}";
@@ -155,9 +153,9 @@ in {
             bind = [
                 "$mod,B,exec,qutebrowser"
                 "$mod SHIFT,D,exec,${dic}/bin/dic"
-                "$mod,Return,exec,${kitty}"
-                "$mod SHIFT,Return,exec,${kitty} --title private fish --private -C 'set -x STARSHIP_CONFIG ~/.config/starship_private.toml'"
-                "$mod,N,exec,MESA_LOADER_DRIVER_OVERRIDE=iris __EGL_VENDOR_LIBRARY_FILENAMES=${pkgs.mesa_drivers}/share/glvnd/egl_vendor.d/50_mesa.json kitty ncpamixer"
+                "$mod,Return,exec, ${config.home.terminal}"
+                "$mod SHIFT,Return,exec, ${config.home.terminal} --title private fish --private -C 'set PRIVATE private && set -x STARSHIP_CONFIG ~/.config/starship_private.toml'"
+                "$mod,N,exec,${config.home.terminal} ncpamixer"
                 "$mod,D,exec,wofi --show drun"
                 "$mod,E,exec,element-desktop-nightly"
                 "$mod SHIFT,E,exec,element-desktop"
@@ -167,7 +165,6 @@ in {
                 "$mod SHIFT,Q,exit,"
                 "$mod,S,togglefloating,"
                 "$mod,F,fullscreen,"
-                "$mod SHIFT,F,fakefullscreen,"
                 "$mod,T,togglesplit"
                 "$mod,G,togglegroup"
                 "$mod,U,changegroupactive,f"

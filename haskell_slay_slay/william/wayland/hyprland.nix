@@ -1,4 +1,4 @@
-{ pkgs, lib, config, inputs, ... }: let
+{ pkgs, lib, config, ... }: let
     hyprrotate = pkgs.writeShellScriptBin "hyprrotate" ''
         #! /bin/sh
         transform="$(${pkgs.hyprland}/bin/hyprctl -j monitors | ${pkgs.jq}/bin/jq '.[0].transform')"
@@ -11,9 +11,14 @@
         ${pkgs.swww}/bin/swww img ${config.stylix.image}
     '';
     wallpaper = pkgs.writeShellScript "wallpaper.sh" ''
+        sleep 3
+        ${pkgs.swww}/bin/swww img ${config.stylix.image}
         last_workspace_id=100
         while true; do
             workspace_id="$(hyprctl activeworkspace -j | ${pkgs.jq}/bin/jq '.id')"
+            # If Hyprland is not running
+            [[ $workspace_id -eq *"HYPRLAND_INSTANCE_SIGNATURE"* ]] && break
+
             if [ $workspace_id -ne $last_workspace_id ]; then
                 last_workspace_id="$workspace_id"
                 [ $workspace_id -eq 8 ] && ${pkgs.swww}/bin/swww img ${../../../resources/wallpapers/gil_nak_won_3d.png} || ${pkgs.swww}/bin/swww img ${config.stylix.image}
@@ -29,16 +34,15 @@ in {
         hyprrotate
     ];
     wayland.windowManager.hyprland = {
-        plugins = [
-            inputs.hyprgrass.packages.${pkgs.system}.default
-        ];
+        #lugins = [ pkgs.hyprlandPlugins.hyprgrass ];
 		settings = {
             env = [
                 "WLR_DRM_DEVICE,/dev/dri/by-path/pci-0000:00:02.0-card"
             ];
             exec-once = [
                 "${pkgs.waybar}/bin/waybar"
-                "${wallpaper}"
+                #"${wallpaper}"
+                "sleep 3; ${pkgs.swww}/bin/swww img ${config.stylix.image}"
             ];
             bind = [
                 "$mod,M,exec,${hyprrotate}/bin/hyprrotate"

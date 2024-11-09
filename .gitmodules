@@ -43,3 +43,6 @@
 [submodule "devel/neovim-nightly-overlay"]
 	path = devel/neovim-nightly-overlay
 	url = git@github.com:willbou1/neovim-nightly-overlay.git
+[submodule "devel/fastfetch"]
+	path = devel/fastfetch
+	url = git@github.com:willbou1/fastfetch.git

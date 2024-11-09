@@ -20,7 +20,7 @@
             "uc" = "systemctl --user";
             "nd" = "nix develop --command fish";
             "w" = "curl -s wttr.in | less -RS";
-            "ns" = "nix-shell --run fish";
+            "ns" = "nix shell";
             "ujc" = "journalctl --user";
         };
         functions = {
@@ -49,7 +49,7 @@
             fish_vi_key_bindings
             set -e MESA_LOADER_DRIVER_OVERRIDE
             set -e __EGL_VENDOR_LIBRARY_FILENAMES
-            '';
+        '';
         plugins = with pkgs.fishPlugins; [
         {
             name ="ssh-agent";

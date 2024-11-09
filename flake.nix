@@ -29,7 +29,10 @@
 		hosts.url = github:StevenBlack/hosts;
 
 		#spicetify-nix.url = github:the-argus/spicetify-nix;
-		spicetify-nix.url = "git+file:./devel/spicetify-nix";
+		spicetify-nix = {
+            url = "git+file:./devel/spicetify-nix";
+            inputs.nixpkgs.follows = "nixpkgs";
+        };
 
         #notnft.url = github:chayleaf/notnft;
 
@@ -44,18 +47,7 @@
 
 		nur.url = github:nix-community/NUR;
 
-		hyprland = {
-            type = "git";
-            url = "https://www.github.com/hyprwm/Hyprland";
-            #url = "file:./devel/hyprland";
-            submodules = true;
-        };
-
-		hyprgrass = {
-			#url = github:horriblename/hyprgrass;
-			url = "git+file:./devel/hyprgrass";
-			inputs.hyprland.follows = "hyprland"; # IMPORTANT
-		};
+        nix-alien.url = "github:thiagokokada/nix-alien";
 	};
 
 	outputs = { self, nixpkgs, home-manager, ... } @ inputs: let
@@ -65,11 +57,14 @@
         lib = mkLib inputs.nixpkgs;
         bleedingEdgePackages = [
             "neovim" "neovim-unwrapped"
-            "qutebrowser"
             "mpv" "mpv-unwrapped"
             "element-desktop"
             "libreoffice-fresh"
-            "steam"
+            "steam" "bitwarden"
+            "kitty" "modrinth-app"
+            "firefox" "OVMF"
+            "gimp" 
+
             "mautrix-meta" # CVE with libolm
         ];
         bleedingEdgeOverlay = final: prev:
@@ -82,6 +77,7 @@
                     (import ./pkgs).overlay
                     #(import ./pkgs).nurOverlay
                     inputs.neovim-nightly-overlay.overlays.default
+                    inputs.nix-alien.overlays.default
                     (final: prev: {
                         unstable = import inputs.unstable {
                             system = final.system;
@@ -110,6 +106,7 @@
                     inputs.sops-nix.homeManagerModules.sops
                     inputs.nixvim.homeManagerModules.nixvim
                     inputs.nur.hmModules.nur
+                    inputs.spicetify-nix.homeManagerModules.default
                 ];
                 home-manager.users.william = import ./common/william;
             }

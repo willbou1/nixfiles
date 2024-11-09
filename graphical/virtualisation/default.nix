@@ -17,9 +17,9 @@ in {
         ];
         systemPackages = with pkgs; [
             virt-manager
-                libguestfs
-                lsiommu
-                win-virtio
+            libguestfs
+            lsiommu
+            win-virtio
         ];
     };
 

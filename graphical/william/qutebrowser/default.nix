@@ -42,11 +42,19 @@ in {
         enable = true;
         package = qutebrowser;
         settings = {
+            # Enable additional hardware acceleration
+            qt.args = [
+                "ignore-gpu-blocklist"
+                "enable-gpu-rasterization"
+                "enable-accelerated-2d-canvas"
+            ];
+
             window.transparent = true;
             editor.command = ["${config.home.terminal}" "nvim" "{file}" "-c" "normal {line}G{column0}l"];
             zoom.default = "135%";
             content = {
-             autoplay = false;
+                pdfjs = true;
+                autoplay = false;
                 fullscreen.overlay_timeout = 0;
                 blocking = {
                     method = "both";
@@ -100,7 +108,8 @@ in {
         };
         searchEngines = {
             #"DEFAULT" = "https://search.ourmiraculous.com/searx/search?q={}";
-            "DEFAULT" = "https://startpage.com/do/search?q={}";
+            #"DEFAULT" = "https://startpage.com/do/search?q={}";
+            "DEFAULT" = "https://duckduckgo.com/?q={}";
             "!s" = "https://startpage.com/do/search?q={}";
             "!w" = "https://en.wikipedia.org/wiki/Special:Search?search={}&amp;go=Go&amp;ns0=1";
             "!g" = "https://www.google.ca/search?q={}";
@@ -117,6 +126,14 @@ in {
 
             "rd" = "https://reddit.com/r/{}";
         };
+        keyBindings = {
+            normal = {
+                ",c" = "open https://chat.openai.com";
+                ",C" = "open -t https://chat.openai.com";
+                ",m" = "open https://mynixos.com";
+                ",M" = "open -t https://mynixos.com";
+            };
+        };
         extraConfig = ''
             c.tabs.padding = {'top':5,'bottom':5,'left':10,'right':10};
         '';
@@ -132,6 +149,13 @@ in {
 // ==/UserScript==
 
 document.addEventListener('load', () => {
+    //if (window.location.toString() === 'https://www.youtube.com/') {
+    //    const recommendations = document.getElementById("contents")
+    //    if(recommendations) {
+    //        recommendations.remove()
+    //    }
+    //}
+
     const btn = document.querySelector('.videoAdUiSkipButton,.ytp-ad-skip-button-modern')
     if (btn) {
         btn.click()
@@ -139,6 +163,7 @@ document.addEventListener('load', () => {
     const ad = [...document.querySelectorAll('.ad-showing')][0];
     if (ad) {
         document.querySelector('video').currentTime = 9999999999;
+        //document.querySelector('video').currentTime = 0;
     }
 }, true);
     '';

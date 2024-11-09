@@ -6,7 +6,7 @@ with lib;
     ];
 
     environment.persistence."/persist".directories = [
-        "/srv/torrents"
+        "/srv"
     ];
     networking = {
         hostName = "haskell_slay_slay";
@@ -17,7 +17,13 @@ with lib;
         mainInterface = "wlp0s20f3";
     };
     environment.shellAliases = {
-        "nr" = "sudo nixos-rebuild --flake /etc/nixos?submodules=1#haskell_slay_slay switch";
+        "nr" = "sudo nixos-rebuild --flake '/etc/nixos?submodules=1#haskell_slay_slay' switch --show-trace";
     };
     services.deluge.config.download_location = "/srv/torrents";
+
+    # 18 cores used total
+    #nix.settings = {
+    #    max-jobs = 3;
+    #    cores = 6;
+    #};
 }

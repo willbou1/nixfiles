@@ -8,6 +8,7 @@ expressvpnServers = servers: builtins.listToAttrs(map (s: {
         config = ''
             config /etc/openvpn/expressvpn/my_expressvpn_${strings.stringAsChars (c: if c == " " then "_" else c) s.fullName}_udp.ovpn
             auth-user-pass ${config.sops.templates."expressvpn_creds.txt".path}
+            route youtube.com 255.255.255.255 net_gateway
         '';
         updateResolvConf = true;
         autoStart = s.autoStart;

@@ -1,5 +1,5 @@
 { config, inputs, pkgs, ... }: let
-spicePkgs = inputs.spicetify-nix.legacyPackages.${pkgs.system}.default;
+spicePkgs = inputs.spicetify-nix.legacyPackages.${pkgs.system};
 in 
 with config.lib.stylix.colors; {
     home.persistence."/persist/home/william".directories = [
@@ -9,14 +9,14 @@ with config.lib.stylix.colors; {
 		enable = true;
 
 		enabledCustomApps = with spicePkgs.apps; [
-			lyrics-plus
+			lyricsPlus
 		];
 
 		enabledExtensions = with spicePkgs.extensions; [
 			bookmark
 			keyboardShortcut
 
-			fullAppDisplayMod
+			fullAppDisplay
 			fullAlbumDate
 			wikify
 			history

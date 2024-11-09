@@ -7,7 +7,7 @@
             powerKey = "suspend";
             extraConfig = ''
                 IdleActionSec=1200
-                IdleAction=suspend
+                IdleAction=ignore
             '';
         };
         thermald.enable = true;

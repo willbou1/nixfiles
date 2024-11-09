@@ -11,6 +11,7 @@ in {
         "/crypto_keyfile.cpio.gz"
     ];
 
+	boot.kernelPackages = pkgs.linuxPackages_zen;
     hardware.cpu.amd.updateMicrocode = true;
 	boot.kernel.sysctl = { "vm.swappiness" = 10;};	
 	boot.loader.efi.canTouchEfiVariables = true;
