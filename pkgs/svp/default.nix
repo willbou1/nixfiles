@@ -53,12 +53,12 @@ let
         "__VK_LAYER_NV_optimus"
         "NVIDIA_only"
       ];
-    scripts = [
+      scripts = [
         mpvScripts.uosc
         mpvScripts.mpris
         mpvScripts.thumbfast
         mpvScripts.sponsorblock
-    ];
+      ];
     };
 
   libraries = [

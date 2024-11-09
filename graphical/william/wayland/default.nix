@@ -1,5 +1,4 @@
-{ lib, ... }:
-with lib;
-{
-    imports = mine.autoInclude ./. [];
+{lib, ...}:
+with lib; {
+  imports = mine.autoInclude ./. [];
 }

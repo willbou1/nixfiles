@@ -1,5 +1,5 @@
 {
-    imports = [
-        ./rt.nix
-    ];
+  imports = [
+    ./rt.nix
+  ];
 }

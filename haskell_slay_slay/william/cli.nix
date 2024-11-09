@@ -1,5 +1,5 @@
 {
-    programs.fish.shellAliases = {
-        "mpv" = "nvidia-offload mpv";
-    };
+  programs.fish.shellAliases = {
+    "mpv" = "nvidia-offload mpv";
+  };
 }

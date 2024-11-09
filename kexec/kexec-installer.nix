@@ -17,19 +17,18 @@
 # $ nix-build custom-installer.nix
 # $ ls -la ./result
 # TODO: make it fully automatic: https://gist.github.com/cleverca22/75e3db4dabeff05b743e9be77a2341b9#file-configuration-nix-L4-L19
-{
-  extraConfig ? {...}: {},
-}:
-let
+{extraConfig ? {...}: {}}: let
   pkgs = import <nixpkgs> {};
-  config = (import <nixpkgs/nixos> {
-    configuration = {
-      imports = [
-        <nixpkgs/nixos/modules/installer/netboot/netboot-minimal.nix>
-        extraConfig
-      ];
-    };
-  }).config;
+  config =
+    (import <nixpkgs/nixos> {
+      configuration = {
+        imports = [
+          <nixpkgs/nixos/modules/installer/netboot/netboot-minimal.nix>
+          extraConfig
+        ];
+      };
+    })
+    .config;
   inherit (config.system) build;
   kexecScript = pkgs.writeScript "kexec-installer" ''
     #!/bin/sh
@@ -42,8 +41,18 @@ let
       kexec -e
     fi
   '';
-in pkgs.linkFarm "netboot" [
-  { name = "initrd.gz"; path = "${build.netbootRamdisk}/initrd"; }
-  { name = "bzImage";   path = "${build.kernel}/bzImage"; }
-  { name = "kexec-installer"; path = kexecScript; }
-]
+in
+  pkgs.linkFarm "netboot" [
+    {
+      name = "initrd.gz";
+      path = "${build.netbootRamdisk}/initrd";
+    }
+    {
+      name = "bzImage";
+      path = "${build.kernel}/bzImage";
+    }
+    {
+      name = "kexec-installer";
+      path = kexecScript;
+    }
+  ]

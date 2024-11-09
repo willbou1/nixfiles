@@ -1,7 +1,7 @@
 {
-    imports = [
-        ./dwm.nix
-        ./dwmblocks.nix
-        ./dmenu.nix
-    ];
+  imports = [
+    ./dwm.nix
+    ./dwmblocks.nix
+    ./dmenu.nix
+  ];
 }
