@@ -1,9 +1,4 @@
-{
-  inputs,
-  config,
-  pkgs,
-  ...
-}: let
+{pkgs, ...}: let
   EFI_UUID = "/dev/disk/by-uuid/04DC-F1BD";
   NVME_LUKS_UUID = "/dev/disk/by-uuid/4d0c061c-d3f2-4553-9aca-ddb5ec7bd1d7";
   PRIV_LUKS_UUID = "/dev/disk/by-uuid/82bc1f36-42ef-4548-aa86-3171543b51c3";

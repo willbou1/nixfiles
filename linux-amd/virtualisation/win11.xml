@@ -276,20 +276,21 @@ or other application using the libvirt API.
     </redirdev>
     <watchdog model='itco' action='reset'/>
     <memballoon model='none'/>
-    <shmem name='looking-glass1'>
-      <model type='ivshmem-plain'/>
-      <size unit='M'>64</size>
-      <address type='pci' domain='0x0000' bus='0x10' slot='0x01' function='0x0'/>
-    </shmem>
-    <shmem name='looking-glass2'>
-      <model type='ivshmem-plain'/>
-      <size unit='M'>64</size>
-      <address type='pci' domain='0x0000' bus='0x10' slot='0x02' function='0x0'/>
-    </shmem>
   </devices>
   <qemu:commandline>
     <qemu:arg value='-overcommit'/>
     <qemu:arg value='cpu-pm=on'/>
+
+    <qemu:arg value='-device'/>
+    <qemu:arg value='{"driver":"ivshmem-plain","id":"shmem0","memdev":"looking-glass0"}'/>
+    <qemu:arg value='-object'/>
+    <qemu:arg value='{"qom-type":"memory-backend-file","id":"looking-glass0","mem-path":"/dev/kvmfr0","size":67108864,"share":true}'/>
+
+    <qemu:arg value='-device'/>
+    <qemu:arg value='{"driver":"ivshmem-plain","id":"shmem1","memdev":"looking-glass1"}'/>
+    <qemu:arg value='-object'/>
+    <qemu:arg value='{"qom-type":"memory-backend-file","id":"looking-glass1","mem-path":"/dev/kvmfr1","size":67108864,"share":true}'/>
+
     <qemu:env name='SPICE_DEBUG_ALLOW_MC' value='1'/>
   </qemu:commandline>
 </domain>

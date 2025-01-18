@@ -90,8 +90,10 @@ with lib; {
   programs = {
     git = {
       enable = true;
+      package = pkgs.gitFull;
       config = {
         include.path = "/home/william/.config/git/config";
+        credential.helper = "libsecret";
       };
     };
     fuse.userAllowOther = true;

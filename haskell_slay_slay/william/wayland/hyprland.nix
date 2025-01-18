@@ -47,7 +47,6 @@ in {
       exec-once = [
         "${pkgs.waybar}/bin/waybar"
         #"${wallpaper}"
-        "sleep 3; ${pkgs.swww}/bin/swww img ${config.stylix.image}"
       ];
       bind = [
         "$mod,M,exec,${hyprrotate}/bin/hyprrotate"

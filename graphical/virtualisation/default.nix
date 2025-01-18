@@ -1,9 +1,10 @@
 {
-  inputs,
+  lib,
   config,
   pkgs,
   ...
-}: let
+}:
+with lib; let
   lsiommu = pkgs.writeShellScriptBin "lsiommu" ''
     #!/bin/bash
     for d in $(find /sys/kernel/iommu_groups/ -type l | sort -n -k5 -t/); do
@@ -15,7 +16,10 @@
   '';
   downloads_pool = pkgs.writeText "downloads_pool.xml" (builtins.readFile ./downloads_pool.xml);
 in {
-  boot.initrd.kernelModules = ["vfio" "vfio_iommu_type1" "vfio_pci"];
+  boot.initrd.kernelModules = ["vfio" "vfio_iommu_type1" "vfio_pci" "kvmfr"];
+  boot.extraModulePackages = mkBefore (with config.boot.kernelPackages; [
+    kvmfr
+  ]);
   environment = {
     persistence."/persist".directories = [
       "/var/lib/libvirt"
@@ -34,6 +38,15 @@ in {
       onBoot = "ignore";
       onShutdown = "shutdown";
       qemu = {
+        verbatimConfig = ''
+          cgroup_device_acl = [
+            "/dev/null", "/dev/full", "/dev/zero",
+            "/dev/random", "/dev/urandom",
+            "/dev/ptmx", "/dev/kvm",
+            "/dev/rtc","/dev/hpet",
+            "/dev/kvmfr0", "/dev/kvmfr1"
+          ]
+        '';
         ovmf = {
           enable = true;
           packages = [
@@ -62,9 +75,9 @@ in {
     #        };
   };
 
-  systemd.tmpfiles.rules = [
-    "f /dev/shm/looking-glass1 0660 william qemu-libvirtd -"
-  ];
+  services.udev.extraRules = ''
+    SUBSYSTEM=="kvmfr", OWNER="william", GROUP="libvirtd", MODE="0600"
+  '';
 
   system.activationScripts.libvirt-pools.text = ''
     storage="/var/lib/libvirt/storage"

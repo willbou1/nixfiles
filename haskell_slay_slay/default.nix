@@ -20,7 +20,7 @@ with lib; {
     mainInterface = "wlp0s20f3";
   };
   environment.shellAliases = {
-    "nr" = "sudo nixos-rebuild --flake '/etc/nixos?submodules=1#haskell_slay_slay' switch --show-trace &| nom";
+    "nr" = "sudo nixos-rebuild --impure --show-trace --flake '/etc/nixos?submodules=1#haskell_slay_slay' switch --show-trace &| nom";
   };
   services.deluge.config.download_location = "/srv/torrents";
 

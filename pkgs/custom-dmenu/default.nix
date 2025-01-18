@@ -10,7 +10,6 @@
   # update script dependencies
   gitUpdater,
 }:
-
 stdenv.mkDerivation rec {
   pname = "custom-dmenu";
   version = "5.3";
@@ -40,7 +39,7 @@ stdenv.mkDerivation rec {
     sed -i "s@PREFIX = /usr/local@PREFIX = $out@g" config.mk
   '';
 
-  makeFlags = [ "CC:=$(CC)" ];
+  makeFlags = ["CC:=$(CC)"];
 
   passthru.updateScript = gitUpdater {
     url = "git://git.suckless.org/dmenu";

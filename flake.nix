@@ -2,7 +2,6 @@
   description = "flake for linux-laptop";
 
   inputs = {
-
     #nixpkgs.url = github:NixOS/nixpkgs/nixos-24.05;
     nixpkgs.url = "git+file:./devel/nixpkgs";
 
@@ -63,37 +62,31 @@
     home-manager,
     ...
   } @ inputs: let
+    settings = import ./settings.nix;
     mkLib = nixpkgs:
       nixpkgs.lib.extend
       (self: super: {mine = import ./lib {lib = self;};});
     lib = mkLib inputs.nixpkgs;
-    bleedingEdgePackages = [
-      "neovim"
-      "kitty"
-      "neovim-unwrapped"
-      "mpv"
-      "mpv-unwrapped"
-      "svp"
-      "element-desktop"
-      "libreoffice-fresh"
-      "steam"
-      "bitwarden"
-      "kitty"
-      "firefox"
-      "OVMF"
-      "gimp"
-      "fastfetch"
-      #"swaylock-effects"
-
-      "mautrix-meta" # CVE with libolm
-    ];
     bleedingEdgeOverlay = final: prev:
       builtins.listToAttrs (builtins.map
         (p: {
           name = p;
           value = final.unstable."${p}";
         })
-        bleedingEdgePackages);
+        settings.bleedingEdgePackages);
+    nixpkgsPRsToPatches = map (p: {
+      url = "https://patch-diff.githubusercontent.com/raw/NixOS/nixpkgs/pull/${toString p.id}.diff";
+      inherit (p) sha256;
+    });
+    patchNixpkgs = name: patches: unpatched: let
+      tools = unpatched.legacyPackages."x86_64-linux";
+    in
+      tools.applyPatches {
+        inherit name;
+        src = unpatched;
+        patches = map tools.fetchpatch patches;
+      };
+    unstable = patchNixpkgs "nixpkgs-unstable-patched" (nixpkgsPRsToPatches settings.unstableNixpkgsPRs) inputs.unstable;
     commonNixosModules = [
       {
         nixpkgs.overlays = [
@@ -104,11 +97,11 @@
           inputs.emacs-overlay.overlays.default
           inputs.nix-alien.overlays.default
           (final: prev: {
-            unstable = import inputs.unstable {
-              system = final.system;
-              config.allowUnfree = final.config.allowUnfree;
+            unstable = import unstable {
+              inherit (final) system config;
               overlays = [
                 (import ./pkgs).overlay
+                (import ./pkgs).nurOverlay
               ];
             };
           })
@@ -147,6 +140,7 @@
         specialArgs = {
           inherit inputs;
           inherit lib;
+          inherit unstable;
         };
         modules =
           [
@@ -166,6 +160,7 @@
         specialArgs = {
           inherit inputs;
           inherit lib;
+          inherit unstable;
         };
         modules =
           [
@@ -185,6 +180,7 @@
         specialArgs = {
           inherit inputs;
           inherit lib;
+          inherit unstable;
         };
         modules =
           [

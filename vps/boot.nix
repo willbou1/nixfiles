@@ -35,7 +35,7 @@ in {
       set timeout=30
     '';
   };
-  boot.kernelPackages = pkgs.unstable.linuxPackages_latest;
+  boot.kernelPackages = pkgs.linuxPackages_latest;
   boot.kernelModules = [];
   boot.extraModulePackages = [];
   boot.kernelParams = [(toKernelIPParam bootNetworkConfig)];

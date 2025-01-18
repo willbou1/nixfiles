@@ -2,7 +2,6 @@
   pkgs,
   lib,
   config,
-  inputs,
   ...
 }:
 with builtins;
@@ -130,6 +129,9 @@ in {
         "$mod,mouse:272,movewindow"
         "$mod,mouse:273,resizewindow"
       ];
+      exec = [
+        "sleep 3; ${pkgs.swww}/bin/swww img ${config.stylix.image}"
+      ];
       exec-once = [
         "SVPManager"
         "element-desktop-nightly"
@@ -171,7 +173,7 @@ in {
           "$mod,N,exec,${config.home.terminal} ncpamixer"
           "$mod,E,exec,emacsclient -c"
           "$mod,D,exec,wofi --show drun"
-          "$mod,W,exec,looking-glass-client -f /dev/shm/looking-glass1"
+          "$mod,W,exec,looking-glass-client -f /dev/kvmfr0"
           "$mod,C,exec,${hyprcap}/bin/hyprcap"
 
           "$mod SHIFT,Q,exit,"

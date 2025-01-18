@@ -3,8 +3,7 @@
   pkgs,
   ...
 }:
-with builtins;
-with config.lib.stylix.colors.withHashtag; {
+with builtins; {
   xdg.configFile."clangd/config.yaml".source = ./clangd.yaml;
   programs.nixvim = {
     enable = true;
@@ -63,8 +62,12 @@ with config.lib.stylix.colors.withHashtag; {
             ["nvim_lsp" "path" "buffer" "cmdline" "vsnip" "calc" "spell"];
           mappingPresets = ["insert"];
           mapping = {
-            "<CR>" = "cmp.mapping.confirm({ select = false })";
+            "<C-Space>" = "cmp.mapping.complete()";
+            "<CR>" = "cmp.mapping.confirm({ select = true })";
+            "<C-j>" = "cmp.mapping.select_next_item()";
+            "<C-k>" = "cmp.mapping.select_prev_item()";
           };
+          preselect = "cmp.PreselectMode.None";
         };
       };
       lsp = {

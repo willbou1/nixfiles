@@ -9,6 +9,7 @@ with lib; {
   #new version
   imports = mine.autoInclude ./. [
     ./deprecated
+    ./emacs
   ];
 
   options.home = {
