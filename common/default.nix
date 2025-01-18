@@ -42,6 +42,7 @@ with lib; {
       nix-prefetch-github
       nix-output-monitor
       nix-alien
+      cntr
     ];
     persistence."/persist" = {
       hideMounts = true;
@@ -81,7 +82,7 @@ with lib; {
       "s" = ''sudo SSH_AUTH_SOCK="$SSH_AUTH_SOCK" '';
       "sc" = "sudo systemctl";
       "jc" = "sudo journalctl --system";
-      "nu" = "sudo nix flake update '/etc/nixos?submodules=1'";
+      "nu" = "sudo nix flake lock --update-input ";
       "shred" = "shred --remove";
     };
   };

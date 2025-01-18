@@ -9,7 +9,7 @@ with lib;
 with config.lib.stylix.colors.withHashtag; {
   stylix = {
     enable = true;
-    image = ../../resources/wallpapers/space.jpg;
+    image = ../../resources/wallpapers/eva_night.jpg;
     polarity = "dark";
     targets.vim.enable = false;
     opacity = {
@@ -18,10 +18,18 @@ with config.lib.stylix.colors.withHashtag; {
       popups = 0.85;
       terminal = 0.75;
     };
-    fonts = {
-      monospace = with pkgs; {
-        name = "FiraCode Nerd Font Mono";
-        package = fira-code;
+    fonts = with pkgs; {
+      serif = {
+        name = "DejaVu Serif";
+        package = pkgs.dejavu_fonts;
+      };
+      sansSerif = {
+        name = "Open Sans";
+        package = open-sans;
+      };
+      monospace = {
+        name = "JetBrains Mono";
+        package = jetbrains-mono;
       };
     };
   };
@@ -52,22 +60,4 @@ with config.lib.stylix.colors.withHashtag; {
       "https://github.com/ful1e5/fuchsia-cursor/releases/download/v2.0.0/Fuchsia-Pop.tar.gz"
       "sha256-BvVE9qupMjw7JRqFUj1J0a4ys6kc9fOLBPx2bGaapTk="
       "Fuchsia-Pop");
-  xdg.configFile."wofi/colors".text = ''
-    ${base00}
-    ${base01}
-    ${base02}
-    ${base03}
-    ${base04}
-    ${base05}
-    ${base06}
-    ${base07}
-    ${base08}
-    ${base09}
-    ${base0A}
-    ${base0B}
-    ${base0C}
-    ${base0D}
-    ${base0E}
-    ${base0F}
-  '';
 }

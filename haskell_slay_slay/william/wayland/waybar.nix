@@ -26,7 +26,7 @@ in {
         memory.format = "  {}%";
         clock.format = "{:%I:%M:%p}";
         "custom/wl-gammarelay-temperature" = {
-          "format" = "{} ";
+          "format" = "  {}";
           "exec" = "wl-gammarelay-rs watch {t}";
           "on-scroll-up" = "busctl --user -- call rs.wl-gammarelay / rs.wl.gammarelay UpdateTemperature n +100";
           "on-scroll-down" = "busctl --user -- call rs.wl-gammarelay / rs.wl.gammarelay UpdateTemperature n -100";
@@ -93,12 +93,12 @@ in {
           format-icons = ["" "" "" "" ""];
         };
         network = {
-          format-wifi = "  {essid} ({signalStrength}%)";
-          format-ethernet = "󰈁  {ifname}";
-          tooltip-format = "󰈁  {ifname} via {gwaddr}";
-          format-linked = "  {ifname} (No IP)";
+          format-wifi = "   {essid} ({signalStrength}%)";
+          format-ethernet = "󰈁   {ifname}";
+          tooltip-format = "󰈁   {ifname} via {gwaddr}";
+          format-linked = "   {ifname} (No IP)";
           format-disconnected = "Disconnected ⚠ {ifname}";
-          format-alt = "  {ifname}: {ipaddr}/{cidr}";
+          format-alt = "   {ifname}: {ipaddr}/{cidr}";
         };
         pulseaudio = {
           format = "{icon}  {volume}%   {format_source}";
@@ -115,7 +115,7 @@ in {
           thermal-zone = 8;
         };
         backlight = {
-          format = "{icon}  {percent}%";
+          format = "{icon} {percent}%";
           format-icons = ["󰃜" "󰃛" "󰃚"];
         };
       };

@@ -46,6 +46,18 @@ in {
   programs.qutebrowser = {
     enable = true;
     package = qutebrowser;
+    domainSettings = {
+      "https://teams.microsoft.com" = {
+        content.notifications.enabled = true;
+        colors.webpage.darkmode.enabled = false;
+      };
+      "https://www.netflix.com".content.notifications.enabled = false;
+      "https://www.facebook.com".content.notifications.enabled = false;
+      "https://mail.google.com" = {
+        content.register_protocol_handler = true;
+        colors.webpage.darkmode.enabled = false;
+      };
+    };
     settings = {
       # Enable additional hardware acceleration
       qt.args = [
@@ -72,12 +84,12 @@ in {
             "https://secure.fanboy.co.nz/fanboy-cookiemonster.txt"
           ];
         };
-        user_stylesheets = [
-          (config.xdg.configHome
-            + "/qutebrowser/stylesheets/youtube.css")
-        ];
+        #user_stylesheets = [];
       };
-      input.insert_mode.auto_load = true;
+      input.insert_mode = {
+        auto_load = true;
+        plugins = true;
+      };
       url = {
         default_page = "https://startpage.com";
         start_pages = ["https://startpage.com"];
@@ -88,27 +100,39 @@ in {
         uppercase = true;
       };
       scrolling.smooth = true;
-      auto_save.session = true;
+      auto_save = {
+        session = true;
+        interval = 5000;
+      };
       colors.webpage.darkmode.enabled = true;
       spellcheck.languages = ["en-US" "fr-FR"];
       statusbar = {
         show = "always";
         position = "top";
+        widgets = [
+          "keypress"
+          "search_match"
+          "url"
+          "history"
+          "tabs"
+          "progress"
+        ];
       };
       tabs = {
         show = "multiple";
         position = "bottom";
         select_on_remove = "last-used";
+        mode_on_change = "restore";
         title.format = "{audio} {current_title}";
       };
       downloads = {
         position = "bottom";
         location = {
           directory = config.xdg.userDirs.download;
-          prompt = false;
+          prompt = true;
           suggestion = "filename";
         };
-        remove_finished = 15;
+        remove_finished = 20;
       };
     };
     searchEngines = {
@@ -119,7 +143,7 @@ in {
       "!w" = "https://en.wikipedia.org/wiki/Special:Search?search={}&amp;go=Go&amp;ns0=1";
       "!g" = "https://www.google.ca/search?q={}";
       "!d" = "https://duckduckgo.com/?q={}";
-      "!i" = "https://invidious.asir.dev/search?q={}";
+      "!i" = "https://inv.nadeko.net/search?q={}";
       "!p" = "https://piped.video/results?search_query={}";
       "!y" = "http://www.youtube.com/results?search_query={}&page={{startPage?}}&utm_source=opensearch";
       "!m" = "https://mydramalist.com/search?q={}";
@@ -135,48 +159,18 @@ in {
       normal = {
         ",c" = "open https://chat.openai.com";
         ",C" = "open -t https://chat.openai.com";
-        ",m" = "open https://mynixos.com";
-        ",M" = "open -t https://mynixos.com";
+        ",n" = "open https://mynixos.com";
+        ",N" = "open -t https://mynixos.com";
+        ",d" = "open https://noogle.dev";
+        ",D" = "open -t https://noogle.dev";
         ",g" = "open https://github.com";
         ",G" = "open -t https://github.com";
+        ",t" = "config-cycle colors.webpage.darkmode.enabled";
       };
     };
     extraConfig = ''
       c.tabs.padding = {'top':5,'bottom':5,'left':10,'right':10};
+      config.unbind('<Ctrl-a>', mode='normal');
     '';
   };
-
-  # TODO: Remember to keep this up to date
-  home.file.".local/share/qutebrowser/greasemonkey/youtube-adblock.user.js".text = ''
-    // ==UserScript==
-    // @name Skip YouTube ads
-    // @description Skips the ads in YouTube videos
-    // @run-at document-start
-    // @include *.youtube.com/*
-    // ==/UserScript==
-
-    document.addEventListener('load', () => {
-        //if (window.location.toString() === 'https://www.youtube.com/') {
-        //    const recommendations = document.getElementById("contents")
-        //    if(recommendations) {
-        //        recommendations.remove()
-        //    }
-        //}
-
-        const btn = document.querySelector('.videoAdUiSkipButton,.ytp-ad-skip-button-modern')
-        if (btn) {
-            btn.click()
-        }
-        const ad = [...document.querySelectorAll('.ad-showing')][0];
-        if (ad) {
-            document.querySelector('video').currentTime = 9999999999;
-            //document.querySelector('video').currentTime = 0;
-        }
-    }, true);
-  '';
-  xdg.configFile."qutebrowser/stylesheets/youtube.css".text = ''
-    .ytp-gradient-bottom{
-       display:none !important
-    }
-  '';
 }

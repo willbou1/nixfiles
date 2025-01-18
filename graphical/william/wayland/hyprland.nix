@@ -37,6 +37,11 @@ in {
     hyprcap
     wl-gammarelay-rs
   ];
+  xdg.configFile."hypr/xdph.conf".text = ''
+    screencopy {
+      mas_fps = 30
+    }
+  '';
   wayland.windowManager.hyprland = {
     #package = inputs.hyprland.packages.${pkgs.system}.default;
     enable = true;
@@ -82,7 +87,7 @@ in {
         blur = {
           enabled = true;
           size = 5;
-          passes = 1;
+          passes = 2;
           special = true;
         };
         drop_shadow = true;
@@ -162,15 +167,15 @@ in {
           "$mod,Return,exec, ${config.home.terminal}"
           "$mod SHIFT,Return,exec, ${config.home.terminal} --title private fish --private -C 'set PRIVATE private && set -x STARSHIP_CONFIG ~/.config/starship_private.toml'"
           "$mod,N,exec,${config.home.terminal} ncpamixer"
+          "$mod,E,exec,emacsclient -c"
           "$mod,D,exec,wofi --show drun"
-          "$mod,E,exec,element-desktop-nightly"
-          "$mod SHIFT,E,exec,element-desktop"
           "$mod,W,exec,looking-glass-client -f /dev/shm/looking-glass1"
           "$mod,C,exec,${hyprcap}/bin/hyprcap"
 
           "$mod SHIFT,Q,exit,"
           "$mod,S,togglefloating,"
           "$mod,F,fullscreen,"
+          "$mod SHIFT,F, fakefullscreen"
           "$mod,T,togglesplit"
           "$mod,G,togglegroup"
           "$mod,U,changegroupactive,f"
@@ -197,7 +202,7 @@ in {
           ",XF86AudioNext,exec,playerctl next"
 
           "$mod SHIFT,S,togglespecialworkspace,secret"
-          "$mod SHIFT,B,exec,qutebrowser ':open -p'"
+          "$mod SHIFT,B,exec,qutebrowser --restore private ':open -p'"
         ]
         ++ concatLists (genList (x: let
             xs = toString (x + 1);

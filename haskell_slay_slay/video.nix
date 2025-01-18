@@ -1,19 +1,8 @@
 {
-  lib,
-  inputs,
   config,
   pkgs,
   ...
 }: {
-  # Fix for low framerate on intel iGPU when not stimulated for a while
-  # - Enable framebuffer compression
-  # - Offload decoding to iGPU with new firmware
-  # - Enable panel self-refresh to save battery
-  # - Disable regular power-saving to avoid bad framerate
-  boot.extraModprobeConfig = ''
-    options i915 enable_dc=4 enable_fbc=1 enable_guc=3 enable_psr=2 enable_psr2_sel_fetch=1 disable_power_well=1
-  '';
-
   boot.kernelModules = ["evdi"];
   services.xserver.videoDrivers = [
     "nvidia"

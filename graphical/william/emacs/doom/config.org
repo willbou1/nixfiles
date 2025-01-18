@@ -1,0 +1,548 @@
+#+TITLE: Emacs Configuration
+#+DESCRIPTION: Literate emacs configuration
+#+STARTUP: showeverything
+#+PROPERTY: header-args:elisp :tangle yes
+
+* Table of contents :toc:
+- [[#required-packages][Required packages]]
+- [[#etc][Etc]]
+- [[#fonts][Fonts]]
+- [[#dashboard][Dashboard]]
+- [[#editor][Editor]]
+  - [[#copy-and-paste][Copy and paste]]
+  - [[#indentation][Indentation]]
+- [[#projectile][Projectile]]
+- [[#completion][Completion]]
+  - [[#orderless][Orderless]]
+  - [[#cape][Cape]]
+- [[#org][Org]]
+  - [[#keybinds][Keybinds]]
+  - [[#roam][Roam]]
+  - [[#appear][Appear]]
+- [[#treemacs][Treemacs]]
+- [[#keybinds-1][Keybinds]]
+  - [[#registers][Registers]]
+  - [[#elisp-evaluation-and-debugging][ELisp evaluation and debugging]]
+  - [[#input-method][Input method]]
+  - [[#misc][Misc]]
+- [[#debugging][Debugging]]
+  - [[#keybindings][Keybindings]]
+- [[#dired][Dired]]
+  - [[#peep][Peep]]
+- [[#minimap][Minimap]]
+- [[#tabs][Tabs]]
+- [[#todo][Todo]]
+- [[#ai][AI]]
+  - [[#prompting][Prompting]]
+  - [[#copilot][Copilot]]
+- [[#elfeed][Elfeed]]
+- [[#treesitter][Treesitter]]
+
+* Required packages
+I like to use dash and s when coding more complex ELisp functions.
+#+begin_src elisp
+(require 'dash)
+(require 's)
+#+end_src
+
+* Etc
+#+begin_src elisp
+(setq user-full-name "William Boulanger"
+      user-mail-address "willbou2@gmail.com"
+      safe-local-variable-values
+       '((projectile-project-compilation-cmd .
+          "cmake -DCMAKE_BUILD_TYPE=Debug . && cmake --build .")))
+(after! which-key
+  (setq which-key-idle-delay 0.2
+        which-key-side-window-max-height 0.6))
+#+end_src
+
+* Fonts
+#+begin_src elisp
+(custom-set-faces!
+  '(font-lock-comment-face :slant italic)
+  '(font-lock-keyword-face :slant italic))
+#+end_src
+
+* Dashboard
+_My Doom Emacs has a patched dashboard_
+#+begin_src elisp
+(defun set-random-fancy-splash ()
+  "This function sets fancy-splash-image to a random image inside $DOOM_DIR/splash."
+  (interactive)
+  (let* ((old-fancy-splash-image fancy-splash-image)
+        (splash-directory (concat doom-private-dir "splash/"))
+        (files (directory-files splash-directory))
+        (splashes (-remove (-partial '-contains? '("." "..")) files)))
+    (setq fancy-splash-image
+          (let ((splash (nth (random (length splashes)) splashes)))
+            (if (eq splashes nil) nil
+              (concat splash-directory splash))))
+    (if (and (stringp fancy-splash-image)
+             (s-equals? fancy-splash-image old-fancy-splash-image))
+        (set-random-fancy-splash)
+        (if (eq major-mode '+doom-dashboard-mode) (+doom-dashboard-reload)))))
+
+(defun browse-nixos ()
+  "Browse NixOS configuration"
+  (interactive)
+  (doom-project-browse "/sudo::/etc/nixos/"))
+
+(setq +doom-dashboard-width 60
+      +doom-dashboard-banner-max-width 50
+      +doom-dashboard-banner-max-height (truncate (/ (* 3 50) 4))
+      +doom-dashboard-banner-padding '(0 . 1)
+      +doom-dashboard-menu-sections
+      '(("Recently opened files"
+         :icon (nerd-icons-faicon "nf-fa-file_text" :face 'doom-dashboard-menu-title)
+         :action recentf-open-files)
+        ("Reload last session"
+         :icon (nerd-icons-octicon "nf-oct-history" :face 'doom-dashboard-menu-title)
+         :when (cond ((modulep! :ui workspaces)
+                      (file-exists-p (expand-file-name persp-auto-save-fname persp-save-dir)))
+                     ((require 'desktop nil t)
+                      (file-exists-p (desktop-full-file-name))))
+         :action doom/quickload-session)
+        ("Open project"
+         :icon (nerd-icons-octicon "nf-oct-briefcase" :face 'doom-dashboard-menu-title)
+         :action projectile-switch-project)
+        ("Open NixOS configuration"
+         :icon (nerd-icons-mdicon "nf-md-nix" :face 'doom-dashboard-menu-title)
+         :when (file-directory-p "/etc/nixos/")
+         :action browse-nixos)
+        ("Open org-agenda"
+         :icon (nerd-icons-octicon "nf-oct-calendar" :face 'doom-dashboard-menu-title)
+         :when (fboundp 'org-agenda)
+         :action org-agenda)
+        ("Randomise banner"
+         :icon (nerd-icons-octicon "nf-oct-image" :face 'doom-dashboard-menu-title)
+         :action set-random-fancy-splash)))
+
+(set-random-fancy-splash)
+#+end_src
+
+* Editor
+#+begin_src elisp
+(setq display-line-numbers-type 'relative)
+
+(after! (evil evil-vars)
+  (setq evil-shift-width 2)
+  (delq 'multiedit evil-escape-excluded-states)
+  (delq 'visual evil-escape-excluded-states))
+
+(after! (evil evil-vars org)
+  (dolist (st '(org-mode-syntax-table prog-mode-syntax-table))
+    (modify-syntax-entry ?- "w" (eval st))
+    (modify-syntax-entry ?_ "w" (eval st))))
+
+(setq-default fill-column 80)
+(after! display-fill-column-indicator
+  (setq global-display-fill-column-indicator-modes
+        '((not special-mode dired-mode) t)))
+(+global-word-wrap-mode +1)
+
+(setq comment-auto-fill-only-comments t)
+(add-hook! (text-mode prog-mode org-mode) #'auto-fill-mode)
+#+end_src
+
+#+RESULTS:
+
+** Copy and paste
+#+begin_src elisp
+(setq select-enable-clipboard t)
+(map!
+ :i "C-S-v" #'yank)
+#+end_src
+
+** Indentation
+#+begin_src elisp
+(setq-default indent-tabs-mode nil)
+(setq-default tab-width 4)
+(setq indent-line-function 'insert-tab)
+#+end_src
+
+* Projectile
+#+begin_src elisp
+(after! projectile
+  (setq projectile-project-search-path
+        '("~/priv/code" "~/priv/source" '("/etc/nixos" . 0))))
+#+end_src
+
+* Completion
+#+begin_src elisp
+(after! corfu
+  (setq corfu-preselect 'first
+        corfu-preview-current nil))
+#+end_src
+
+** Orderless
+By default, only a space can be used to interact with orderless which does
+not makes sense for CAP sometimes. Let's change it so that we can also use
+slashes to achieve the same.
+#+begin_src elisp
+(after! orderless
+  (setq orderless-component-separator " +\\|[/]"))
+#+end_src
+
+** Cape
+#+begin_src elisp
+(after! cape
+  (setq cape-dabbrev-check-other-buffers nil)
+  (defun set-up-completions ()
+    (add-to-list 'completion-at-point-functions #'cape-dict)
+    (add-to-list 'completion-at-point-functions #'cape-abbrev)
+    (add-to-list 'completion-at-point-functions #'cape-dabbrev)
+    (add-to-list 'completion-at-point-functions #'cape-file))
+  (add-hook! prog-mode #'set-up-completions)
+  (add-hook! org-mode #'set-up-completions))
+#+end_src
+
+* Org
+#+begin_src elisp
+(after! org
+  (setq org-directory "~/priv/documents/org/"
+        org-log-into-drawer t
+        org-log-done 'note
+        org-hide-emphasis-markers t))
+#+end_src
+
+** Keybinds
+#+begin_src elisp
+(defun find-headlines ()
+  "Find all Org headlines in the current file"
+  (interactive)
+  (xref-show-xrefs
+    (apply-partially #'project--find-regexp-in-files "^\\*+" (list (buffer-file-name)))
+    nil))
+
+(defun project-find-headlines ()
+  "Find all Org headlines in the current projectile project."
+  (interactive)
+  (require 'xref)
+  (require 'grep)
+  (let* ((caller-dir default-directory)
+         (pr (project-current t))
+         (default-directory (project-root pr))
+         (project-files-relative-names t)
+         (files
+          (if (not current-prefix-arg)
+              (project-files pr)
+            (let* ((dir (read-directory-name "Base directory: "
+                                             caller-dir nil t)))
+              (setq default-directory (file-name-as-directory dir))
+              (project--files-in-directory dir
+                                           nil
+                                           (grep-read-files "^\\*+")))))
+         (org-files (-filter (-partial 's-ends-with? "org") files)))
+    (xref-show-xrefs
+     (apply-partially #'project--find-regexp-in-files "^\\*+" org-files)
+     nil)))
+
+(map! :after (org projectile)
+      :leader
+      :prefix "n"
+      :desc "Find headlines in directory" "H"
+        (lambda () (interactive)
+          (let ((current-prefix-arg '(4)))
+            (call-interactively #'project-find-headlines)))
+      :desc "Find headlines in project" "h" #'project-find-headlines
+      :prefix "s"
+      :desc "Search headlines in current file" "h" #'find-headlines)
+
+(map! :after org
+      :map org-mode-map
+      :localleader
+      :desc "Edit code block"
+      "C" #'org-edit-src-code
+      :prefix "s"
+      "N" nil
+      "n" #'org-toggle-narrow-to-subtree
+      :prefix "g"
+      :desc "Headlie" "h" (lambda () (interactive) (avy-jump "^\\*+"))
+      :desc "Code block" "b"
+        (lambda () (interactive)
+          (require 'avy)
+          (avy-jump "#\\+begin_src")
+          (next-line)))
+#+end_src
+
+#+RESULTS:
+
+** Roam
+#+begin_src elisp
+(after! org-roam
+  (setq org-roam-directory (concat org-directory "roam/")))
+#+end_src
+
+** Appear
+#+begin_src elisp
+(after! org-appear
+  (setq org-appear-autoemphasis t
+        org-appear-autolinks nil
+        org-appear-autosubmarkers t
+        org-appear-autoentities t
+        org-appear-autokeywords t))
+#+end_src
+
+* Treemacs
+#+begin_src elisp
+(after! treemacs
+  (setq treemacs-width 26
+        treemacs-width-is-initially-locked nil)
+  (add-hook! treemacs-mode #'display-line-numbers-mode))
+#+end_src
+
+* Keybinds
+** Registers
+#+begin_src elisp
+(map! :leader
+      :prefix ("r" . "register")
+      :desc "Copy to register"                 "c"   #'copy-to-register
+      :desc "Frameset to register"             "f"   #'frameset-to-register
+      :desc "Insert contents of register"      "i"   #'insert-register
+      :desc "Jump to register"                 "j"   #'jump-to-register
+      :desc "List registers"                   "l"   #'list-registers
+      :desc "Number to register"               "n"   #'number-to-register
+      :desc "Interactively choose a register"  "r"   #'counsel-register
+      :desc "View a register"                  "v"   #'view-register
+      :desc "Window configuration to register" "w"   #'window-configuration-to-register
+      :desc "Increment register"               "+"   #'increment-register
+      :desc "Print to register"                "SPC" #'print-to-register)
+#+end_src
+
+** ELisp evaluation and debugging
+#+begin_src elisp
+(map! :leader
+      :prefix ("e" . "elisp")
+      :desc "Evaluate elisp in buffer"  "b" #'eval-buffer
+      :desc "Evaluate defun"            "d" #'evaluate-defun
+      :desc "Evaluate elisp expression" "e" #'eval-expression
+      :desc "Evaluate last expression"  "l" #'eval-last-exp
+      :desc "Evaluate elisp in region"  "r" #'eval-region
+      :desc "Instrument a function"     "i" #'+emacs-lisp/edebug-instrument-defun-on
+      :desc "Uninstrument a function"   "u" #'+emacs-lisp/edebug-instrument-defun-off)
+#+end_src
+
+** Input method
+#+begin_src elisp
+(map! :leader
+      :prefix "t"
+      :desc "Input method editor" "e" #'toggle-input-method
+      :prefix ("l" . "lang")
+      :desc "Japanese IME"
+       "j" (lambda () (interactive) (set-input-method 'japanese))
+      :desc "Korean IME"
+       "k" (lambda () (interactive) (set-input-method 'korean-hangul))
+      :desc "Convert to Hanja" "h" #'hangul-to-hanja-conversion)
+#+end_src
+
+** Misc
+#+begin_src elisp
+(map! :leader
+      :prefix "f"
+      :desc "/sudo::" "t" #'tramp-revert-buffer-with-sudo
+      :prefix ("v" . "vibe")
+      :desc "Randomize banner" "r" #'set-random-fancy-splash
+      :desc "Find file in NixOS config"
+       "n" (lambda () (interactive) (doom-project-find-file "/etc/nixos/"))
+      :desc "Browse NisOS config" "N" #'browse-nixos)
+#+end_src
+
+* Debugging
+** Keybindings
+#+begin_src elisp
+(map! :after dap-mode
+      :map dap-mode-map
+      :leader
+      
+      :prefix ("d" . "dap")
+      :desc "next"           "n" #'dap-next
+      :desc "step in"        "i" #'dap-step-in
+      :desc "step out"       "o" #'dap-step-out
+      :desc "continue"       "c" #'dap-continue
+      :desc "hydra"          "h" #'dap-hydra
+      :desc "debug restart"  "r" #'dap-debug-restart
+      :desc "debug"          "s" #'dap-debug
+      :desc "disconnect"     "d" #'dap-disconnect
+      :desc "disconnect all" "d" #'dap-delete-all-sessions
+
+      :prefix ("dt" . "thread")
+      :desc "switch" "s" #'dap-switch-thread
+      :desc "stop"   "k" #'dap-stop-thread
+
+      :prefix ("dO" . "open")
+      :desc "expressions" "e" #'dap-ui-expressions
+      :desc "breakpoints" "b" #'dap-ui-breakpoints
+      :desc "locals"      "l" #'dap-ui-locals
+      :desc "sessions"    "s" #'dap-ui-sessions
+
+      :prefix ("dd" . "debug")
+      :desc "debug recent"  "r" #'dap-debug-recent
+      :desc "debug last"    "l" #'dap-debug-last
+
+      :prefix ("de" . "eval")
+      :desc "eval"                "e" #'dap-eval
+      :desc "eval region"         "r" #'dap-eval-region
+      :desc "eval thing at point" "s" #'dap-eval-thing-at-point
+      :desc "add expression"      "a" #'dap-ui-expressions-add
+      :desc "remove expression"   "d" #'dap-ui-expressions-remove
+
+      :prefix ("db" . "breakpoint")
+      :desc "goto"        "g" #'dap-breakpoint-browse
+      :desc "delete all"  "d" #'dap-breakpoint-delete-all
+      :desc "toggle"      "b" #'dap-breakpoint-toggle
+      :desc "condition"   "c" #'dap-breakpoint-condition
+      :desc "hit count"   "h" #'dap-breakpoint-hit-condition
+      :desc "log message" "l" #'dap-breakpoint-log-message)
+
+(after! dap-mode
+  (require 'dap-cpptools))
+#+end_src
+
+* Dired
+#+begin_src elisp
+(add-hook! dired-mode #'display-line-numbers-mode)
+#+end_src
+
+** Peep
+Add the right keybindings to make peep-dired work
+#+begin_src elisp
+(evil-define-key 'normal peep-dired-mode-map
+  (kbd "j") 'peep-dired-next-file
+  (kbd "k") 'peep-dired-prev-file)
+(add-hook! peep-dired #'evil-normalize-keymaps)
+
+(map! :after dired
+      :map dired-mode-map
+      :localleader
+      :desc "Peep mode" "p" #'peep-dired)
+#+end_src
+
+* Minimap
+#+begin_src elisp
+(after! minimap
+  (setq minimap-automatically-delete-window t
+        minimap-window-width 1
+        minimap-width-fraction 0.15))
+#+end_src
+
+* Tabs
+#+begin_src elisp
+(after! centaur-tabs
+  (setq centaur-tabs-style "wave"
+        centaur-tabs-left-edge-margin nil
+        centaur-tabs-right-edge-margin " ")
+  (map! :leader
+        :desc "Tab ace jump" "è" #'centaur-tabs-ace-jump
+        :prefix "t"
+        :desc "Tabs" "t" #'centaur-tabs-mode)
+
+  ;; it is possible that 0 is returned which can be ignored
+  (defun centaur-tabs-get-total-tab-length ()
+    (length (centaur-tabs-tabs (centaur-tabs-current-tabset))))
+
+  (defun centaur-tabs-hide-on-window-change ()
+    ;; run-at-time is required so the tab length is correct on killing a buffer
+    ;; without it, it still returns the old value
+    (if centaur-tabs-mode
+        (run-at-time nil nil
+                        (lambda () (centaur-tabs-hide-check)))))
+
+  (defun centaur-tabs-hide-check ()
+    (shut-up
+      (let ((len (centaur-tabs-get-total-tab-length)))
+        (cond
+         ((and (= len 1) (not (centaur-tabs-local-mode)))
+          (call-interactively #'centaur-tabs-local-mode))
+         ((and (>= len 2) (centaur-tabs-local-mode))
+          (call-interactively #'centaur-tabs-local-mode))))))
+
+  (add-hook 'window-configuration-change-hook 'centaur-tabs-hide-on-window-change))
+#+end_src
+
+* Todo
+#+begin_src elisp
+(after! hl-todo
+  (let ((additional-keyword-faces '(("DEBUG" success bold))))
+       (setq hl-todo-keyword-faces
+             (append hl-todo-keyword-faces additional-keyword-faces))))
+#+end_src
+
+* AI
+** Prompting
+#+begin_src elisp
+(use-package! gptel
+  :config
+  (setq gptel-default-mode 'org-mode
+        gptel-model 'local-llama
+        gptel-backend (gptel-make-openai "llama-cpp"
+                        :stream t
+                        :protocol "http"
+                        :host "localhost:8080"
+                        :models '(local-llama)))
+  (map! :leader
+        :prefix "o"
+        :desc "Gptel" "g" #'gptel
+        :prefix ("y" . "ai")
+        :desc "Send" "s" #'gptel-send
+        :desc "Menu" "m" #'gptel-menu
+        :desc "Rewruite" "r" #'gptel-rewrite
+        :desc "Add file" "A" #'gptel-add-file
+        :desc "Write config" "w" #'gptel-org-set-properties
+        :desc "Set topic" "t" #'gptel-org-set-topic
+        :desc "Add" "a" #'gptel-add))
+#+end_src
+
+** Copilot
+#+begin_src elisp :tangle no
+;;(use-package! copilot
+;;  :hook (prog-mode . copilot-mode)
+;;  :bind (:map copilot-completion-map
+;;              ("<tab>" . 'copilot-accept-completion)
+;;              ("TAB" . 'copilot-accept-completion)
+;;              ("C-TAB" . 'copilot-accept-completion-by-word)
+;;              ("C-<tab>" . 'copilot-accept-completion-by-word)))
+#+end_src
+
+* Elfeed
+#+begin_src elisp
+(after! elfeed
+  (setq elfeed-feeds '(("https://discourse.nixos.org/c/links.rss" nixos linux)
+                       ("https://cvefeed.io/rssfeed/latest.xml" cve))))
+#+end_src
+
+* Treesitter
+#+begin_src elisp
+(after! treesit
+  (let ((languages '(css
+                     html
+                     (javascript :mode js)
+                     json
+                     (typescript :dir "typescript/src")
+                     (tsx :repo "typescript":dir "tsx/src")
+                     c
+                     (cpp :mode c++)
+                     rust go
+                     bash
+                     (lua :owner "tjdevries")
+                     (markdown :owner "ikatyang")
+                     (yaml :owner "ikatyang")
+                     toml)))
+    (setq treesit-language-source-alist
+          (-map (lambda (l) (if (consp l)
+                          (cl-destructuring-bind (n &key repo dir owner mode) l
+                            (let ((owner (or owner "tree-sitter"))
+                                  (repo (or repo (symbol-name n))))
+                               `(,n . (,(concat "https://github.com/" owner "/tree-sitter-" repo) "master" ,dir))))
+                          `(,l . (,(concat "https://github.com/tree-sitter/tree-sitter-" (symbol-name l)))))) languages)
+          major-mode-remap-alist
+          (-map (lambda (l) (if (consp l)
+                          (cl-destructuring-bind (n &key repo dir owner mode) l
+                            (let ((n (symbol-name (or mode n))))
+                              `(,(intern (concat n "-mode")) . ,(intern (concat n "-ts-mode"))))))) languages))
+  (defun treesit-install-all-language-grammars ()
+    "Install all treesitter language grammers at once"
+    (interactive)
+    (mapc (lambda (l) (unless (treesit-language-available-p l) (treesit-install-language-grammar l)))
+          (mapcar #'car treesit-language-source-alist)))))
+#+end_src

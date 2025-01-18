@@ -6,3 +6,4 @@ nix flake lock --update-input sops-nix
 nix flake lock --update-input impermanence
 nix flake lock --update-input spicetify-nix
 nix flake lock --update-input neovim-nightly-overlay
+nix flake lock --update-input emacs-verlay

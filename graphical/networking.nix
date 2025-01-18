@@ -7,6 +7,30 @@
 }:
 with lib;
 with builtins; let
+  #googleIPsPkg = fetchurl {
+  #  url = "https://www.gstatic.com/ipranges/goog.json";
+  #  sha256 = "17qrx00i26aaf09xszqp0di0qg1m20v2wn12mwjgwyfjzkhvypqp";
+  #};
+  #cidrToMask = p: let
+  #  ones = genList (_: "1") p;
+  #  zeros = genList (_: "0") (32 - p);
+  #  bin = ones ++ zeros;
+  #  dec = foldl' (a: b: a * 2 + b) 0;
+  #  group = i: toString (dec (sublist (i * 8) 8 bin)); in
+  #  "${group 0}.${group 1}.${group 2}.${group 3}";
+  #googleIPsJSON = fromJSON (readFile googleIPsPkg);
+  #googleIPLines = map
+  #  (p: let ns = attrNames p;
+  #    ip = i: head (split "/" i);
+  #    prefix = pr: tail (split "/" pr);
+  #    mask = cidrToMask prefix; in
+  #    if elem "ipv4Prefix" ns then
+  #      "route ${ip p.ipv4Prefix} ${mask p.ipv4Prefix} net_gateway"
+  #    else if elem "ipv6Prefix" ns then
+  #      "route ${ip p.ipv6Prefix} ${mask p.ipv6Prefix} net_gateway"
+  #    else
+  #      "")
+  #  googleIPsJSON.prefixes;
   expressvpnServers = servers:
     builtins.listToAttrs (map (s: {
         name = s.name;
@@ -18,7 +42,6 @@ with builtins; let
               else c)
             s.fullName}_udp.ovpn
             auth-user-pass ${config.sops.templates."expressvpn_creds.txt".path}
-            route youtube.com 255.255.255.255 net_gateway
           '';
           updateResolvConf = true;
           autoStart = s.autoStart;
@@ -157,7 +180,7 @@ in {
         {
           name = "canada-montreal";
           fullName = "canada - montreal";
-          autoStart = true;
+          autoStart = false;
         }
         {
           name = "korea";

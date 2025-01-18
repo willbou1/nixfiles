@@ -1,4 +1,8 @@
-{ pkgs, lib, ... }:
+{
+  pkgs,
+  lib,
+  ...
+}:
 with lib; {
   imports = mine.autoInclude ./. [
     ./william
@@ -20,9 +24,9 @@ with lib; {
   };
   services.deluge.config.download_location = "/srv/torrents";
 
-  # 18 cores used total
-  #nix.settings = {
-  #    max-jobs = 3;
-  #    cores = 6;
-  #};
+  # 16 cores used total
+  nix.settings = {
+      max-jobs = 4;
+      cores = 4;
+  };
 }

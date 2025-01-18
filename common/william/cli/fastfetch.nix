@@ -33,9 +33,11 @@ in {
         {
           type = "disk";
           key = "Disk";
-          folders = "/:/home/william:/persist";
-          format = "{10} - {3}";
+          showSubvolumes = true;
+          folders = "/:/home/william";
+          format = "{9} - {3}";
         }
+        "btrfs"
       ];
     };
   };

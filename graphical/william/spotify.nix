@@ -13,6 +13,15 @@ in
     programs.spicetify = {
       enable = true;
 
+      # debug
+      # spotifyPackage = pkgs.spotify.overrideAttrs (oldAttrs: {
+      #   nativeBuildInputs = [pkgs.breakpointHook] ++ oldAttrs.nativeBuildInputs;
+      # });
+
+      # TODO remove this once the versions are compatible
+      spicetifyPackage = pkgs.unstable.spicetify-cli;
+      spotifyPackage = pkgs.spotify;
+
       enabledCustomApps = with spicePkgs.apps; [
         lyricsPlus
       ];

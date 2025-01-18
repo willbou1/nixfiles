@@ -29,6 +29,7 @@ with lib; {
     home.persistence."/persist/home/william" = {
       directories = [
         ".mozilla/firefox"
+        ".config/libreoffice"
       ];
       files = [
         ".config/deluge/hostlist.conf"

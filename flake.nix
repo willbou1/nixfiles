@@ -26,12 +26,12 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    hosts.url = github:StevenBlack/hosts;
+    hosts.url = "github:StevenBlack/hosts";
 
     #spicetify-nix.url = github:the-argus/spicetify-nix;
     spicetify-nix = {
       url = "git+file:./devel/spicetify-nix";
-      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.nixpkgs.follows = "unstable";
     };
 
     #notnft.url = github:chayleaf/notnft;
@@ -42,10 +42,16 @@
       inputs.nixpkgs.follows = "unstable";
     };
 
+    #emacs-overlay.url = github:nix-community/emacs-overlay;
+    emacs-overlay = {
+      url = "git+file:./devel/emacs-overlay";
+      inputs.nixpkgs.follows = "unstable";
+    };
+
     #stylix.url = github:danth/stylix/release-24.05;
     stylix.url = "git+file:./devel/stylix";
 
-    nur.url = github:nix-community/NUR;
+    nur.url = "github:nix-community/NUR";
 
     nix-alien.url = "github:thiagokokada/nix-alien";
   };
@@ -70,10 +76,11 @@
       "steam"
       "bitwarden"
       "kitty"
-      "modrinth-app"
       "firefox"
       "OVMF"
       "gimp"
+      "fastfetch"
+      #"swaylock-effects"
 
       "mautrix-meta" # CVE with libolm
     ];
@@ -91,6 +98,7 @@
           (import ./pkgs).overlay
           #(import ./pkgs).nurOverlay
           inputs.neovim-nightly-overlay.overlays.default
+          inputs.emacs-overlay.overlays.default
           inputs.nix-alien.overlays.default
           (final: prev: {
             unstable = import inputs.unstable {

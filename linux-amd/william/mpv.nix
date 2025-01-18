@@ -1,6 +1,9 @@
 {pkgs, ...}: {
   programs.mpv = {
-    config.glsl-shaders = "~~/shaders/ai_upscale/Photo/2x/AiUpscale_HQ_Sharp_2x_Photo.glsl";
+    config = {
+      glsl-shaders = "~~/shaders/ai_upscale/Photo/2x/AiUpscale_HQ_Sharp_2x_Photo.glsl";
+      sub-font-size = 75;
+    };
     bindings = {
       "CTRL+1" = "no-osd change-list glsl-shaders set \"~~/shaders/Photo/2x/AiUpscale_HQ_Sharp_2x_Photo.glsl\"; show-text \"AiUpscale: 2x HQ Sharp\"";
       "CTRL+2" = "no-osd change-list glsl-shaders set \"~~/shaders/Photo/2x/AiUpscale_HQ_2x_Photo.glsl\"; show-text \"AiUpscale: 2x HQ\"";

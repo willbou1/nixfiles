@@ -8,3 +8,5 @@ result-*
 *.out
 *.swp
 *.dmg
+
+.ccls-cache/

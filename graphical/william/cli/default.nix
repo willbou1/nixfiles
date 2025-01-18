@@ -9,14 +9,8 @@ with lib; {
   home.packages = with pkgs; [
     yt-dlp
     qpdf
-    ncpamixer
     nvtopPackages.full
     ani-cli
     mkvtoolnix
-
-    weechat
-    aspell
-    aspellDicts.en
-    aspellDicts.fr
   ];
 }

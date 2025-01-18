@@ -36,16 +36,10 @@ with lib; {
   };
 
   home.packages = with pkgs; [
-    yt-dlp
-    qpdf
     p7zip
-    ncpamixer
     lolcat
     progress
     fd
-    nvtopPackages.full
-    ani-cli
-    mkvtoolnix
 
     weechat
     aspell

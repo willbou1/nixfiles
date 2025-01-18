@@ -8,8 +8,12 @@ with lib; let
     add_newline = false;
     scan_timeout = 10;
     command_timeout = 750;
-    format = "[⌜ ](bold cyan)[ ](bold blue)$username$hostname$localip$shlvl$singularity$kubernetes$directory$vcsh$git_branch$git_commit$git_state$git_metrics$git_status$hg_branch$docker_context$package$buf$c$cmake$cobol$container$daml$dart$deno$dotnet$elixir$elm$erlang$golang$haskell$helm$java$julia$kotlin$lua$nodejs$ocaml$perl$php$pulumi$purescript$python$rlang$red$ruby$rust$scala$swift$terraform$vlang$vagrant$zig$nix_shell$conda$spack$memory_usage$aws$nim$gcloud$openstack$azure$env_var$crystal[ ]()$fill[  ]()$time[ ⌝](bold cyan)$line_break[⌞ ](bold cyan)$sudo$cmd_duration$jobs$battery$status$shell$character";
+    format = "[⌜ ](bold cyan)[  ](bold blue)$username$hostname$localip$shlvl$singularity$kubernetes$directory$vcsh$git_branch$git_commit$git_state$git_metrics$git_status$hg_branch$docker_context$package$buf$c$cmake$cobol$container$daml$dart$deno$dotnet$elixir$elm$erlang$golang$haskell$helm$java$julia$kotlin$lua$nodejs$ocaml$perl$php$pulumi$purescript$python$rlang$red$ruby$rust$scala$swift$terraform$vlang$vagrant$zig$nix_shell$conda$spack$memory_usage$aws$nim$gcloud$openstack$azure$env_var$crystal[ ]()$fill[  ]()$time[ ⌝](bold cyan)$line_break[⌞ ](bold cyan)$sudo$cmd_duration$jobs$battery$status$shell$character";
     right_format = "[ ⌟](bold cyan)";
+    git_status = {
+      ignore_submodules = true;
+      untracked = "";
+    };
     git_branch.format = "[$symbol$branch(:$remote_branch)]($style) ";
     cmd_duration.format = "[$duration]($style) ";
     hostname = {

@@ -20,6 +20,8 @@
       "w" = "curl -s wttr.in | less -RS";
       "ns" = "nix shell";
       "ujc" = "journalctl --user";
+      "e" = "emacs";
+      "ec" = "emacsclient -c";
     };
     functions = {
       cp = ''
