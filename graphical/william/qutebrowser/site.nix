@@ -1,4 +1,8 @@
-{lib, config, ...}:
+{
+  lib,
+  config,
+  ...
+}:
 with builtins;
 with lib; let
   cfg = config.programs.qutebrowser;
@@ -24,16 +28,20 @@ in {
   };
   config.programs.qutebrowser.extraConfig = let
     formatValue = v:
-      if v == null then
-        "None"
-      else if isBool v then
-        (if v then "True" else "False")
-      else if isString v then
-        ''"${v}"''
-      else if isList v then
-        "[${concatStringsSep ", " (map formatValue v)}]"
-      else
-        toString v;
+      if v == null
+      then "None"
+      else if isBool v
+      then
+        (
+          if v
+          then "True"
+          else "False"
+        )
+      else if isString v
+      then ''"${v}"''
+      else if isList v
+      then "[${concatStringsSep ", " (map formatValue v)}]"
+      else toString v;
     formatDomainBlock = n: v: let
       formatDomainLine = d: o: on: ov:
         if isAttrs ov

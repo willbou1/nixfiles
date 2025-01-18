@@ -9,4 +9,6 @@ result-*
 *.swp
 *.dmg
 
+crypto_keyfile.cpio.gz
+
 .ccls-cache/

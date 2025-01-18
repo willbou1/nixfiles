@@ -26,7 +26,7 @@ with lib; {
 
   # 16 cores used total
   nix.settings = {
-      max-jobs = 4;
-      cores = 4;
+    max-jobs = 4;
+    cores = 4;
   };
 }

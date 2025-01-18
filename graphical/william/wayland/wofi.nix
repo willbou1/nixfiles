@@ -1,7 +1,7 @@
-{config,...}:
- {
-  xdg.configFile."wofi/colors".text =
-    with config.lib.stylix.colors.withHashtag; ''
+{config, ...}: {
+  # mine is better
+  stylix.targets.wofi.enable = false;
+  xdg.configFile."wofi/colors".text = with config.lib.stylix.colors.withHashtag; ''
     ${base00}
     ${base01}
     ${base02}

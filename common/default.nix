@@ -82,7 +82,7 @@ with lib; {
       "s" = ''sudo SSH_AUTH_SOCK="$SSH_AUTH_SOCK" '';
       "sc" = "sudo systemctl";
       "jc" = "sudo journalctl --system";
-      "nu" = "sudo nix flake lock --update-input ";
+      "nu" = "sudo nix flake update ";
       "shred" = "shred --remove";
     };
   };
@@ -106,7 +106,8 @@ with lib; {
   };
 
   nix = {
-    package = pkgs.nixFlakes;
+    # TODO keep an eye on this
+    package = pkgs.nixVersions.git;
     #allowed-users = [ "@wheel" ];
     gc = {
       automatic = true;

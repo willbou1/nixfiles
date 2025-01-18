@@ -1,7 +1,11 @@
-{lib, config, pkgs, ...}:
+{
+  lib,
+  config,
+  pkgs,
+  ...
+}:
 with builtins;
-with lib;
-let
+with lib; let
   themeConfig = config.lib.stylix.colors {
     template = ./doom/doom-base16-theme.el.mustache;
     extension = ".el";
@@ -49,7 +53,9 @@ in {
       ];
       # Tangled literate config
       files = map (n: ".config/doom/${n}.el") [
-        "config" "playground" "custom"
+        "config"
+        "playground"
+        "custom"
       ];
     };
     packages = [emacs];
@@ -60,24 +66,25 @@ in {
     percentageOpacity = floor (opacity.terminal * 100);
     fontSize = floor (fonts.sizes.terminal * 1.22);
     bigFontSize = floor (fontSize * 1.5);
-    in concatStringsSep "\n" [
-    ''
-      #+BEGIN_SRC elisp :tangle yes
-      (setq doom-font (font-spec :family "${fonts.monospace.name}" :size ${toString fontSize} :weight 'semi-light)
-            doom-variable-pitch-font (font-spec :family "${fonts.sansSerif.name}" :size ${toString (fontSize - 1)})
-            doom-big-font (font-spec :family "${fonts.monospace.name}" :size ${toString bigFontSize}))
+  in
+    concatStringsSep "\n" [
+      ''
+        #+BEGIN_SRC elisp :tangle yes
+        (setq doom-font (font-spec :family "${fonts.monospace.name}" :size ${toString fontSize} :weight 'semi-light)
+              doom-variable-pitch-font (font-spec :family "${fonts.sansSerif.name}" :size ${toString (fontSize - 1)})
+              doom-big-font (font-spec :family "${fonts.monospace.name}" :size ${toString bigFontSize}))
 
-      (setq doom-theme 'doom-base16)
-      (set-frame-parameter nil 'alpha-background ${toString percentageOpacity})
-      (add-to-list 'default-frame-alist '(alpha-background . ${toString percentageOpacity}))
+        (setq doom-theme 'doom-base16)
+        (set-frame-parameter nil 'alpha-background ${toString percentageOpacity})
+        (add-to-list 'default-frame-alist '(alpha-background . ${toString percentageOpacity}))
 
-      (let ((playground-file (concat doom-private-dir "playground.el")))
-            (if (file-exists-p playground-file)
-                (load playground-file)))
-      #+END_SRC
-    ''
-    (readFile ./doom/config.org)
-  ];
+        (let ((playground-file (concat doom-private-dir "playground.el")))
+              (if (file-exists-p playground-file)
+                  (load playground-file)))
+        #+END_SRC
+      ''
+      (readFile ./doom/config.org)
+    ];
   xdg.configFile."doom/themes/doom-base16-theme.el".source = themeConfig;
   xdg.configFile."doom/splash".source = ./../../../resources/splash/emacs;
 }

@@ -58,6 +58,9 @@ with lib; let
       main "$@"
     '');
 in {
+  disabledModules = [
+    "programs/vifm.nix"
+  ];
   options.programs.vifm = {
     enable = mkEnableOption "Vifm - Vim-like file manager";
 

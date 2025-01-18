@@ -1,78 +1,77 @@
 {
+  fetchurl,
   stdenv,
   buildFHSEnv,
-  fetchurl,
+  writeShellScriptBin,
+  callPackage,
+  makeDesktopItem,
+  copyDesktopItems,
+  # Dependencies
   ffmpeg,
   glibc,
-  gnome,
+  jq,
   lib,
   libmediainfo,
   libsForQt5,
   libusb1,
-  lsof,
-  mpv-unwrapped,
   ocl-icd,
   p7zip,
   patchelf,
+  socat,
   vapoursynth,
-  wrapMpv,
-  writeText,
   xdg-utils,
   xorg,
-  mpvScripts,
-  ffmpeg_6-full,
-  ...
+  zenity,
+  # MPV dependencies
+  mpv-unwrapped,
+  customMpv ? null,
 }:
 ################################################################################
 # Based on svp package from AUR:
 # https://aur.archlinux.org/packages/svp
 ################################################################################
 let
-  mpvForSVP =
-    wrapMpv
-    (mpv-unwrapped.override {
-      vapoursynthSupport = true;
-      ffmpeg = ffmpeg_6-full;
-    })
-    {
-      extraMakeWrapperArgs = [
-        "--prefix"
-        "LD_LIBRARY_PATH"
-        ":"
-        "/run/opengl-driver/lib"
-        "--set"
-        "__NV_PRIME_RENDER_OFFLOAD"
-        "1"
-        "--set"
-        "__NV_PRIME_RENDER_OFFLOAD_PROVIDER"
-        "NVIDIA-G0"
-        "--set"
-        "__GLX_VENDOR_LIBRARY_NAME"
-        "nvidia"
-        "--set"
-        "__VK_LAYER_NV_optimus"
-        "NVIDIA_only"
-      ];
-      scripts = [
-        mpvScripts.uosc
-        mpvScripts.mpris
-        mpvScripts.thumbfast
-        mpvScripts.sponsorblock
-      ];
+  sources = {
+    version = "4.6.263";
+    src = fetchurl {
+      url = "https://www.svp-team.com/files/svp4-linux.4.6.263.tar.bz2";
+      hash = "sha256-HyRDVFHVmTan/Si3QjGQpC3za30way10d0Hk79oXG98=";
     };
+  };
+
+  mpvForSVP = callPackage ./mpv.nix {inherit mpv-unwrapped;};
+
+  # Script provided by GitHub user @xrun1
+  # https://github.com/xddxdd/nur-packages/issues/31#issuecomment-1812591688
+  fakeLsof = writeShellScriptBin "lsof" ''
+    for arg in "$@"; do
+      if [ -S "$arg" ]; then
+        printf %s p
+        echo '{"command": ["get_property", "pid"]}' |
+          ${socat}/bin/socat - "UNIX-CONNECT:$arg" |
+          ${jq}/bin/jq -Mr .data
+        printf '\n'
+      fi
+    done
+  '';
 
   libraries = [
+    fakeLsof
     ffmpeg.bin
     glibc
-    gnome.zenity
+    zenity
     libmediainfo
     libsForQt5.qtbase
+    libsForQt5.qtwayland
     libsForQt5.qtdeclarative
     libsForQt5.qtscript
     libsForQt5.qtsvg
     libusb1
-    lsof
-    mpvForSVP
+    (
+      if (customMpv != null)
+      then customMpv
+      else mpvForSVP
+    )
     ocl-icd
     stdenv.cc.cc.lib
     vapoursynth
@@ -82,17 +81,16 @@ let
 
   svp-dist = stdenv.mkDerivation rec {
     pname = "svp-dist";
-    version = "4.5.210-2";
-    src = fetchurl {
-      url = "https://www.svp-team.com/files/svp4-linux.${version}.tar.bz2";
-      sha256 = "sha256-dY9uQ9jzTHiN2XSnOrXtHD11IIJW6t9BUzGGQFfZ+yg=";
-    };
+    inherit (sources) version src;
 
-    nativeBuildInputs = [p7zip patchelf];
+    nativeBuildInputs = [
+      p7zip
+      patchelf
+    ];
     dontFixup = true;
 
     unpackPhase = ''
-      tar xf ${src}
+      tar xf $src
     '';
 
     buildPhase = ''
@@ -109,8 +107,7 @@ let
       done
 
       for SIZE in 32 48 64 128; do
-        mkdir -p "$out/share/icons/hicolor/''${SIZE}x''${SIZE}/apps"
-        mv "$out/opt/svp-manager4-''${SIZE}.png" "$out/share/icons/hicolor/''${SIZE}x''${SIZE}/apps/svp-manager4.png"
+        install -Dm644 "$out/opt/svp-manager4-''${SIZE}.png" "$out/share/icons/hicolor/''${SIZE}x''${SIZE}/apps/svp-manager4.png"
       done
       rm -f $out/opt/{add,remove}-menuitem.sh
     '';
@@ -118,7 +115,7 @@ let
 
   fhs = buildFHSEnv {
     name = "SVPManager";
-    targetPkgs = pkgs: libraries;
+    targetPkgs = _pkgs: libraries;
     runScript = "${svp-dist}/opt/SVPManager";
     unshareUser = false;
     unshareIpc = false;
@@ -127,37 +124,55 @@ let
     unshareUts = false;
     unshareCgroup = false;
   };
-
-  desktopFile = writeText "svp-manager4.desktop" ''
-    [Desktop Entry]
-    Version=1.0
-    Encoding=UTF-8
-    Name=SVP 4 Linux
-    GenericName=Real time frame interpolation
-    Type=Application
-    Categories=Multimedia;AudioVideo;Player;Video;
-    MimeType=video/x-msvideo;video/x-matroska;video/webm;video/mpeg;video/mp4;
-    Terminal=false
-    StartupNotify=true
-    Exec=${fhs}/bin/SVPManager %f
-    Icon=svp-manager4.png
-  '';
 in
   stdenv.mkDerivation {
     pname = "svp";
-    inherit (svp-dist) version;
-    phases = ["installPhase"];
-    installPhase = ''
-      mkdir -p $out/bin $out/share/applications
-      ln -s ${fhs}/bin/SVPManager $out/bin/SVPManager
-      ln -s ${desktopFile} $out/share/applications/svp-manager4.desktop
+    inherit (sources) version src;
+
+    dontUnpack = true;
+
+    nativeBuildInputs = [copyDesktopItems];
+
+    postInstall = ''
+      install -Dm755 ${fhs}/bin/SVPManager $out/bin/SVPManager
+
+      mkdir -p $out/share
       ln -s ${svp-dist}/share/icons $out/share/icons
     '';
 
-    meta = with lib; {
-      description = "SmoothVideo Project 4 (SVP4) (Packaging script adapted from https://aur.archlinux.org/packages/svp)";
+    passthru.mpv = mpvForSVP;
+
+    desktopItems = [
+      (makeDesktopItem {
+        name = "svp-manager4";
+        exec = "${fhs}/bin/SVPManager %f";
+        desktopName = "SVP 4 Linux";
+        genericName = "Real time frame interpolation";
+        icon = "svp-manager4";
+        categories = [
+          "AudioVideo"
+          "Player"
+          "Video"
+        ];
+        mimeTypes = [
+          "video/x-msvideo"
+          "video/x-matroska"
+          "video/webm"
+          "video/mpeg"
+          "video/mp4"
+        ];
+        terminal = false;
+        startupNotify = true;
+      })
+    ];
+
+    meta = {
+      mainProgram = "SVPManager";
+      maintainers = with lib.maintainers; [xddxdd];
+      description = "SmoothVideo Project 4 (SVP4) converts any video to 60 fps (and even higher) and performs this in real time right in your favorite video player";
       homepage = "https://www.svp-team.com/wiki/SVP:Linux";
       platforms = ["x86_64-linux"];
-      license = licenses.unfree;
+      license = lib.licenses.unfree;
+      sourceProvenance = with lib.sourceTypes; [binaryNativeCode];
     };
   }

@@ -8,12 +8,26 @@
     vapoursynthSupport = true;
     ffmpeg = pkgs.ffmpeg_6-full;
   };
-  mpv = pkgs.wrapMpv mpv-unwrapped {
+  mpv = pkgs.mpv-unwrapped.wrapper {
+    mpv = mpv-unwrapped;
     extraMakeWrapperArgs = [
       "--prefix"
       "LD_LIBRARY_PATH"
       ":"
-      "${pkgs.vapoursynth-mvtools}/lib/vapoursynth"
+      "/run/opengl-driver/lib:${pkgs.vapoursynth-mvtools}/lib/vapoursynth"
+      # make mpv work with nvidia-offload automagically
+      "--set"
+      "__NV_PRIME_RENDER_OFFLOAD"
+      "1"
+      "--set"
+      "__NV_PRIME_RENDER_OFFLOAD_PROVIDER"
+      "NVIDIA-G0"
+      "--set"
+      "__GLX_VENDOR_LIBRARY_NAME"
+      "nvidia"
+      "--set"
+      "__VK_LAYER_NV_optimus"
+      "NVIDIA_only"
     ];
     scripts = [
       pkgs.mpvScripts.uosc
@@ -37,7 +51,12 @@
     fi
   '';
 in {
-  home.packages = [pkgs.svp svpWrapper];
+  home.packages = [
+    (pkgs.unstable.svp.override {
+      customMpv = svpWrapper;
+    })
+    svpWrapper
+  ];
   programs.mpv = {
     enable = true;
     package = mpv;

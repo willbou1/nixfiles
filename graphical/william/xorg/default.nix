@@ -14,7 +14,7 @@ in {
     ${pkgs.dbus}/bin/dbus-update-activation-environment --systemd DISPLAY WAYLAND_DISPLAY HYPRLAND_INSTANCE_SIGNATURE XDG_CURRENT_DESKTOP XAUTHORITY XDG_SESSION_ID
     xrandr ${monitors}
     xinput set-prop 'VEN_04F3:00 04F3:32AA Touchpad' "libinput Natural Scrolling Enabled" 1
-    ${pkgs.kime}/bin/kime -D &
+    # TODO start ibus maybe
     xset s on
     xset s 1200
     xset s blank

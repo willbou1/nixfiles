@@ -48,7 +48,10 @@ in {
     package = qutebrowser;
     domainSettings = {
       "https://teams.microsoft.com" = {
-        content.notifications.enabled = true;
+        content = {
+          notifications.enabled = true;
+          javascript.clipboard = "access-paste";
+        };
         colors.webpage.darkmode.enabled = false;
       };
       "https://www.netflix.com".content.notifications.enabled = false;
@@ -57,6 +60,7 @@ in {
         content.register_protocol_handler = true;
         colors.webpage.darkmode.enabled = false;
       };
+      "https://github.com".content.javascript.clipboard = "access-paste";
     };
     settings = {
       # Enable additional hardware acceleration

@@ -8,13 +8,7 @@ with builtins;
 with config.lib.stylix.colors.withHashtag; let
   fonts = config.stylix.fonts;
   alpha = toString (ceil (255 * config.stylix.opacity.desktop));
-  myDmenu = pkgs.dmenu.overrideAttrs (prev: {
-    src = pkgs.fetchFromGitHub {
-      owner = "willbou1";
-      repo = "dmenu";
-      rev = "78ff93302b4c7cbca7792dd55c49a5228e4751c1";
-      hash = "sha256-naowy3DuodhLlfkvwK5iRak29X088uifowlXnOpYlJM=";
-    };
+  myDmenu = pkgs.custom-dmenu.overrideAttrs (prev: {
     postPatch = let
       configFile = pkgs.writeText "config.def.h" ''
         static int fuzzy = 1;                      /* -F  option; if 0, dmenu doesn't use fuzzy matching     */

@@ -1,9 +1,13 @@
-nix flake lock --update-input nixpkgs
-nix flake lock --update-input unstable
-nix flake lock --update-input home-manager
-nix flake lock --update-input nixvim
-nix flake lock --update-input sops-nix
-nix flake lock --update-input impermanence
-nix flake lock --update-input spicetify-nix
-nix flake lock --update-input neovim-nightly-overlay
-nix flake lock --update-input emacs-verlay
+nix flake update stylix
+nix flake update nixpkgs
+nix flake update unstable
+nix flake update home-manager
+nix flake update nixvim
+nix flake update sops-nix
+nix flake update impermanence
+nix flake update spicetify-nix
+nix flake update neovim-nightly-overlay
+nix flake update emacs-overlay
+nix-flake update nur
+nix-flake update nix-alien
+nix-flake update hosts

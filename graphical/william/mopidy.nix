@@ -1,5 +1,8 @@
-{pkgs, config, ...}:
-rec {
+{
+  pkgs,
+  config,
+  ...
+}: rec {
   sops = {
     secrets = {
       "spotify/config" = {};
@@ -29,10 +32,22 @@ rec {
     enable = true;
     mpdMusicDir = builtins.head services.mopidy.settings.file.media_dirs;
     bindings = [
-      { key = "j"; command = "scroll_down"; }
-      { key = "k"; command = "scroll_up"; }
-      { key = "J"; command = [ "select_item" "scroll_down" ]; }
-      { key = "K"; command = [ "select_item" "scroll_up" ]; }
+      {
+        key = "j";
+        command = "scroll_down";
+      }
+      {
+        key = "k";
+        command = "scroll_up";
+      }
+      {
+        key = "J";
+        command = ["select_item" "scroll_down"];
+      }
+      {
+        key = "K";
+        command = ["select_item" "scroll_up"];
+      }
     ];
   };
 }

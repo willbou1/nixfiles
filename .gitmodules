@@ -31,15 +31,9 @@
 [submodule "devel/impermanence"]
 	path = devel/impermanence
 	url = git@github.com:willbou1/impermanence.git
-[submodule "devel/hyprland"]
-	path = devel/hyprland
-	url = git@github.com:willbou1/hyprland.git
 [submodule "devel/stylix"]
 	path = devel/stylix
 	url = git@github.com:willbou1/stylix.git
-[submodule "devel/hyprgrass"]
-	path = devel/hyprgrass
-	url = git@github.com:willbou1/hyprgrass.git
 [submodule "devel/neovim-nightly-overlay"]
 	path = devel/neovim-nightly-overlay
 	url = git@github.com:willbou1/neovim-nightly-overlay.git

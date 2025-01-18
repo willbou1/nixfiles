@@ -2,6 +2,7 @@
   description = "flake for linux-laptop";
 
   inputs = {
+
     #nixpkgs.url = github:NixOS/nixpkgs/nixos-24.05;
     nixpkgs.url = "git+file:./devel/nixpkgs";
 
@@ -68,9 +69,11 @@
     lib = mkLib inputs.nixpkgs;
     bleedingEdgePackages = [
       "neovim"
+      "kitty"
       "neovim-unwrapped"
       "mpv"
       "mpv-unwrapped"
+      "svp"
       "element-desktop"
       "libreoffice-fresh"
       "steam"
@@ -94,9 +97,9 @@
     commonNixosModules = [
       {
         nixpkgs.overlays = [
-          inputs.nur.overlay
+          inputs.nur.overlays.default
           (import ./pkgs).overlay
-          #(import ./pkgs).nurOverlay
+          (import ./pkgs).nurOverlay
           inputs.neovim-nightly-overlay.overlays.default
           inputs.emacs-overlay.overlays.default
           inputs.nix-alien.overlays.default
@@ -104,12 +107,15 @@
             unstable = import inputs.unstable {
               system = final.system;
               config.allowUnfree = final.config.allowUnfree;
+              overlays = [
+                (import ./pkgs).overlay
+              ];
             };
           })
           bleedingEdgeOverlay
         ];
       }
-      inputs.nur.nixosModules.nur
+      inputs.nur.modules.nixos.default
       inputs.stylix.nixosModules.stylix
       inputs.sops-nix.nixosModules.sops
       inputs.hosts.nixosModule
@@ -118,7 +124,7 @@
       home-manager.nixosModules.home-manager
       {
         nixpkgs.overlays = [
-          inputs.nur.overlay
+          inputs.nur.overlays.default
         ];
         home-manager.extraSpecialArgs = {inherit inputs;};
         home-manager.useGlobalPkgs = true;
@@ -127,7 +133,7 @@
           inputs.impermanence.nixosModules.home-manager.impermanence
           inputs.sops-nix.homeManagerModules.sops
           inputs.nixvim.homeManagerModules.nixvim
-          inputs.nur.hmModules.nur
+          inputs.nur.modules.homeManager.default
           inputs.spicetify-nix.homeManagerModules.default
         ];
         home-manager.users.william = import ./common/william;

@@ -90,11 +90,13 @@ in {
           passes = 2;
           special = true;
         };
-        drop_shadow = true;
-        shadow_range = 30;
-        shadow_offset = "5 5";
-        shadow_render_power = 8;
-        shadow_ignore_window = 0;
+        shadow = {
+          enabled = true;
+          range = 30;
+          offset = "5 5";
+          render_power = 8;
+          ignore_window = 0;
+        };
         dim_special = 0.4;
       };
       animations = {
@@ -175,7 +177,7 @@ in {
           "$mod SHIFT,Q,exit,"
           "$mod,S,togglefloating,"
           "$mod,F,fullscreen,"
-          "$mod SHIFT,F, fakefullscreen"
+          "$mod SHIFT,F, fullscreenstate, 0 3"
           "$mod,T,togglesplit"
           "$mod,G,togglegroup"
           "$mod,U,changegroupactive,f"

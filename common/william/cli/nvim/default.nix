@@ -10,6 +10,7 @@ with config.lib.stylix.colors.withHashtag; {
     enable = true;
     package = pkgs.neovim-unwrapped;
     plugins = {
+      web-devicons.enable = true;
       rainbow-delimiters.enable = true;
       lualine.enable = true;
       barbar = {
@@ -57,7 +58,8 @@ with config.lib.stylix.colors.withHashtag; {
       cmp = {
         enable = true;
         settings = {
-          sources = map (n: {name = n;})
+          sources =
+            map (n: {name = n;})
             ["nvim_lsp" "path" "buffer" "cmdline" "vsnip" "calc" "spell"];
           mappingPresets = ["insert"];
           mapping = {
@@ -68,8 +70,11 @@ with config.lib.stylix.colors.withHashtag; {
       lsp = {
         enable = true;
         servers = {
-          java-language-server.enable = true;
-          hls.enable = true;
+          java_language_server.enable = true;
+          hls = {
+            enable = true;
+            installGhc = false;
+          };
           texlab.enable = true;
           cmake.enable = true;
           bashls.enable = true;
@@ -81,14 +86,14 @@ with config.lib.stylix.colors.withHashtag; {
               "--enable-config"
             ];
           };
-          rust-analyzer = {
+          rust_analyzer = {
             enable = true;
             installCargo = false;
             installRustc = false;
           };
           cssls.enable = true;
           omnisharp.enable = true;
-          nil-ls.enable = true;
+          nil_ls.enable = true;
           gopls.enable = true;
         };
       };
