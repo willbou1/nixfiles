@@ -1,10 +1,4 @@
-{
-  inputs,
-  lib,
-  config,
-  pkgs,
-  ...
-}: {
+{config, ...}: {
   sops = {
     secrets = {
       "deluge/localclient_password" = {};

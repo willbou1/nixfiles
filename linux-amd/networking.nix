@@ -1,10 +1,4 @@
-{
-  inputs,
-  lib,
-  config,
-  pkgs,
-  ...
-}: {
+{pkgs, ...}: {
   networking = {
     hostName = "linux-amd";
     ip = "10.0.0.160";

@@ -1,7 +1,6 @@
 {
   config,
   pkgs,
-  inputs,
   ...
 }: let
   swaylock = "${config.programs.swaylock.package}/bin/swaylock";

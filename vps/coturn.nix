@@ -1,8 +1,4 @@
-{
-  config,
-  pkgs,
-  ...
-}: let
+{config, ...}: let
   hostName = config.networking.hostName;
   suffix = config.networking.suffix;
   turnAddress = "turn.${hostName}.${suffix}";

@@ -1,6 +1,25 @@
 {pkgs, ...}:
 with builtins; let
   win11 = pkgs.writeText "win11.xml" (builtins.readFile ./win11.xml);
+  bind-gpu = pkgs.writeShellScriptBin "bind-gpu" ''
+    echo 0000:01:00.0 > /sys/bus/pci/drivers/vfio-pci/unbind
+    echo 0000:01:00.1 > /sys/bus/pci/drivers/vfio-pci/unbind
+    echo 10de 27a0 > /sys/bus/pci/drivers/vfio-pci/remove_id
+    echo 10de 22bc > /sys/bus/pci/drivers/vfio-pci/remove_id
+
+    modprobe nvidia
+    modprobe nvidia_drm
+    modprobe nvidia_uvm
+  '';
+  unbind-gpu = pkgs.writeShellScriptBin "unbind-gpu" ''
+    rmmod nvidia_drm
+    rmmod nvidia_uvm
+    rmmod nvidia_modeset
+    rmmod nvidia
+
+    echo 10de 27a0 > /sys/bus/pci/drivers/vfio-pci/new_id
+    echo 10de 22bc > /sys/bus/pci/drivers/vfio-pci/new_id
+  '';
 in {
   boot.kernelParams = [
     "intel_iommu=on"
@@ -47,27 +66,7 @@ in {
 
   # If we bind at boot, shit goes south so let's blacklist the GPU
   # and bind it 2 minutes after we boot
-  systemd = let
-    bind-gpu = pkgs.writeShellScriptBin "bind-gpu" ''
-      echo 0000:01:00.0 > /sys/bus/pci/drivers/vfio-pci/unbind
-      echo 0000:01:00.1 > /sys/bus/pci/drivers/vfio-pci/unbind
-      echo 10de 27a0 > /sys/bus/pci/drivers/vfio-pci/remove_id
-      echo 10de 22bc > /sys/bus/pci/drivers/vfio-pci/remove_id
-
-      modprobe nvidia
-      modprobe nvidia_drm
-      modprobe nvidia_uvm
-    '';
-    unbind-gpu = pkgs.writeShellScriptBin "unbind-gpu" ''
-      rmmod nvidia_drm
-      rmmod nvidia_uvm
-      rmmod nvidia_modeset
-      rmmod nvidia
-
-      echo 10de 27a0 > /sys/bus/pci/drivers/vfio-pci/new_id
-      echo 10de 22bc > /sys/bus/pci/drivers/vfio-pci/new_id
-    '';
-  in {
+  systemd = {
     services."bind-gpu" = {
       path = with pkgs; [
         kmod

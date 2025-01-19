@@ -1,9 +1,4 @@
-{
-  inputs,
-  config,
-  pkgs,
-  ...
-}: let
+{pkgs, ...}: let
   LUKS_UUID = "/dev/disk/by-uuid/5a7e9eb7-cd9d-43af-892e-a7c70e09e6d5";
   BTRFS_UUID = "/dev/disk/by-uuid/ac418410-e9e7-4e54-9dec-5c9b0a0fb75d";
 in {

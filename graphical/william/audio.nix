@@ -1,10 +1,3 @@
-{
-  lib,
-  config,
-  pkgs,
-  inputs,
-  ...
-}:
 with builtins; {
   # default to aptx_ll for my bluetooth headphones
   home.file.".local/state/wireplumber/default-profile" = {

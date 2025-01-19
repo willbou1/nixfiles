@@ -1,8 +1,4 @@
-{
-  pkgs,
-  config,
-  ...
-}:
+{config, ...}:
 with builtins; let
   vaultCfg = config.services.vaultwarden.config;
   hostName = config.networking.hostName;

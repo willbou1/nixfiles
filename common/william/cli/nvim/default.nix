@@ -1,8 +1,4 @@
-{
-  config,
-  pkgs,
-  ...
-}:
+{pkgs, ...}:
 with builtins; {
   xdg.configFile."clangd/config.yaml".source = ./clangd.yaml;
   programs.nixvim = {

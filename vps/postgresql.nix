@@ -1,8 +1,4 @@
-{
-  config,
-  pkgs,
-  ...
-}:
+{config, ...}:
 with builtins; let
   users = map (u: u.name) config.services.postgresql.ensureUsers;
   passwordScript = user: let

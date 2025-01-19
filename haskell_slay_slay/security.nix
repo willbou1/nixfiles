@@ -1,10 +1,4 @@
 {
-  lib,
-  inputs,
-  config,
-  pkgs,
-  ...
-}: {
   environment.persistence."/persist".directories = [
     "/var/lib/fprint"
   ];

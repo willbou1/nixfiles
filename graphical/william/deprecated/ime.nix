@@ -2,7 +2,6 @@
   lib,
   config,
   pkgs,
-  inputs,
   ...
 }: {
   options.i18n.inputMethod.kime.translationLayer = lib.mkOption {

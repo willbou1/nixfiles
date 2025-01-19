@@ -10,12 +10,20 @@ with lib; let
     template = ./doom/doom-base16-theme.el.mustache;
     extension = ".el";
   };
-  # for some reason emacs needs bigger fonts for the same result
-  emacs = pkgs.emacs-pgtk.override {
-    withNativeCompilation = true;
-  };
+  useOverlay = false;
   debug = false;
-in {
+  emacs =
+    if useOverlay
+    then
+      pkgs.emacs-pgtk.override {
+        withNativeCompilation = true;
+      }
+    else pkgs.emacs;
+in rec {
+  sops.secrets = {
+    "emacs/ai-images-api-key" = {};
+  };
+
   # TODO DEBUG find weird systemd environment bug
   #systemd.user.services.dummy-env-log = {
   #  Unit = {
@@ -66,6 +74,7 @@ in {
     percentageOpacity = floor (opacity.terminal * 100);
     fontSize = floor (fonts.sizes.terminal * 1.22);
     bigFontSize = floor (fontSize * 1.5);
+    secrets = concatStringsSep "\n" (attrValues (mapAttrs (k: v: "(setq sops--${elemAt (split "/" k) 2} (f-read-text \"${config.sops.secrets.${k}.path}\"))") sops.secrets));
   in
     concatStringsSep "\n" [
       ''
@@ -81,8 +90,11 @@ in {
         (let ((playground-file (concat doom-private-dir "playground.el")))
               (if (file-exists-p playground-file)
                   (load playground-file)))
-        #+END_SRC
+
+        (require 'f)
       ''
+      secrets
+      "#+END_SRC\n"
       (readFile ./doom/config.org)
     ];
   xdg.configFile."doom/themes/doom-base16-theme.el".source = themeConfig;

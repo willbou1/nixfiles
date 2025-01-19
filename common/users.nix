@@ -1,9 +1,4 @@
-{
-  inputs,
-  config,
-  pkgs,
-  ...
-}: {
+{pkgs, ...}: {
   users = {
     mutableUsers = false;
     users.root.hashedPassword = "$y$j9T$PY3O4ZGgd.CdIq.EkwuIV/$WYwblb5ck3iX3Y76DFCFJDbdfRRh7xF9QTB3tc6tb31";

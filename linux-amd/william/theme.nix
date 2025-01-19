@@ -1,10 +1,4 @@
 {
-  config,
-  pkgs,
-  inputs,
-  lib,
-  ...
-}: {
   stylix.fonts.sizes = {
     applications = 15;
     desktop = 15;

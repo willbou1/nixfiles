@@ -2,14 +2,12 @@
   lib,
   config,
   pkgs,
-  inputs,
   ...
 }:
 with lib; {
   #new version
   imports = mine.autoInclude ./. [
     ./deprecated
-    ./emacs
   ];
 
   options.home = {

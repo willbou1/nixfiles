@@ -1,8 +1,4 @@
-{
-  pkgs,
-  config,
-  ...
-}: let
+{config, ...}: let
   hostName = config.networking.hostName;
   suffix = config.networking.suffix;
 in {

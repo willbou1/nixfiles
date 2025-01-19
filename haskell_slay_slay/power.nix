@@ -1,10 +1,4 @@
 {
-  lib,
-  inputs,
-  config,
-  pkgs,
-  ...
-}: {
   powerManagement.enable = true;
   services = {
     logind = {

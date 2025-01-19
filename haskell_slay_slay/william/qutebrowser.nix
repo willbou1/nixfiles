@@ -1,9 +1,4 @@
 {
-  config,
-  pkgs,
-  lib,
-  ...
-}: {
   programs.qutebrowser = {
     keyBindings.normal = {
       ",m" = "spawn nmpv {url}";

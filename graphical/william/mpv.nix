@@ -1,9 +1,4 @@
-{
-  config,
-  inputs,
-  pkgs,
-  ...
-}: let
+{pkgs, ...}: let
   mpv-unwrapped = pkgs.mpv-unwrapped.override {
     vapoursynthSupport = true;
     ffmpeg = pkgs.ffmpeg_6-full;
@@ -52,7 +47,7 @@
   '';
 in {
   home.packages = [
-    (pkgs.unstable.svp.override {
+    (pkgs.svp.override {
       customMpv = svpWrapper;
     })
     svpWrapper

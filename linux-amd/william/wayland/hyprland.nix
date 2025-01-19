@@ -1,10 +1,4 @@
-{
-  pkgs,
-  lib,
-  config,
-  inputs,
-  ...
-}: let
+{config, ...}: let
   reserved = toString (config.home.gapSize / 2 + config.home.ewwHeight);
 in {
   wayland.windowManager.hyprland.settings = {

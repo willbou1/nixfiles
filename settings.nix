@@ -24,7 +24,6 @@
     "bitwarden"
     "modrinth-app"
     "firefox"
-    "gimp"
 
     # vps
     "mautrix-meta" # CVE with libolm
@@ -40,7 +39,7 @@
     {
       name = "Mautrix-discord module";
       id = 355025;
-      sha256 = "0lmmcbw1mpjngbdpm9q25dbbbf70i8n8z7yk1pns61rf8mryyk20";
+      sha256 = "1h9msxyp75rhx7pqnsi6akcxhwfifjdpwx5jaip2fqdp3qqaq92q";
     }
   ];
 }
