@@ -7,6 +7,10 @@
 
 ;; To install SOME-PACKAGE from MELPA, ELPA or emacsmirror:
 ;; (package! some-package)
+(package! olivetti)
+(package! auto-olivetti
+  :recipe (:host sourcehut :repo "ashton314/auto-olivetti" :files ("*.el")))
+
 (package! kurecolor)
 (package! peep-dired)
 (package! gptel)

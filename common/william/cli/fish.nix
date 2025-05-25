@@ -25,13 +25,13 @@
     };
     functions = {
       cp = ''
-        command cp $argv & progress -mp $last_pid
+        command cp $argv & ${pkgs.progress}/bin/progress -mp $last_pid
       '';
       mv = ''
-        command mv $argv & progress -mp $last_pid
+        command mv $argv & ${pkgs.progress}/bin/progress -mp $last_pid
       '';
       dd = ''
-        command dd $argv & progress -mp $last_pid
+        command dd $argv & ${pkgs.progress}/bin/progress -mp $last_pid
       '';
       killall = ''
         pkill ".*$argv.*"
@@ -43,6 +43,9 @@
       '';
       rb = ''
         string repeat -n $argv[1] '../'
+      '';
+      ne = ''
+        nix eval --json --file $argv | ${pkgs.jq}/bin/jq
       '';
     };
     interactiveShellInit = ''

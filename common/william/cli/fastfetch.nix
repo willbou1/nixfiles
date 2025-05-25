@@ -19,8 +19,12 @@ in {
     settings = {
       logo = {
         type = "kitty-direct";
-        width = 20;
+        width = 23;
         height = 10;
+        padding = {
+          top = 1;
+          right = 2;
+        };
       };
       modules = [
         "os"

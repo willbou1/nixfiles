@@ -41,6 +41,13 @@
 - [[#elfeed][Elfeed]]
 - [[#treesitter][Treesitter]]
 
+* Heading 1
+** Heading 2
+- _underline_
+- ~inline code~
+- +cross+
+- lien: [[https://www.google.ca][google]] 
+
 * Doom Emacs fixes
 For some reason, evil-bindings aren't loaded when I start Doom sometimes so let's load them manually
 #+begin_src elisp
@@ -557,7 +564,6 @@ Add the right keybindings to make peep-dired work
                      (tsx :repo "typescript":dir "tsx/src")
                      c
                      (cpp :mode c++)
-                     (glsl :owner "tree-sitter-grammars")
                      rust go
                      bash
                      (lua :owner "tjdevries")

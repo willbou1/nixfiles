@@ -3,7 +3,8 @@
 in {
   wayland.windowManager.hyprland.settings = {
     monitor = [
-      "HDMI-A-1,addreserved,${reserved},0,0,0"
+      (if config.home.verticalDisplays then "HDMI-A-1,addreserved,${reserved},0,0,0"
+        else "HDMI-A-1,addreserved,0,${reserved},0,0")
       "DP-1,addreserved,0,${reserved},0,0"
     ];
     workspace = [
@@ -21,7 +22,7 @@ in {
     ];
     bind = [
       "$mod SHIFT,W,exec,looking-glass-client -f /dev/kvmfr1"
-      "$mod,Q,exec,${config.programs.swaylock.package}/bin/swaylock"
+      "$mod,Q,exec,${config.programs.swaylock.package}/bin/swaylock --grace 0"
     ];
   };
 }

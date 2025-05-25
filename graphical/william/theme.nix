@@ -8,7 +8,6 @@ with lib;
 with config.lib.stylix.colors.withHashtag; {
   stylix = {
     enable = true;
-    image = ../../resources/wallpapers/eva_night.jpg;
     polarity = "dark";
     targets.vim.enable = false;
     opacity = {

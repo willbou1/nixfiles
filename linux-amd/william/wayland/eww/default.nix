@@ -7,19 +7,21 @@
 with builtins;
 with lib;
 with config.lib.stylix.colors.withHashtag; let
-  vars = {
-    "@border@" = toString config.home.borderSize;
-    "@out_gap@" = toString (config.home.gapSize * 1.5);
-    "@in_gap@" = toString config.home.gapSize;
-    "@bar_y_secondary@" = toString (config.home.gapSize / 2);
-    "@bar_y_main@" = toString (1440 - config.home.gapSize / 2 - config.home.ewwHeight);
-    "@bar_height@" = toString config.home.ewwHeight;
+  vars = with config.home; {
+    "@border@" = toString borderSize;
+    "@out_gap@" = toString (gapSize * 1.5);
+    "@in_gap@" = toString gapSize;
+    "@bar_y_secondary@" = if verticalDisplays
+      then toString (gapSize / 2)
+      else toString (1440 - gapSize / 2 - ewwHeight);
+    "@bar_y_main@" = toString (1440 - gapSize / 2 - ewwHeight);
+    "@bar_height@" = toString ewwHeight;
     "@width@" = "3440";
     "@height@" = "1440";
     "@bar_right_width@" = "500";
     "@bar_wm_width@" = "460";
     "@bar_music_width@" = "320";
-    "@bar_controls_width@" = "530";
+    "@bar_controls_width@" = "570";
     "@bar_net_width@" = "380";
     "@bar_cpu_width@" = "810";
     "@bar_mem_width@" = "380";

@@ -5,7 +5,7 @@ in {
     timeouts = [
       {
         timeout = 600;
-        command = "${swaylock}/bin/swaylock -f";
+        command = "${swaylock}/bin/swaylock -f --grace 0";
       }
     ];
     events = [

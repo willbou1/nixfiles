@@ -46,12 +46,18 @@
     fi
   '';
 in {
-  home.packages = [
-    (pkgs.svp.override {
-      customMpv = svpWrapper;
-    })
-    svpWrapper
-  ];
+  home = {
+    packages = [
+      (pkgs.svp.override {
+        customMpv = svpWrapper;
+      })
+      svpWrapper
+    ];
+    persistence."/persist/home/william".directories = [
+      ".local/state/mpv"
+      ".local/share/SVP4"
+    ];
+  };
   programs.mpv = {
     enable = true;
     package = mpv;
@@ -85,7 +91,8 @@ in {
       cscale = "spline64";
       input-ipc-server = "/tmp/mpvsocket";
       hr-seek-framedrop = false;
-      resume-playback = false;
+
+      keep-open = true;
     };
     profiles = {
       pause_on_focus_lost = {
@@ -118,6 +125,9 @@ in {
         scale = 1.3;
         ui_scale = 1.3;
         scale_fullscreen = 1.3;
+        autoload = true;
+        top_bar = "always";
+        top_bar_controls = "no";
       };
       thumbfast = {
         max_height = 450;
@@ -138,7 +148,4 @@ in {
       }
       + "/glsl";
   };
-  home.persistence."/persist/home/william".directories = [
-    ".local/share/SVP4"
-  ];
 }

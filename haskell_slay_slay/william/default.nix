@@ -5,6 +5,9 @@ with lib; {
   home.persistence."/persist/home/william".directories = [
     "priv"
   ];
+
+  stylix.image = ../../resources/wallpapers/eva_night.jpg;
+
   home = {
     gapSize = 8;
     borderSize = 3;

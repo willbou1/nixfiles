@@ -50,6 +50,7 @@
     #emacs-overlay.url = github:nix-community/emacs-overlay;
     emacs-overlay = {
       url = "git+file:./devel/emacs-overlay";
+      inputs.nixpkgs-stable.follows = "nixpkgs";
       inputs.nixpkgs.follows = "unstable";
     };
 
@@ -156,6 +157,7 @@
               home-manager.sharedModules = [
                 ./graphical/william
                 ./haskell_slay_slay/william
+                ./school.nix
               ];
             }
           ]
@@ -176,6 +178,7 @@
               home-manager.sharedModules = [
                 ./graphical/william
                 ./linux-amd/william
+                ./school.nix
               ];
             }
           ]

@@ -2,7 +2,7 @@
   programs.mpv = {
     config = {
       glsl-shaders = "~~/shaders/ai_upscale/Photo/2x/AiUpscale_HQ_Sharp_2x_Photo.glsl";
-      sub-font-size = 75;
+      sub-font-size = 65;
     };
     bindings = {
       "CTRL+1" = "no-osd change-list glsl-shaders set \"~~/shaders/Photo/2x/AiUpscale_HQ_Sharp_2x_Photo.glsl\"; show-text \"AiUpscale: 2x HQ Sharp\"";

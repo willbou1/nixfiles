@@ -86,8 +86,9 @@ in {
         blur = {
           enabled = true;
           size = 5;
-          passes = 2;
+          passes = 1;
           special = true;
+          popups = true;
         };
         shadow = {
           enabled = true;
@@ -151,7 +152,7 @@ in {
 
         "opacity 0.85,deluge"
 
-        "opacity 0.85,title:(.*)(Spotify)(.*)"
+        "opacity 0.85 override 0.85 override 0.85 override,workspace:6"
         "workspace 6 silent,title:(.*)(Spotify)(.*)"
 
         "float,SVPManager"

@@ -83,6 +83,7 @@ with lib; {
       "jc" = "sudo journalctl --system";
       "nu" = "sudo nix flake update ";
       "shred" = "shred --remove";
+      "cn" = "cd /etc/nixos";
     };
   };
 

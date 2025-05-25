@@ -47,6 +47,12 @@ in rec {
     client.enable = true;
   };
   systemd.user.services.emacs = {
+    #path = with pkgs; [
+    #  clang
+    #  gnumake
+    #  cmake
+
+    #];
     Service = {
       Nice = -8;
       WorkingDirectory = (toPath config.home.homeDirectory) + "/priv";
@@ -79,6 +85,10 @@ in rec {
     concatStringsSep "\n" [
       ''
         #+BEGIN_SRC elisp :tangle yes
+        (require 'f)
+      ''
+      secrets
+      ''
         (setq doom-font (font-spec :family "${fonts.monospace.name}" :size ${toString fontSize} :weight 'semi-light)
               doom-variable-pitch-font (font-spec :family "${fonts.sansSerif.name}" :size ${toString (fontSize - 1)})
               doom-big-font (font-spec :family "${fonts.monospace.name}" :size ${toString bigFontSize}))
@@ -86,16 +96,16 @@ in rec {
         (setq doom-theme 'doom-base16)
         (set-frame-parameter nil 'alpha-background ${toString percentageOpacity})
         (add-to-list 'default-frame-alist '(alpha-background . ${toString percentageOpacity}))
-
+      ''
+      "#+END_SRC\n"
+      (readFile ./doom/config.org)
+      ''
+        #+BEGIN_SRC elisp :tangle yes
         (let ((playground-file (concat doom-private-dir "playground.el")))
               (if (file-exists-p playground-file)
                   (load playground-file)))
-
-        (require 'f)
+        #+END_SRC
       ''
-      secrets
-      "#+END_SRC\n"
-      (readFile ./doom/config.org)
     ];
   xdg.configFile."doom/themes/doom-base16-theme.el".source = themeConfig;
   xdg.configFile."doom/splash".source = ./../../../resources/splash/emacs;
