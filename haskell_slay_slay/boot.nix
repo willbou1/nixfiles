@@ -39,7 +39,7 @@ in {
     "/" = {
       device = "none";
       fsType = "tmpfs";
-      options = ["size=10G" "mode=755"];
+      options = ["size=20G" "mode=755"];
     };
     "/home/william" = {
       device = "none";

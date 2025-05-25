@@ -42,6 +42,11 @@
       inputs.nixpkgs.follows = "unstable";
     };
 
+    zen-browser = {
+      url = "github:MarceColl/zen-browser-flake";
+      inputs.nixpkgs.follows = "unstable";
+    };
+
     #emacs-overlay.url = github:nix-community/emacs-overlay;
     emacs-overlay = {
       url = "git+file:./devel/emacs-overlay";
@@ -97,6 +102,7 @@
           inputs.emacs-overlay.overlays.default
           inputs.nix-alien.overlays.default
           (final: prev: {
+            zen-browser = inputs.zen-browser.packages.${final.system}.default;
             unstable = import unstable {
               inherit (final) system config;
               overlays = [

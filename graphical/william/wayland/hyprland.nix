@@ -129,9 +129,6 @@ in {
         "$mod,mouse:272,movewindow"
         "$mod,mouse:273,resizewindow"
       ];
-      exec = [
-        "sleep 3; ${pkgs.swww}/bin/swww img ${config.stylix.image}"
-      ];
       exec-once = [
         "SVPManager"
         "element-desktop-nightly"

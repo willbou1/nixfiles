@@ -28,6 +28,7 @@ with lib; {
     home.persistence."/persist/home/william" = {
       directories = [
         ".mozilla/firefox"
+        ".zen"
         ".config/libreoffice"
       ];
       files = [
@@ -48,11 +49,8 @@ with lib; {
       helvum
       steam
       wally-cli
+      zen-browser
     ];
-
-    programs = {
-      firefox.enable = true;
-    };
 
     services = {
       udiskie = {

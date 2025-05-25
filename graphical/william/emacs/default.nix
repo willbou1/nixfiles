@@ -10,12 +10,12 @@ with lib; let
     template = ./doom/doom-base16-theme.el.mustache;
     extension = ".el";
   };
-  useOverlay = false;
+  useOverlay = true;
   debug = false;
   emacs =
     if useOverlay
     then
-      pkgs.emacs-pgtk.override {
+      pkgs.emacs-git-pgtk.override {
         withNativeCompilation = true;
       }
     else pkgs.emacs;

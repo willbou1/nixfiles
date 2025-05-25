@@ -161,8 +161,8 @@ in {
     };
     keyBindings = {
       normal = {
-        ",c" = "open https://chat.openai.com";
-        ",C" = "open -t https://chat.openai.com";
+        ",c" = "open https://duck.ai";
+        ",C" = "open -t https://duck.ai";
         ",n" = "open https://mynixos.com";
         ",N" = "open -t https://mynixos.com";
         ",d" = "open https://noogle.dev";
