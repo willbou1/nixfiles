@@ -90,6 +90,6 @@ in {
 
   home.packages = with pkgs; [
     hmcl
-    modrinth-app
+    #modrinth-app
   ];
 }

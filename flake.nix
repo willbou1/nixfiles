@@ -15,13 +15,13 @@
     impermanence.url = "git+file:./devel/impermanence";
 
     home-manager = {
-      #url = github:nix-community/home-manager/release-24.05;
+      #url = github:nix-community/home-manager/release-25.05;
       url = "git+file:./devel/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
     nixvim = {
-      #url = github:nix-community/nixvim/nixos-24.05;
+      #url = github:nix-community/nixvim/nixos-25.05;
       url = "git+file:./devel/nixvim";
       inputs.nixpkgs.follows = "nixpkgs";
     };
@@ -54,7 +54,7 @@
       inputs.nixpkgs.follows = "unstable";
     };
 
-    #stylix.url = github:danth/stylix/release-24.05;
+    #stylix.url = github:danth/stylix/release-25.05;
     stylix.url = "git+file:./devel/stylix";
 
     nur.url = "github:nix-community/NUR";

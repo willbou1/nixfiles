@@ -16,7 +16,7 @@ with builtins;
           highlight_alternate = true;
         };
       };
-      nvim-colorizer.enable = true;
+      colorizer.enable = true;
       treesitter.enable = true;
       fugitive.enable = true;
       telescope = {
@@ -46,11 +46,11 @@ with builtins;
       };
       dap = {
         enable = true;
-        extensions.dap-ui.enable = true;
         adapters.executables = {
           cpptools.command = "${pkgs.vscode-extensions.ms-vscode.cpptools}/share/vscode/extensions/ms-vscode.cpptools/debugAdapters/bin/OpenDebugAD7";
         };
       };
+      dap-ui.enable = true;
       cmp = {
         enable = true;
         settings = {
@@ -133,7 +133,6 @@ with builtins;
       splitbelow = true;
       splitright = true;
       spelllang = "en_ca";
-      guifont = "Monospace:h18";
       undofile = true;
       ignorecase = true;
       smartcase = true;

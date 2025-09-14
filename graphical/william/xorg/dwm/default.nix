@@ -1,7 +1,7 @@
+{ lib, ... }:
+with lib;
 {
-  imports = [
-    ./dwm.nix
-    ./dwmblocks.nix
-    ./dmenu.nix
+  imports = mine.autoInclude ./. [
+    ./blocks
   ];
 }

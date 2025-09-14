@@ -140,25 +140,25 @@ in {
         "${pkgs.dbus}/bin/dbus-update-activation-environment --systemd XAUTHORITY XDG_SESSION_ID"
       ];
       windowrule = [
-        "idleinhibit fullscreen,.*"
+        "idleinhibit fullscreen,class:.*"
 
-        "opacity 0.93 0.93 1.0,org.qutebrowser.qutebrowser"
-        "opacity 0.93,firefox"
+        "opacity 0.93 0.93 1.0,class:org.qutebrowser.qutebrowser"
+        "opacity 0.93,class:firefox"
 
-        "workspace 4,mpv"
+        "workspace 4,class:mpv"
 
-        "opacity 0.85,Element"
-        "workspace 5 silent,Element"
+        "opacity 0.85,class:Element"
+        "workspace 5 silent,class:Element"
 
-        "opacity 0.85,deluge"
+        "opacity 0.85,class:deluge"
 
         "opacity 0.85 override 0.85 override 0.85 override,workspace:6"
         "workspace 6 silent,title:(.*)(Spotify)(.*)"
 
-        "float,SVPManager"
-        "workspace 9 silent,SVPManager"
+        "float,class:SVPManager"
+        "workspace 9 silent,class:SVPManager"
 
-        "opacity 0.75,udiskie"
+        "opacity 0.75,class:udiskie"
 
         "bordercolor 0x${hexOpacity + base0E},title:private"
       ];

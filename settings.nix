@@ -3,7 +3,7 @@
   # TODO Keep an eye on these packages closely in case something breaks.
   bleedingEdgePackages = [
     # kernels
-    "linuxPackages_zen"
+    #"linuxPackages_zen"
     "linuxPackages_latest"
 
     # video
@@ -18,7 +18,7 @@
     "fastfetch"
 
     # apps
-    "element-desktop"
+    #"element-desktop"
     "libreoffice-fresh"
     "steam"
     "bitwarden"
@@ -36,10 +36,10 @@
   # be accessed as unstable in system and home-manager modules. Note that
   # inputs.unstable points to the original nixpkgs-unstable.
   unstableNixpkgsPRs = [
-    {
-      name = "Mautrix-discord module";
-      id = 355025;
-      sha256 = "1h9msxyp75rhx7pqnsi6akcxhwfifjdpwx5jaip2fqdp3qqaq92q";
-    }
+#    {
+#      name = "Mautrix-discord module";
+#      id = 355025;
+#      sha256 = "1skhw6w4mnc4n9paha24kg1paqhl8837jmj86yvgyd9bd479qjrf";
+#    }
   ];
 }
