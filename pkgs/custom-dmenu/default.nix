@@ -39,6 +39,10 @@ stdenv.mkDerivation rec {
     sed -i "s@PREFIX = /usr/local@PREFIX = $out@g" config.mk
   '';
 
+  NIX_CFLAGS_COMPILE = [
+    "-Wno-error=implicit-function-declaration"
+  ];
+
   makeFlags = ["CC:=$(CC)"];
 
   passthru.updateScript = gitUpdater {

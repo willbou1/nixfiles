@@ -173,6 +173,7 @@ in {
           "$mod,D,exec,wofi --show drun"
           "$mod,W,exec,looking-glass-client -f /dev/kvmfr0"
           "$mod,C,exec,${hyprcap}/bin/hyprcap"
+          "$mod,M,exec,cd /data/datasheets; fd . | wofi -d -i | xargs -I'{}' zathura '/data/datasheets/{}'"
 
           "$mod SHIFT,Q,exit,"
           "$mod,S,togglefloating,"

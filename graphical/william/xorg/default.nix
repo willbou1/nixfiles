@@ -10,7 +10,6 @@ with builtins; let
 in {
   imports = mine.autoInclude ./. [
     ./rofi
-    ./dwm
   ];
 
   home.file.".xinitrc".source = pkgs.writeShellScript ".xinitrc" ''

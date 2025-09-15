@@ -1,7 +1,7 @@
 {
   users = {
     users.william = {
-      extraGroups = ["networkmanager" "libvirtd" "video"];
+      extraGroups = ["networkmanager" "libvirtd" "video" "dialout"];
     };
   };
 }

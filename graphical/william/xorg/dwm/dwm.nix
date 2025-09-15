@@ -15,6 +15,10 @@ with builtins; let
           xorgproto
           libXext
         ]);
+      # TODO Maybe update my fork, butttt don't want to
+      NIX_CFLAGS_COMPILE = [
+        "-Wno-error=int-conversion"
+      ];
       src = pkgs.fetchFromGitHub {
         owner = "willbou1";
         repo = "dwm";

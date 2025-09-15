@@ -13,6 +13,11 @@ with builtins; let
         rev = "83522dad7dfebecf5230704641c8a1f83756831e";
         hash = "sha256-1n/onlzW1ntAjsJf4WgiDJm8S2L+4yejz85zK0Dej7A=";
       };
+      # TODO Possibly take the time to update my fork lol
+      NIX_CFLAGS_COMPILE = [
+        "-Wno-error=int-conversion"
+        "-Wno-error=incompatible-pointer-types"
+      ];
     })
     .override {
       conf = ''

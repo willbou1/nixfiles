@@ -50,6 +50,7 @@ with lib; {
       steam
       wally-cli
       zen-browser
+      bitwig-studio
     ];
 
     services = {
