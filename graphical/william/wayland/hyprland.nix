@@ -147,8 +147,8 @@ in {
 
         "workspace 4,class:mpv"
 
-        "opacity 0.85,class:Element"
-        "workspace 5 silent,class:Element"
+        "opacity 0.85,class:Element(-Nightly)*"
+        "workspace 5 silent,class:Element(-Nightly)*"
 
         "opacity 0.85,class:deluge"
 
