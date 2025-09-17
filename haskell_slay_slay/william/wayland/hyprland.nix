@@ -41,7 +41,7 @@ in {
     plugins = [ pkgs.hyprlandPlugins.hyprgrass ];
     settings = {
       env = [
-        "WLR_DRM_DEVICE,/dev/dri/by-path/pci-0000:00:02.0-card"
+        "AQ_DRM_DEVICES,/dev/dri/by-path/pci-0000:00:02.0-card"
       ];
       exec-once = [
         "${pkgs.waybar}/bin/waybar"

@@ -7,8 +7,11 @@
 with builtins;
 with lib;
 with config.lib.stylix.colors; let
+  jq = "${pkgs.jq}/bin/jq";
+  stylix = config.stylix;
   monitors = map (m: "${m.wlrName},${toString m.width}x${toString m.height}@${toString m.rate},${toString m.x}x${toString m.y},${toString (trivial.max m.hScale m.vScale)}") config.home.monitors;
-  hexOpacity = lib.toHexString (((ceil (config.stylix.opacity.desktop * 100)) * 255) / 100);
+  hexOpacity = lib.toHexString (((ceil (stylix.opacity.desktop * 100)) * 255) / 100);
+  groupFontSize = floor (stylix.fonts.sizes.desktop * 1.2);
   hyprcap = pkgs.writeShellScriptBin "hyprcap" ''
     slurp_args="-b "${withHashtag.base00 + hexOpacity}" -B "${withHashtag.base00 + hexOpacity}" -c "${withHashtag.base0A + hexOpacity}""
 
@@ -47,6 +50,7 @@ in {
     xwayland.enable = true;
     #enableNvidiaPatches = true;
     settings = {
+      ecosystem.no_update_news = true;
       monitor = monitors ++ [",disable"];
       #plugin = {
       #    touch_gestures = {
@@ -74,12 +78,26 @@ in {
         gaps_out = ceil (config.home.gapSize * 1.5);
         border_size = config.home.borderSize;
         "col.inactive_border" = mkForce "0x${hexOpacity + base03}";
-        "col.active_border" = mkForce "0x${hexOpacity + base0A}";
+        "col.active_border" = mkForce "0x${hexOpacity + base0D}";
       };
       group = {
-        "col.border_inactive" = mkForce "0x${hexOpacity + base06}";
+        "col.border_inactive" = mkForce "0x${hexOpacity + base03}";
         "col.border_active" = mkForce "0x${hexOpacity + base0D}";
-        "col.border_locked_active" = mkForce "0x${hexOpacity + base06}";
+        "col.border_locked_active" = mkForce "0x${hexOpacity + base0C}";
+        groupbar = rec {
+          font_size = groupFontSize;
+          font_weight_active = "bold";
+          font_weight_inactive = font_weight_active;
+          height = floor (groupFontSize * 1.5);
+          indicator_height = 0;
+          gradients = true;
+          gradient_round_only_edges = false;
+          gradient_rounding = 20;
+          gaps_in = floor (config.home.gapSize * 0.7);
+          gaps_out = gaps_in;
+          "col.active" = mkForce "0x${hexOpacity + base0D}";
+          "col.inactive" = mkForce "0x${hexOpacity + base03}";
+        };
       };
       decoration = {
         rounding = 20;
@@ -124,6 +142,8 @@ in {
         vfr = false;
         mouse_move_enables_dpms = true;
         key_press_enables_dpms = true;
+        font_family = stylix.fonts.monospace.name;
+        new_window_takes_over_fullscreen = 2;
       };
       "$mod" = "SUPER";
       bindm = [
@@ -181,7 +201,7 @@ in {
           "$mod SHIFT,F, fullscreenstate, 0 3"
           "$mod,T,togglesplit"
           "$mod,G,togglegroup"
-          "$mod,U,changegroupactive,f"
+          "$mod,TAB,changegroupactive,f"
 
           "$mod,H,movefocus,l"
           "$mod,L,movefocus,r"
@@ -206,6 +226,13 @@ in {
 
           "$mod SHIFT,S,togglespecialworkspace,secret"
           "$mod SHIFT,B,exec,qutebrowser --restore private ':open -p'"
+
+          "$mod, equal, exec, hyprctl -q keyword cursor:zoom_factor $(hyprctl getoption cursor:zoom_factor -j | ${jq} '.float * 1.2')"
+          "$mod, minus, exec, hyprctl -q keyword cursor:zoom_factor $(hyprctl getoption cursor:zoom_factor -j | ${jq} '(.float * 0.8) | if . < 1 then 1 else . end')"
+          "$mod, mouse_up, exec, hyprctl -q keyword cursor:zoom_factor $(hyprctl getoption cursor:zoom_factor -j | ${jq} '.float * 1.2')"
+          "$mod, mouse_down, exec, hyprctl -q keyword cursor:zoom_factor $(hyprctl getoption cursor:zoom_factor -j | ${jq} '(.float * 0.8) | if . < 1 then 1 else . end')"
+          "$mod SHIFT, mouse_up, exec, hyprctl -q keyword cursor:zoom_factor 1"
+          "$mod SHIFT, mouse_down, exec, hyprctl -q keyword cursor:zoom_factor 1"
         ]
         ++ concatLists (genList (x: let
             xs = toString (x + 1);

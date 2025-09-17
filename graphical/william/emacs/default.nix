@@ -39,7 +39,7 @@ in rec {
   #};
 
   services.emacs = {
-    enable = true;
+    enable = false;
     package = emacs;
     extraOptions = mkIf debug [
       "--debug-init"
@@ -54,7 +54,6 @@ in rec {
 
     #];
     Service = {
-      Nice = -8;
       WorkingDirectory = (toPath config.home.homeDirectory) + "/priv";
     };
   };

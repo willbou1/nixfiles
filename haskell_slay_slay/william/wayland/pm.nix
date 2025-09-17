@@ -27,6 +27,12 @@
         disown -a
     fi
   '';
+  resumeLock = pkgs.writeShellScript "lock" ''
+    if ! ${pkgs.procps}/bin/pgrep '.*swaylock.*'; then
+        ${config.programs.swaylock.package}/bin/swaylock "$@" &
+        disown -a
+    fi
+  '';
 in {
   wayland.windowManager.hyprland.settings.bind = [
     "$mod,Q,exec,${brilloDim}; ${lock} --grace 0"
@@ -34,8 +40,8 @@ in {
   services.swayidle = {
     events = [
       {
-        event = "before-sleep";
-        command = "${lock} --grace 0";
+        event = "after-resume";
+        command = "${resumeLock} --grace 0";
       }
     ];
     timeouts = [

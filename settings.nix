@@ -4,12 +4,11 @@
   bleedingEdgePackages = [
     # kernels
     #"linuxPackages_zen"
-    "linuxPackages_latest"
+    #"linuxPackages_latest"
 
     # video
-    "mpv"
-    "mpv-unwrapped"
-    "svp"
+    #"mpv"
+    #"mpv-unwrapped"
 
     # cli
     "kitty"
