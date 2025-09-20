@@ -58,13 +58,6 @@ with lib; {
         enable = true;
         tray = "never";
       };
-      easyeffects.enable = true;
     };
-
-    # default to aptx_ll for my bluetooth headphones
-    home.file.".local/state/wireplumber/default-profile".text = ''
-      [default-profile]
-      bluez_card.00_1B_66_C0_52_BD=a2dp-sink-aptx_ll
-    '';
   };
 }

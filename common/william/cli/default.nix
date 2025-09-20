@@ -20,7 +20,10 @@ with lib; {
       userName = "William Boulanger";
       userEmail = "willbou2@gmail.com";
     };
-    btop.enable = true;
+    btop = {
+      enable = true;
+      settings.vim_keys = true;
+    };
     bat = {
       enable = true;
       config = {

@@ -39,7 +39,7 @@ in rec {
   #};
 
   services.emacs = {
-    enable = false;
+    enable = true;
     package = emacs;
     extraOptions = mkIf debug [
       "--debug-init"
@@ -53,9 +53,7 @@ in rec {
     #  cmake
 
     #];
-    Service = {
-      WorkingDirectory = (toPath config.home.homeDirectory) + "/priv";
-    };
+    Service.WorkingDirectory = (toPath config.home.homeDirectory) + "/priv";
   };
 
   home = {

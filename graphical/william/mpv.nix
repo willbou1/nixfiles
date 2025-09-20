@@ -75,7 +75,7 @@ in {
       osc = false;
       osd-bar = false;
       border = false;
-      video-sync = "display-resample";
+      #video-sync = "display-resample"; # TODO causes freezes I think on haskellslayslay
 
       alang = "jpn,jp,kor,ko,eng,en";
       af = "acompressor=ratio=4,loudnorm";
@@ -147,5 +147,13 @@ in {
         hash = "sha256-01js/vr+kpFAm2Hfj64ad+odZKYiC9TZiTTj6mwAFd8=";
       }
       + "/glsl";
+    "mpv/shaders/ai_upscale".source =
+      pkgs.fetchFromGitHub {
+        owner = "Alexkral";
+        repo = "AviSynthAiUpscale";
+        rev = "d04cf8154e4ba9914f3ead0dec9f7a4a7df7369f";
+        hash = "sha256-MKW7y/I+LDAsOU3ROVN/ySrTYJ0YMN+P/oBB7x6HXys=";
+      }
+      + "/mpv user shaders";
   };
 }

@@ -11,14 +11,4 @@
       "CTRL+4" = "no-osd change-list glsl-shaders set \"~~/shaders/Photo/4x/AiUpscale_HQ_4x_Photo.glsl\"; show-text \"AiUpscale: 4x HQ\"";
     };
   };
-  xdg.configFile = {
-    "mpv/shaders/ai_upscale".source =
-      pkgs.fetchFromGitHub {
-        owner = "Alexkral";
-        repo = "AviSynthAiUpscale";
-        rev = "d04cf8154e4ba9914f3ead0dec9f7a4a7df7369f";
-        hash = "sha256-MKW7y/I+LDAsOU3ROVN/ySrTYJ0YMN+P/oBB7x6HXys=";
-      }
-      + "/mpv user shaders";
-  };
 }

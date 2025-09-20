@@ -22,11 +22,11 @@ in {
         modules-left = ["custom/nix" "hyprland/workspaces" "hyprland/window"];
         modules-center = ["clock"];
         modules-right = ["custom/kime" "network" "pulseaudio" "backlight" "custom/wl-gammarelay-temperature" "memory" "cpu" "temperature" "battery"];
-        cpu.format = "  {usage}%";
-        memory.format = "  {}%";
+        cpu.format = "  {usage}%";
+        memory.format = "  {}%";
         clock.format = "{:%I:%M:%p}";
         "custom/wl-gammarelay-temperature" = {
-          "format" = "  {}";
+          "format" = "  {}";
           "exec" = "wl-gammarelay-rs watch {t}";
           "on-scroll-up" = "busctl --user -- call rs.wl-gammarelay / rs.wl.gammarelay UpdateTemperature n +100";
           "on-scroll-down" = "busctl --user -- call rs.wl-gammarelay / rs.wl.gammarelay UpdateTemperature n -100";
@@ -46,7 +46,7 @@ in {
         };
         "custom/nix".format = "󱄅";
         "custom/kime" = {
-          format = "󰌌  {}";
+          format = "  {}";
           exec = ''
             echo ca
             kime-indicator 2>&1 |
@@ -87,36 +87,37 @@ in {
             warning = 30;
             critical = 15;
           };
-          format = "{icon}   {capacity}%";
-          format-charging = "󰂅  {capacity}%";
-          format-plugged = "  {capacity}%";
-          format-icons = ["" "" "" "" ""];
+          format = "{icon} {capacity}%";
+          format-charging = "󰂅 {capacity}%";
+          format-plugged = " {capacity}%";
+          format-icons = [" " " " " " " " " "];
         };
         network = {
-          format-wifi = "   {essid} ({signalStrength}%)";
-          format-ethernet = "󰈁   {ifname}";
-          tooltip-format = "󰈁   {ifname} via {gwaddr}";
-          format-linked = "   {ifname} (No IP)";
+          format-wifi = "  {essid} ({signalStrength}%)";
+          format-ethernet = "󰈀  {ifname}";
+          tooltip-format = "󰈀  {ifname} via {gwaddr}";
+          format-linked = "  {ifname} (No IP)";
           format-disconnected = "Disconnected ⚠ {ifname}";
-          format-alt = "   {ifname}: {ipaddr}/{cidr}";
+          format-alt = "  {ifname}: {ipaddr}/{cidr}";
         };
         pulseaudio = {
-          format = "{icon}  {volume}%   {format_source}";
-          format-bluetooth = " {icon}  {volume}% {format_source}";
-          format-bluetooth-muted = "󰝟  {icon}  {format_source}";
+          format = "{icon} {volume}%  {format_source}";
+          format-bluetooth = " {icon} {volume}% {format_source}";
+          format-bluetooth-muted = "󰝟  {icon} {format_source}";
           format-muted = "󰝟  {format_source}";
           format-source = " {volume}%";
           format-source-muted = "";
-          format-icons.default = ["" "" ""];
+          format-icons.default = [" " " " " "];
           ignored-sinks = ["Easy Effects Sink"];
         };
         temperature = {
-          format = "󰔏  {temperatureC}°C";
+          format = "{icon} {temperatureC}°C";
+          format-icons = ["" "" ""];
           thermal-zone = 8;
         };
         backlight = {
-          format = "{icon} {percent}%";
-          format-icons = ["󰃜" "󰃛" "󰃚"];
+          format = "{icon}{percent}%";
+          format-icons = [" " " " " "];
         };
       };
     };

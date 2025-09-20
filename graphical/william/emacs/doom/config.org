@@ -48,6 +48,8 @@ For some reason, evil-bindings aren't loaded when I start Doom sometimes so let'
   (interactive)
   (load-file (concat doom-emacs-dir "modules/config/default/+evil-bindings.el")))
 (add-hook 'doom-after-init-hook #'my/load-evil-bindings)
+
+(setq anzu-mode--set-explicitly t)
 #+end_src
 
 * Required packages

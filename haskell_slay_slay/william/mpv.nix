@@ -15,7 +15,7 @@ in {
   programs.mpv.config = {
     panscan = 1.0;
     sub-font-size = 45;
-    glsl-shaders = "~/.config/mpv/shaders/film/FSRCNNX_x2_8-0-4-1.glsl:~/.config/mpv/shaders/film/SSimDownscaler.glsl:~/.config/mpv/shaders/film/KrigBilateral.glsl";
+    #glsl-shaders = "~/.config/mpv/shaders/film/FSRCNNX_x2_8-0-4-1.glsl:~/.config/mpv/shaders/film/SSimDownscaler.glsl:~/.config/mpv/shaders/film/KrigBilateral.glsl";
   };
   xdg.configFile = {
     "mpv/shaders/film".source =

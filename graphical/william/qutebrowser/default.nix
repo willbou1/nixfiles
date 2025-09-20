@@ -182,10 +182,15 @@ in {
     };
     keyBindings = {
       normal = {
-        ",o" = "open https://duck.ai";
-        ",O" = "open -t https://duck.ai";
-        ",c" = "open https://chat.openai.com";
-        ",C" = "open -t https://chat.openai.com";
+        ",ad" = "open https://duck.ai";
+        ",Ad" = "open -t https://duck.ai";
+        ",ac" = "open https://chat.openai.com";
+        ",Ac" = "open -t https://chat.openai.com";
+        ",ag" = "open https://gemini.google.com";
+        ",Ag" = "open -t https://gemini.google.com";
+        ",an" = "open https://claude.ai";
+        ",An" = "open -t https://claude.ai";
+
         ",n" = "open https://mynixos.com";
         ",N" = "open -t https://mynixos.com";
         ",d" = "open https://noogle.dev";

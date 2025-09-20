@@ -8,6 +8,11 @@ with builtins; {
     '';
   };
 
+  services = {
+    easyeffects.enable = true;
+    playerctld.enable = true;
+  };
+
   xdg.configFile."easyeffects/output/mono.json".text = toJSON {
     output = {
       blocklist = [];
