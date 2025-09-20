@@ -1,6 +1,9 @@
-{ pkgs, lib, ... }:
-with lib;
-let
+{
+  pkgs,
+  lib,
+  ...
+}:
+with lib; let
   kicadThemes = pkgs.fetchFromGitHub {
     owner = "pointhi";
     repo = "kicad-color-schemes";

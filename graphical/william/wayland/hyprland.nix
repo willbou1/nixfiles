@@ -93,6 +93,7 @@ in {
           gradients = true;
           gradient_round_only_edges = false;
           gradient_rounding = 20;
+          keep_upper_gap = false;
           gaps_in = floor (config.home.gapSize * 0.7);
           gaps_out = gaps_in;
           "col.active" = mkForce "0x${hexOpacity + base0D}";
@@ -145,6 +146,7 @@ in {
         font_family = stylix.fonts.monospace.name;
         new_window_takes_over_fullscreen = 2;
       };
+      binds.scroll_event_delay = 100;
       "$mod" = "SUPER";
       bindm = [
         "$mod,mouse:272,movewindow"
@@ -229,8 +231,8 @@ in {
 
           "$mod, equal, exec, hyprctl -q keyword cursor:zoom_factor $(hyprctl getoption cursor:zoom_factor -j | ${jq} '.float * 1.2')"
           "$mod, minus, exec, hyprctl -q keyword cursor:zoom_factor $(hyprctl getoption cursor:zoom_factor -j | ${jq} '(.float * 0.8) | if . < 1 then 1 else . end')"
-          "$mod, mouse_up, exec, hyprctl -q keyword cursor:zoom_factor $(hyprctl getoption cursor:zoom_factor -j | ${jq} '.float * 1.2')"
-          "$mod, mouse_down, exec, hyprctl -q keyword cursor:zoom_factor $(hyprctl getoption cursor:zoom_factor -j | ${jq} '(.float * 0.8) | if . < 1 then 1 else . end')"
+          "$mod, mouse_down, exec, hyprctl -q keyword cursor:zoom_factor $(hyprctl getoption cursor:zoom_factor -j | ${jq} '.float * 1.2')"
+          "$mod, mouse_up, exec, hyprctl -q keyword cursor:zoom_factor $(hyprctl getoption cursor:zoom_factor -j | ${jq} '(.float * 0.8) | if . < 1 then 1 else . end')"
           "$mod SHIFT, mouse_up, exec, hyprctl -q keyword cursor:zoom_factor 1"
           "$mod SHIFT, mouse_down, exec, hyprctl -q keyword cursor:zoom_factor 1"
         ]

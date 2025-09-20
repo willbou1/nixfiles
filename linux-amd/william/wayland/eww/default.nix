@@ -11,7 +11,8 @@ with config.lib.stylix.colors.withHashtag; let
     "@border@" = toString borderSize;
     "@out_gap@" = toString (gapSize * 1.5);
     "@in_gap@" = toString gapSize;
-    "@bar_y_secondary@" = if verticalDisplays
+    "@bar_y_secondary@" =
+      if verticalDisplays
       then toString (gapSize / 2)
       else toString (1440 - gapSize / 2 - ewwHeight);
     "@bar_y_main@" = toString (1440 - gapSize / 2 - ewwHeight);

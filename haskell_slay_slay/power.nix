@@ -34,10 +34,7 @@
 
         ENERGY_PERF_POLICY_ON_AC = "balance-performance";
         ENERGY_PERF_POLICY_ON_BAT = "power";
-
-        START_CHARGE_THRESH_BAT0 = 50; # 40 and below it starts to charge
-        STOP_CHARGE_THRESH_BAT0 = 85; # 80 and above it stops charging
       };
-};
+    };
   };
 }

@@ -1,8 +1,4 @@
-{
-  pkgs,
-  ...
-}:
-{
+{pkgs, ...}: {
   home.persistence."/persist/home/william".directories = [
     ".local/share/keyrings"
   ];

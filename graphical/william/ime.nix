@@ -34,7 +34,7 @@
             "0" = "Default";
           };
         };
-       };
+      };
       addons = with pkgs; [
         fcitx5-mozc
         fcitx5-gtk

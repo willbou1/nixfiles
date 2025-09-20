@@ -45,7 +45,7 @@
       intel-vaapi-driver = pkgs.intel-vaapi-driver.override {enableHybridCodec = true;};
     };
   };
-  environment.sessionVariables = { LIBVA_DRIVER_NAME = "iHD"; }; # Force intel-media-driver
+  environment.sessionVariables = {LIBVA_DRIVER_NAME = "iHD";}; # Force intel-media-driver
   environment.systemPackages = with pkgs; [
     cudaPackages.cudatoolkit
     #displaylink

@@ -17,12 +17,13 @@
     "fastfetch"
 
     # apps
-    #"element-desktop"
+    "element-desktop"
     "libreoffice-fresh"
     "steam"
     "bitwarden"
     "modrinth-app"
     "firefox"
+    "kicad"
 
     # vps
     "mautrix-meta" # CVE with libolm

@@ -30,4 +30,9 @@ with lib; {
     max-jobs = 5;
     cores = 4;
   };
+
+  # linux-amd is in my room so I'm not that concerned
+  security.sudo.extraConfig = ''
+    Defaults timestamp_timeout=20
+  '';
 }

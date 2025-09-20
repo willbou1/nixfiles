@@ -38,7 +38,7 @@ in {
     hyprrotate
   ];
   wayland.windowManager.hyprland = {
-    plugins = [ pkgs.hyprlandPlugins.hyprgrass ];
+    plugins = [pkgs.hyprlandPlugins.hyprgrass];
     settings = {
       env = [
         #"AQ_DRM_DEVICES,/dev/dri/by-path/pci-0000:00:02.0-card"

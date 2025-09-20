@@ -4,8 +4,7 @@
   lib,
   ...
 }:
-with lib;
-let
+with lib; let
   qutebrowser = pkgs.qutebrowser.override {
     enableWideVine = true;
   };
@@ -13,30 +12,45 @@ let
     builtins.concatStringsSep "\n" (builtins.map (n: "${config.programs.qutebrowser.package}/share/qutebrowser/scripts/dictcli.py install ${n}") config.programs.qutebrowser.settings.spellcheck.languages)
   );
 
-    permissions = {
-      notification = "notifications";
-      clipboard = "clipboard";
-      protocol = "protocol";
-      call = "call";
-      audio = "audio";
-      video = "video";
-      desktop = "desktop";
-    };
-    siteSettings = ss: listToAttrs (map (s: with permissions; let
-      toMerge = map (p: if p == notification then { content.notifications.enabled = true; }
-                        else if p == clipboard then { content.javascript.clipboard = "access"; }
-                        else if p == protocol then { content.register_protocol_handler = true; }
-                        else if p == desktop then { content.desktop_capture = true; }
-                        else if p == audio then { content.audio_capture = true; }
-                        else if p == video then { content.video_capture = true; }
-                        else if p == call then
-                          { content = { media.audio_video_capture = true; desktop_capture = true; }; }
-                        else error "Unrecognized permission for Qutebrowser") s.permissions;
+  permissions = {
+    notification = "notifications";
+    clipboard = "clipboard";
+    protocol = "protocol";
+    call = "call";
+    audio = "audio";
+    video = "video";
+    desktop = "desktop";
+  };
+  siteSettings = ss:
+    listToAttrs (map (s:
+      with permissions; let
+        toMerge = map (p:
+          if p == notification
+          then {content.notifications.enabled = true;}
+          else if p == clipboard
+          then {content.javascript.clipboard = "access";}
+          else if p == protocol
+          then {content.register_protocol_handler = true;}
+          else if p == desktop
+          then {content.desktop_capture = true;}
+          else if p == audio
+          then {content.audio_capture = true;}
+          else if p == video
+          then {content.video_capture = true;}
+          else if p == call
+          then {
+            content = {
+              media.audio_video_capture = true;
+              desktop_capture = true;
+            };
+          }
+          else error "Unrecognized permission for Qutebrowser")
+        s.permissions;
       in {
         name = "https://${s.domain}";
-        value = mkMerge (toMerge ++ [{ colors.webpage.darkmode.enabled = !s.light or true; }]);
-      }) ss);
-
+        value = mkMerge (toMerge ++ [{colors.webpage.darkmode.enabled = !s.light or true;}]);
+      })
+    ss);
 in {
   imports = lib.mine.autoInclude ./. [];
   xdg.mimeApps.defaultApplications = {
@@ -74,14 +88,31 @@ in {
     enable = true;
     package = qutebrowser;
 
-    domainSettings = with permissions; siteSettings [
-      { domain = "teams.microsoft.com";
-        permissions = [notification clipboard call]; light = true; }
-      { domain = "www.facebook.com"; permissions = [notification]; }
-      { domain = "www.netflix.com"; permissions = [notification]; }
-      { domain = "github.com"; permissions = [clipboard]; }
-      { domain = "mail.google.com"; permissions = [protocol]; light = true; }
-    ];
+    domainSettings = with permissions;
+      siteSettings [
+        {
+          domain = "teams.microsoft.com";
+          permissions = [notification clipboard call];
+          light = true;
+        }
+        {
+          domain = "www.facebook.com";
+          permissions = [notification];
+        }
+        {
+          domain = "www.netflix.com";
+          permissions = [notification];
+        }
+        {
+          domain = "github.com";
+          permissions = [clipboard];
+        }
+        {
+          domain = "mail.google.com";
+          permissions = [protocol];
+          light = true;
+        }
+      ];
 
     settings = {
       # Enable additional hardware acceleration

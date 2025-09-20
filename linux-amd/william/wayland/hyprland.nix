@@ -3,8 +3,11 @@
 in {
   wayland.windowManager.hyprland.settings = {
     monitor = [
-      (if config.home.verticalDisplays then "HDMI-A-1,addreserved,${reserved},0,0,0"
-        else "HDMI-A-1,addreserved,0,${reserved},0,0")
+      (
+        if config.home.verticalDisplays
+        then "HDMI-A-1,addreserved,${reserved},0,0,0"
+        else "HDMI-A-1,addreserved,0,${reserved},0,0"
+      )
       "DP-1,addreserved,0,${reserved},0,0"
     ];
     workspace = [

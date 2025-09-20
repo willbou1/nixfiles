@@ -1,6 +1,5 @@
-{ lib, ... }:
-with lib;
-{
+{lib, ...}:
+with lib; {
   imports = mine.autoInclude ./. [
     ./blocks
   ];

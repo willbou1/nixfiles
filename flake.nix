@@ -123,9 +123,6 @@
       ./common
       home-manager.nixosModules.home-manager
       {
-        nixpkgs.overlays = [
-          inputs.nur.overlays.default
-        ];
         home-manager.extraSpecialArgs = {inherit inputs;};
         home-manager.useGlobalPkgs = true;
         home-manager.useUserPackages = true;
@@ -207,6 +204,12 @@
       "william@haskell_slay_slay" = nixosConfigurations.haskell_slay_slay.config.home-manager.users.william.home;
       "william@linux-amd" = nixosConfigurations.linux-amd.config.home-manager.users.william.home;
       "william@vps" = nixosConfigurations.vps.config.home-manager.users.william.home;
+    };
+
+    # Little "hack" to re-export all my inputs for use with nix shell
+    packages.x86_64-linux = {
+      nixpkgs = inputs.nixpkgs.legacyPackages.x86_64-linux;
+      unstable = inputs.unstable.legacyPackages.x86_64-linux;
     };
   };
 }

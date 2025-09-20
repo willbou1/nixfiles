@@ -34,9 +34,11 @@ with config.lib.stylix.colors.withHashtag; {
 
   # Fonts
   fonts.fontconfig.enable = true;
-  home.packages = with pkgs; [
-    baekmuk-ttf
-  ] ++ builtins.filter lib.attrsets.isDerivation (builtins.attrValues pkgs.nerd-fonts);
+  home.packages = with pkgs;
+    [
+      baekmuk-ttf
+    ]
+    ++ builtins.filter lib.attrsets.isDerivation (builtins.attrValues pkgs.nerd-fonts);
 
   home.pointerCursor = let
     getFrom = url: hash: name: {

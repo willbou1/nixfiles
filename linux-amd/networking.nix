@@ -18,14 +18,22 @@
       jellyfin-ffmpeg
     ];
   };
-  networking.firewall = {
-    allowedTCPPorts = [21];
-    allowedTCPPortRanges = [
-      {
-        from = 2000;
-        to = 2030;
-      }
-    ];
+  networking = {
+    firewall = {
+      allowedTCPPorts = [21];
+      allowedTCPPortRanges = [
+        {
+          from = 2000;
+          to = 2030;
+        }
+      ];
+    };
+    # for easy SCPI access to my electronics lab
+    extraHosts = ''
+      10.42.0.10 awg
+      10.42.0.9 scope
+      10.42.0.11 psu
+    '';
   };
   services = {
     deluge = {

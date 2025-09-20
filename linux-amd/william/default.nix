@@ -1,4 +1,8 @@
-{config, lib, ...}:
+{
+  config,
+  lib,
+  ...
+}:
 with lib; {
   imports = mine.autoInclude ./. [];
 
@@ -22,7 +26,10 @@ with lib; {
           width = 3440;
           height = 1440;
           rate = 100;
-          x = if verticalDisplays then 0 else 3440;
+          x =
+            if verticalDisplays
+            then 0
+            else 3440;
           y = 0;
           hScale = 1;
           vScale = 1;
@@ -34,7 +41,10 @@ with lib; {
           height = 1440;
           rate = 100;
           x = 0;
-          y = if verticalDisplays then 1440 else 0;
+          y =
+            if verticalDisplays
+            then 1440
+            else 0;
           hScale = 1;
           vScale = 1;
         }
