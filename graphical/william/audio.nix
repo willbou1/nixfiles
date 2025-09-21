@@ -1,6 +1,4 @@
 with builtins; {
-  services.easyeffects.enable = true;
-
   # default to aptx_ll for my bluetooth headphones
   home.file.".local/state/wireplumber/default-profile" = {
     force = true;

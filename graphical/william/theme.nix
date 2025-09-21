@@ -7,10 +7,7 @@
 with lib;
 with config.lib.stylix.colors.withHashtag; {
   stylix = {
-<<<<<<< Updated upstream
     enable = true;
-=======
->>>>>>> Stashed changes
     polarity = "dark";
     targets.vim.enable = false;
     opacity = {
