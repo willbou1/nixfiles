@@ -33,7 +33,10 @@ with lib; {
       };
     };
     environment.shellAliases = {
-      "nr" = "sudo nixos-rebuild --show-trace --flake '/etc/nixos?submodules=1#vps' switch";
+      "nr" = "sudo nixos-rebuild --show-trace --flake '/etc/nixos?submodules=1#vps' switch &| nom";
     };
+    nixpkgs.config.permittedInsecurePackages = [
+      "olm-3.2.16"
+    ];
   };
 }

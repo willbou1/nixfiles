@@ -25,9 +25,6 @@
     "firefox"
     "kicad"
 
-    # vps
-    "mautrix-meta" # CVE with libolm
-
     # misc
     "OVMF"
   ];

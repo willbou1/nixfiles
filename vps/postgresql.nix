@@ -12,6 +12,10 @@ with builtins; let
     END $$;
   '';
   passwordScripts = concatStringsSep "\n" (map passwordScript users);
+  databases = [
+    "vaultwarden" "synapse" "mautrix-meta-facebook" "mautrix-meta-instagram"
+    "mautrix-discord" "grafana"
+  ];
 in {
   system.activationScripts.createPostgresqlDir.text = ''
     mkdir -p /srv/postgresql
@@ -24,32 +28,10 @@ in {
         mode = "0440";
         owner = "postgres";
       };
-    in {
-      "postgresql/vaultwarden" =
-        {
-        }
-        // commonProps;
-      "postgresql/synapse" =
-        {
-        }
-        // commonProps;
-      "postgresql/mautrix-meta-facebook" =
-        {
-        }
-        // commonProps;
-      "postgresql/mautrix-meta-instagram" =
-        {
-        }
-        // commonProps;
-      "postgresql/matrix-appservice-discord" =
-        {
-        }
-        // commonProps;
-      "postgresql/grafana" =
-        {
-        }
-        // commonProps;
-    };
+    in listToAttrs (map (d: {
+      name = "postgresql/${d}";
+      value = commonProps;
+    }) databases);
   };
   services.postgresql = {
     enable = true;
@@ -58,26 +40,12 @@ in {
       "--encoding=UTF8"
       "--locale=C"
     ];
-    ensureDatabases = [
-      "vaultwarden"
-      "synapse"
-      "mautrix-meta-facebook"
-      "mautrix-meta-instagram"
-      "matrix-appservice-discord"
-      "grafana"
-    ];
+    ensureDatabases = databases;
     ensureUsers =
       map (u: {
         name = u;
         ensureDBOwnership = true;
-      }) [
-        "synapse"
-        "mautrix-meta-facebook"
-        "mautrix-meta-instagram"
-        "matrix-appservice-discord"
-        "grafana"
-        "vaultwarden"
-      ];
+      }) databases;
   };
 
   systemd.services.postgresql.postStart = ''

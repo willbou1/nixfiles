@@ -42,4 +42,4 @@
 	url = git@github.com:willbou1/fastfetch.git
 [submodule "devel/emacs-overlay"]
 	path = devel/emacs-overlay
-	url = git@github.com:willbou1/emacs-overlay.git
+	url = git@github.com:nix-community/emacs-overlay

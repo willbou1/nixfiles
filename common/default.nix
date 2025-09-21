@@ -12,6 +12,18 @@ with lib; {
     ++ [
       inputs.impermanence.nixosModules.impermanence
     ];
+  stylix = {
+    enable = true;
+    image = ../resources/wallpapers/space.jpg;
+    polarity = "dark";
+    homeManagerIntegration.followSystem = false;
+    fonts.sizes = {
+      terminal = 48;
+      applications = 48;
+      desktop = 48;
+      popups = 48;
+    };
+  };
 
   hardware.enableRedistributableFirmware = true;
   hardware.enableAllFirmware = true;

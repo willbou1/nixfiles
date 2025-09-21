@@ -3,26 +3,26 @@
 
   inputs = {
     #nixpkgs.url = github:NixOS/nixpkgs/nixos-24.05;
-    nixpkgs.url = "git+file:./devel/nixpkgs";
+    nixpkgs.url = ./devel/nixpkgs;
 
     #unstable.url = github:NixOS/nixpkgs/nixos-unstable;
-    unstable.url = "git+file:./devel/nixpkgs-unstable";
+    unstable.url = ./devel/nixpkgs-unstable;
 
     #sops-nix.url = github:Mic92/sops-nix;
-    sops-nix.url = "git+file:./devel/sops-nix";
+    sops-nix.url = ./devel/sops-nix;
 
     #impermanence.url = github:nix-community/impermanence;
-    impermanence.url = "git+file:./devel/impermanence";
+    impermanence.url = ./devel/impermanence;
 
     home-manager = {
       #url = github:nix-community/home-manager/release-25.05;
-      url = "git+file:./devel/home-manager";
+      url = ./devel/home-manager;
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
     nixvim = {
       #url = github:nix-community/nixvim/nixos-25.05;
-      url = "git+file:./devel/nixvim";
+      url = ./devel/nixvim;
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
@@ -30,7 +30,7 @@
 
     #spicetify-nix.url = github:the-argus/spicetify-nix;
     spicetify-nix = {
-      url = "git+file:./devel/spicetify-nix";
+      url = ./devel/spicetify-nix;
       inputs.nixpkgs.follows = "unstable";
     };
 
@@ -38,7 +38,7 @@
 
     neovim-nightly-overlay = {
       #url = github:nix-community/neovim-nightly-overlay;
-      url = "git+file:./devel/neovim-nightly-overlay";
+      url = ./devel/neovim-nightly-overlay;
       inputs.nixpkgs.follows = "unstable";
     };
 
@@ -49,13 +49,13 @@
 
     #emacs-overlay.url = github:nix-community/emacs-overlay;
     emacs-overlay = {
-      url = "git+file:./devel/emacs-overlay";
+      url = ./devel/emacs-overlay;
       inputs.nixpkgs-stable.follows = "nixpkgs";
       inputs.nixpkgs.follows = "unstable";
     };
 
     #stylix.url = github:danth/stylix/release-25.05;
-    stylix.url = "git+file:./devel/stylix";
+    stylix.url = ./devel/stylix;
 
     nur.url = "github:nix-community/NUR";
 
