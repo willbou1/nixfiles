@@ -174,7 +174,7 @@ in {
         {
           name = "canada-toronto";
           fullName = "canada - toronto";
-          autoStart = false;
+          autoStart = true;
         }
         {
           name = "canada-montreal";

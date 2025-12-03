@@ -44,7 +44,7 @@
 
     zen-browser = {
       url = "github:MarceColl/zen-browser-flake";
-      inputs.nixpkgs.follows = "unstable";
+      inputs.nixpkgs.follows = "nixpkgs";
     };
 
     #emacs-overlay.url = github:nix-community/emacs-overlay;
