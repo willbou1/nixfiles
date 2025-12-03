@@ -25,5 +25,10 @@ with lib; {
     home-manager
   ];
 
+  xdg.configFile."lftp/rc".text = ''
+    set net:reconnect-interval-base 1
+    set net:max-retries 1
+  '';
+
   home.stateVersion = "25.05";
 }

@@ -48,5 +48,7 @@ with lib; {
     aspell
     aspellDicts.en
     aspellDicts.fr
+
+    libqalculate
   ];
 }

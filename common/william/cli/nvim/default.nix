@@ -10,6 +10,7 @@ with builtins;
     enable = true;
     package = pkgs.neovim-unwrapped;
     plugins = {
+      better-escape.enable = true;
       web-devicons.enable = true;
       rainbow-delimiters.enable = true;
       lualine.enable = true;
@@ -82,6 +83,7 @@ with builtins;
           texlab.enable = true;
           cmake.enable = true;
           bashls.enable = true;
+          fish_lsp.enable = true;
           clangd = {
             enable = true;
             cmd = [
@@ -122,6 +124,7 @@ with builtins;
       })
     ];
     opts = {
+      timeoutlen = 100;
       termguicolors = true;
       wildignore = "*.pyc,*_build/*,**/coverage/*,**/node_modules/*,**/android/*,**/ios/*,**/.git/*";
       number = true;

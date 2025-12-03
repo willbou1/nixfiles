@@ -67,12 +67,6 @@ with lib; {
         "/etc/machine-id"
       ];
     };
-    etc = {
-      "lftp.conf" = {
-        text = "set ssl:verify-certificate no";
-        mode = "0644";
-      };
-    };
     shellAliases = {
       "ll" = "ls -alF";
       "la" = "ls -A";

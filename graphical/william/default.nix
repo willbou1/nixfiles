@@ -51,6 +51,7 @@ with lib; {
       wally-cli
       zen-browser
       bitwig-studio
+      qalculate-gtk
     ];
 
     services = {

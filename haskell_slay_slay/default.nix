@@ -20,6 +20,8 @@ with lib; {
   };
   services.deluge.config.download_location = "/srv/torrents";
 
+  virtualisation.virtualbox.host.enable = true;
+
   # 16 cores used total
   nix.settings = {
     max-jobs = 4;

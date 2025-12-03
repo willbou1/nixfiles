@@ -12,5 +12,6 @@ with lib; {
     nvtopPackages.full
     ani-cli
     mkvtoolnix
+    posting
   ];
 }
