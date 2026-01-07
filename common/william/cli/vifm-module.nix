@@ -39,7 +39,7 @@ with lib; let
             ;;
           "pdf")
             [ ! -f "''${PCACHE}.jpg" ] && \
-              ${pkgs.poppler_utils}/bin/pdftoppm -jpeg -f 1 -singlefile "$6" "$PCACHE"
+              ${pkgs.poppler-utils}/bin/pdftoppm -jpeg -f 1 -singlefile "$6" "$PCACHE"
             image "$1" "$2" "$3" "$4" "$5" "''${PCACHE}.jpg"
             ;;
           "audio")

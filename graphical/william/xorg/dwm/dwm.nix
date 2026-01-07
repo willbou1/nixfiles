@@ -11,9 +11,10 @@ with builtins; let
     (pkgs.dwm.overrideAttrs (prev: {
       buildInputs =
         (prev.buildInputs or [])
-        ++ (with pkgs.xorg; [
-          xorgproto
-          libXext
+        ++ (with pkgs; [
+          xorg.xorgproto
+          xorg.libXext
+          libxcb-wm
         ]);
       # TODO Maybe update my fork, butttt don't want to
       NIX_CFLAGS_COMPILE = [

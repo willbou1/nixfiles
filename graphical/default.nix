@@ -15,7 +15,7 @@ with lib; {
     image = ../resources/wallpapers/space.jpg;
     polarity = "dark";
     homeManagerIntegration.followSystem = false;
-    targets.grub.useImage = true;
+    targets.grub.useWallpaper = true;
     fonts.sizes = {
       terminal = 48;
       applications = 48;
@@ -28,6 +28,7 @@ with lib; {
     systemPackages = with pkgs; [
       pulseaudio
       exfat
+      zsa-udev-rules
     ];
     shellAliases = {
       "b" = "bluetoothctl";

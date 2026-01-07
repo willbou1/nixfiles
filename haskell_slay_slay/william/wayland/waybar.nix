@@ -18,6 +18,8 @@ in {
         position = "top";
         output = [
           "eDP-1"
+          "DP-3"
+          "DP-4"
         ];
         modules-left = ["custom/nix" "hyprland/workspaces" "hyprland/window"];
         modules-center = ["clock"];

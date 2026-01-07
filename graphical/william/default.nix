@@ -41,7 +41,7 @@ with lib; {
 
     home.packages = with pkgs; [
       libreoffice-fresh
-      gimp
+      #gimp
       playerctl
       hyprpaper
       swww
@@ -49,7 +49,7 @@ with lib; {
       helvum
       steam
       wally-cli
-      zen-browser
+      #zen-browser
       bitwig-studio
       qalculate-gtk
     ];

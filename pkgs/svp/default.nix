@@ -12,8 +12,10 @@
   jq,
   lib,
   libmediainfo,
-  libsForQt5,
+  qt6,
   libusb1,
+  eudev,
+  openssl,
   ocl-icd,
   p7zip,
   patchelf,
@@ -31,11 +33,24 @@
 # https://aur.archlinux.org/packages/svp
 ################################################################################
 let
-  sources = {
-    version = "4.6.263";
+  sources = rec {
+    version = "4.7.305";
+    cdnVersion = "4.7.0.305-4";
     src = fetchurl {
-      url = "https://www.svp-team.com/files/svp4-linux.4.6.263.tar.bz2";
-      hash = "sha256-HyRDVFHVmTan/Si3QjGQpC3za30way10d0Hk79oXG98=";
+      url = "https://www.svp-team.com/files/svp4-linux.${version}.tar.bz2";
+      hash = "sha256-PWAcm/hIA4JH2QtJPP+gSJdJLRdfdbZXIVdWELazbxQ=";
+    };
+    libs = fetchurl {
+      url = "http://cdn.svp-team.com/repo/full-lin64/core.full/${cdnVersion}libs.7z";
+      sha256 = "1xrv19gw455zc1ibbvx0gkdjz0wkrfsfwxv8wbydwhmxyxz6iv8a";
+    };
+    licenses = fetchurl {
+      url = "http://cdn.svp-team.com/repo/full-lin64/core.full/${cdnVersion}licenses.7z";
+      hash = "sha256-Xf9/UjUqMMLPSBbRVs6AIoHApuIOHfR0vad5QsEgKyE=";
+    };
+    content = fetchurl {
+      url = "http://cdn.svp-team.com/repo/full-lin64/core.full/${cdnVersion}content.7z";
+      hash = "sha256-YK8POShqnts3vapeyALl/Wh0Bg15/0mIDfHDYL9lpAE=";
     };
   };
 
@@ -61,11 +76,11 @@ let
     glibc
     zenity
     libmediainfo
-    libsForQt5.qtbase
-    libsForQt5.qtwayland
-    libsForQt5.qtdeclarative
-    libsForQt5.qtscript
-    libsForQt5.qtsvg
+    qt6.qtbase
+    qt6.qtwayland
+    qt6.qtdeclarative
+    qt6.qtsvg
+    eudev
     libusb1
     (
       if (customMpv != null)
@@ -77,11 +92,12 @@ let
     vapoursynth
     xdg-utils
     xorg.libX11
+    openssl
   ];
 
   svp-dist = stdenv.mkDerivation rec {
     pname = "svp-dist";
-    inherit (sources) version src;
+    inherit (sources) version src libs licenses content;
 
     nativeBuildInputs = [
       p7zip
@@ -91,13 +107,17 @@ let
 
     unpackPhase = ''
       tar xf $src
+      mkdir -p svp_updates
+      7z x $libs -osvp_updates
+      7z x $licenses -osvp_updates
+      7z x $content -osvp_updates
     '';
 
     buildPhase = ''
       mkdir installer
-      LANG=C grep --only-matching --byte-offset --binary --text  $'7z\xBC\xAF\x27\x1C' "svp4-linux-64.run" |
+      LANG=C grep --only-matching --byte-offset --binary --text  $'7z\xBC\xAF\x27\x1C' "svp4-linux.run" |
         cut -f1 -d: |
-        while read ofs; do dd if="svp4-linux-64.run" bs=1M iflag=skip_bytes status=none skip=$ofs of="installer/bin-$ofs.7z"; done
+        while read ofs; do dd if="svp4-linux.run" bs=1M iflag=skip_bytes status=none skip=$ofs of="installer/bin-$ofs.7z"; done
     '';
 
     installPhase = ''
@@ -110,6 +130,8 @@ let
         install -Dm644 "$out/opt/svp-manager4-''${SIZE}.png" "$out/share/icons/hicolor/''${SIZE}x''${SIZE}/apps/svp-manager4.png"
       done
       rm -f $out/opt/{add,remove}-menuitem.sh
+
+      cp -a "svp_updates/"* "$out/opt/"
     '';
   };
 

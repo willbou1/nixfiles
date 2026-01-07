@@ -3,10 +3,10 @@
   services = {
     logind = {
       powerKey = "suspend";
-      extraConfig = ''
-        IdleActionSec=1200
-        IdleAction=ignore
-      '';
+      settings.Login = {
+        IdleActionSec = 1200;
+        IdleAction = "ignore";
+      };
     };
     #thermald.enable = true;
     tlp = {

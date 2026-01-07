@@ -28,7 +28,7 @@ in {
       virt-manager
       libguestfs
       lsiommu
-      win-virtio
+      virtio-win
     ];
   };
 
@@ -47,18 +47,6 @@ in {
             "/dev/kvmfr0", "/dev/kvmfr1"
           ]
         '';
-        ovmf = {
-          enable = true;
-          packages = [
-            (pkgs.OVMF.override {
-              secureBoot = true;
-              tpmSupport = true;
-              httpSupport = false;
-              tlsSupport = false;
-            })
-            .fd
-          ];
-        };
         swtpm.enable = true;
         runAsRoot = true;
       };

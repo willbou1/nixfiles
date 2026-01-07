@@ -52,13 +52,6 @@ in {
     settings = {
       ecosystem.no_update_news = true;
       monitor = monitors ++ [",disable"];
-      #plugin = {
-      #    touch_gestures = {
-      #        sensitivity = 1.0;
-      #        workspace_swipe_fingers = 3;
-      #        experimental.send_cancel = 0;
-      #    };
-      #};
       input = {
         kb_layout = "ca";
         kb_variant = "multix";
@@ -69,7 +62,6 @@ in {
         };
       };
       gestures = {
-        workspace_swipe = true;
         workspace_swipe_forever = true;
         workspace_swipe_direction_lock = false;
       };

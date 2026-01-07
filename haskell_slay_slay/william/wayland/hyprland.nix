@@ -63,6 +63,14 @@ in {
           name = sof-soundwire-headset-jack
           enabled = false
       }
+      device {
+          name = acdc-co.,-ltd.-acdc-touch-input-device-3
+          output = DP-3
+      }
+      device {
+          name = acdc-co.,-ltd.-acdc-touch-input-device-2
+          output = DP-4
+      }
     '';
   };
 }

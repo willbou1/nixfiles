@@ -13,12 +13,15 @@ with lib; {
   programs = {
     ssh = {
       enable = true;
+      enableDefaultConfig = true;
       extraConfig = "AddKeysToAgent yes";
     };
     git = {
       enable = true;
-      userName = "William Boulanger";
-      userEmail = "willbou2@gmail.com";
+      settings.user = {
+        name = "William Boulanger";
+        email = "willbou2@gmail.com";
+      };
     };
     btop = {
       enable = true;

@@ -3,7 +3,9 @@
   pkgs,
   ...
 }: {
-  boot.kernelModules = ["evdi"];
+  boot = {
+    kernelModules = ["evdi"];
+  };
   services.xserver.videoDrivers = [
     "nvidia"
   ];
@@ -30,24 +32,20 @@
       enable32Bit = true;
       extraPackages = with pkgs; [
         intel-media-driver
-        intel-vaapi-driver
         libvdpau-va-gl
         vpl-gpu-rt
-        vaapiVdpau
       ];
-      extraPackages32 = with pkgs.pkgsi686Linux; [intel-vaapi-driver];
     };
   };
 
   nixpkgs.config = {
     cudaSupport = true;
-    packageOverrides = pkgs: {
-      intel-vaapi-driver = pkgs.intel-vaapi-driver.override {enableHybridCodec = true;};
-    };
   };
-  environment.sessionVariables = {LIBVA_DRIVER_NAME = "iHD";}; # Force intel-media-driver
+  environment.sessionVariables = {
+    LIBVA_DRIVER_NAME = "iHD"; # Force intel-media-driver
+  };
   environment.systemPackages = with pkgs; [
     cudaPackages.cudatoolkit
-    #displaylink
+    displaylink
   ];
 }

@@ -6,6 +6,7 @@
   home = {
     persistence."/persist/home/william".directories = [
       "eclipse-workspace"
+      ".config/JetBrains"
     ];
     packages = with pkgs; [
       (symlinkJoin {
@@ -16,10 +17,13 @@
           wrapProgram $out/bin/eclipse --set GDK_BACKEND x11
         '';
       })
-      jetbrains.idea-community
+      jetbrains.idea
       jetbrains.dataspell
-      jetbrains.pycharm-community
+      jetbrains.pycharm
       jetbrains-toolbox
+      jetbrains.rider
+
+      unityhub
     ];
   };
 

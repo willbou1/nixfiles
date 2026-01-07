@@ -49,9 +49,9 @@ in {
   home = {
     packages = [
       # TODO check if SVP is fixed
-      #(pkgs.svp.override {
-      #  customMpv = svpWrapper;
-      #})
+      (pkgs.svp.override {
+        customMpv = svpWrapper;
+      })
       svpWrapper
     ];
     persistence."/persist/home/william".directories = [
