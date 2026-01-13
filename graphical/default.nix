@@ -10,19 +10,7 @@ with lib; {
     ./networking-alt.nix
   ];
 
-  stylix = {
-    enable = true;
-    image = ../resources/wallpapers/space.jpg;
-    polarity = "dark";
-    homeManagerIntegration.followSystem = false;
-    targets.grub.useWallpaper = true;
-    fonts.sizes = {
-      terminal = 48;
-      applications = 48;
-      desktop = 48;
-      popups = 48;
-    };
-  };
+  stylix.targets.grub.useWallpaper = true;
 
   environment = {
     systemPackages = with pkgs; [

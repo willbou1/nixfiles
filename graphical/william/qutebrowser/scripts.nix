@@ -15,7 +15,7 @@
         }
         const ad = [...document.querySelectorAll('.ad-showing')][0];
         if (ad) {
-            document.querySelector('video').playbackRate = 15;
+            document.querySelector('video').playbackRate = 10;
         }
     }, 50)
   '';

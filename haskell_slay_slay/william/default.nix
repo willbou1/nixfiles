@@ -6,8 +6,6 @@ with lib; {
     "priv"
   ];
 
-  stylix.image = ../../resources/wallpapers/eva_wide.jpg;
-
   home = {
     gapSize = 8;
     borderSize = 3;

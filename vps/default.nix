@@ -9,6 +9,8 @@ with lib; {
   };
 
   config = {
+    wallpaper = ../resources/wallpapers/colorful_iridescent_bubbles-wallpaper-3440x1440.jpg;
+
     users.users.william.openssh.authorizedKeys.keys = ["ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAICJ2b2UtfnyyWsNKR96dUK6l1iVaEUc1uTEf8X8VBZeC willbou2@gmail.com"];
     services.openssh = {
       enable = true;
@@ -16,6 +18,7 @@ with lib; {
       ports = [2223];
       startWhenNeeded = true;
     };
+
     networking = {
       hostName = "ourmiraculous";
       suffix = "com";
@@ -32,6 +35,7 @@ with lib; {
         gateway = ["185.165.171.1"];
       };
     };
+
     environment.shellAliases = {
       "nr" = "sudo nixos-rebuild --show-trace --flake '/etc/nixos?submodules=1#vps' switch &| nom";
     };

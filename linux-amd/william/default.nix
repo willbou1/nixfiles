@@ -13,8 +13,6 @@ with lib; {
   };
 
   config = {
-    stylix.image = ../../resources/wallpapers/eva_wide.jpg;
-
     home = {
       verticalDisplays = false;
       gapSize = 20;

@@ -4,6 +4,8 @@ with lib; {
     ./william
   ];
 
+  wallpaper = ../resources/wallpapers/eva_abstract.png;
+
   environment.persistence."/persist".directories = [
     "/srv"
   ];

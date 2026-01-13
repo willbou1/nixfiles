@@ -122,19 +122,6 @@
       #inputs.notnft.nixosModules.default
       ./common
       home-manager.nixosModules.home-manager
-      {
-        home-manager.extraSpecialArgs = {inherit inputs;};
-        home-manager.useGlobalPkgs = true;
-        home-manager.useUserPackages = true;
-        home-manager.sharedModules = [
-          inputs.impermanence.nixosModules.home-manager.impermanence
-          inputs.sops-nix.homeManagerModules.sops
-          inputs.nixvim.homeManagerModules.nixvim
-          inputs.nur.modules.homeManager.default
-          inputs.spicetify-nix.homeManagerModules.default
-        ];
-        home-manager.users.william = import ./common/william;
-      }
     ];
   in rec {
     formatter.x86_64-linux = nixpkgs.legacyPackages.x86_64-linux.alejandra;

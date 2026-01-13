@@ -2,10 +2,10 @@
   powerManagement.enable = true;
   services = {
     logind = {
-      powerKey = "suspend";
       settings.Login = {
         IdleActionSec = 1200;
         IdleAction = "ignore";
+        HandlePowerKey = "suspend";
       };
     };
     #thermald.enable = true;

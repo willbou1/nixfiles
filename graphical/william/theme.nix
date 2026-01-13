@@ -2,6 +2,7 @@
   config,
   pkgs,
   lib,
+  wallpaper,
   ...
 }:
 with lib;
@@ -10,6 +11,7 @@ with config.lib.stylix.colors.withHashtag; {
     enable = true;
     polarity = "dark";
     targets.vim.enable = false;
+    image = wallpaper;
     opacity = {
       applications = 0.93;
       desktop = 0.75;

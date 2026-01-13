@@ -109,6 +109,7 @@ in {
       stevenBlackHosts = {
         enable = true;
         blockFakenews = true;
+        blockGambling = true;
       };
 
       firewall = {
