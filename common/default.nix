@@ -1,8 +1,9 @@
 {
-  lib,
+
   inputs,
   config,
   pkgs,
+  lib,
   ...
 }:
 with lib; {
@@ -42,20 +43,24 @@ with lib; {
         inputs.impermanence.nixosModules.home-manager.impermanence
         inputs.sops-nix.homeManagerModules.sops
         inputs.nixvim.homeManagerModules.nixvim
-        inputs.nur.modules.homeManager.default
         inputs.spicetify-nix.homeManagerModules.default
+        ../modules/home-manager
       ];
     };
 
-    hardware.enableRedistributableFirmware = true;
-    hardware.enableAllFirmware = true;
+    hardware = {
+      enableRedistributableFirmware = true;
+      enableAllFirmware = true;
+    };
 
     time.timeZone = "America/Toronto";
     i18n.defaultLocale = "en_CA.UTF-8";
-    console.keyMap = "ca";
-    console.earlySetup = true;
-    console.font = "ter-i32b";
-    console.packages = with pkgs; [terminus_font];
+    console = {
+      keyMap = "ca";
+      earlySetup = true;
+      font = "ter-i32b";
+      packages = with pkgs; [terminus_font];
+    };
 
     environment = {
       systemPackages = with pkgs; [
@@ -71,6 +76,7 @@ with lib; {
         miniupnpc
         acpi
         wget
+
         # nix-related stuff
         nix-prefetch-github
         nix-output-monitor

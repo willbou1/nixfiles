@@ -1,8 +1,4 @@
 {pkgs, ...}: {
-  imports = [
-    ./vifm-module.nix
-  ];
-
   programs.vifm = {
     enable = true;
     vifmimg.enable = true;

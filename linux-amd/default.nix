@@ -10,6 +10,8 @@ with lib; {
 
   wallpaper = ../resources/wallpapers/eva_abstract.png;
 
+  home-manager.users.william = import ./william;
+
   environment.shellAliases = {
     "nr" = "sudo nixos-rebuild --impure --show-trace --flake '/etc/nixos?submodules=1#linux-amd' switch &| nom";
   };

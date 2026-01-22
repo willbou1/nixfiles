@@ -10,6 +10,8 @@ with lib; {
     ./networking-alt.nix
   ];
 
+  home-manager.users.william = import ./william;
+
   stylix.targets.grub.useWallpaper = true;
 
   environment = {
@@ -50,13 +52,15 @@ with lib; {
     extraBackends = [pkgs.sane-airscan];
   };
 
-  services.udisks2.enable = true;
-  services.xserver = {
-    enable = true;
-    xkb = {
-      layout = "ca";
-      variant = "multix";
+  services = {
+    udisks2.enable = true;
+    xserver = {
+      enable = true;
+      xkb = {
+        layout = "ca";
+        variant = "multix";
+      };
+      displayManager.startx.enable = true;
     };
-    displayManager.startx.enable = true;
   };
 }

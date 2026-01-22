@@ -47,7 +47,7 @@
   '';
 in {
   home = {
-    packages = [
+    packages = with pkgs; [
       # TODO check if SVP is fixed
       (pkgs.svp.override {
         customMpv = svpWrapper;

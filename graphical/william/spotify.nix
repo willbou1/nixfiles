@@ -11,7 +11,7 @@ in {
   programs.spicetify = {
     enable = true;
 
-    # debug
+    # EX debug
     # spotifyPackage = pkgs.spotify.overrideAttrs (oldAttrs: {
     #   nativeBuildInputs = [pkgs.breakpointHook] ++ oldAttrs.nativeBuildInputs;
     # });

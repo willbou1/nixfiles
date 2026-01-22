@@ -16,10 +16,10 @@ with lib; let
   '';
   downloads_pool = pkgs.writeText "downloads_pool.xml" (builtins.readFile ./downloads_pool.xml);
 in {
-  boot.initrd.kernelModules = ["vfio" "vfio_iommu_type1" "vfio_pci" "kvmfr"];
-  boot.extraModulePackages = mkBefore (with config.boot.kernelPackages; [
-    kvmfr
-  ]);
+  boot.initrd.kernelModules = ["vfio" "vfio_iommu_type1" "vfio_pci"];
+  boot.kernelModules = ["kvmfr"];
+  boot.extraModulePackages = mkBefore (with config.boot.kernelPackages; [ kvmfr ]);
+
   environment = {
     persistence."/persist".directories = [
       "/var/lib/libvirt"
@@ -29,6 +29,7 @@ in {
       libguestfs
       lsiommu
       virtio-win
+      virtiofsd
     ];
   };
 
@@ -51,16 +52,6 @@ in {
         runAsRoot = true;
       };
     };
-    #        kvmfr = {
-    #            enable = true;
-    #            shm = {
-    #                enable = true;
-    #                size = 128;
-    #                user = "william";
-    #                group = "libvirtd";
-    #                mode = "0600";
-    #            };
-    #        };
   };
 
   services.udev.extraRules = ''

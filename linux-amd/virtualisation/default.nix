@@ -36,7 +36,6 @@ in {
   };
 
   environment = {
-    systemPackages = with pkgs; [virtiofsd];
     etc."libvirt/vbios/RX5700XT.rom".source = ../../resources/RTX4080.rom;
   };
 

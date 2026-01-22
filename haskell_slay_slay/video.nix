@@ -3,9 +3,6 @@
   pkgs,
   ...
 }: {
-  boot = {
-    kernelModules = ["evdi"];
-  };
   services.xserver.videoDrivers = [
     "nvidia"
   ];
@@ -46,6 +43,5 @@
   };
   environment.systemPackages = with pkgs; [
     cudaPackages.cudatoolkit
-    displaylink
   ];
 }

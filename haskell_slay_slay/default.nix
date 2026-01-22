@@ -6,6 +6,8 @@ with lib; {
 
   wallpaper = ../resources/wallpapers/eva_abstract.png;
 
+  home-manager.users.william = import ./william;
+
   environment.persistence."/persist".directories = [
     "/srv"
   ];

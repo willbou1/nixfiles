@@ -6,8 +6,9 @@
       enable = true;
       enable32Bit = true;
       extraPackages = with pkgs; [
-        vaapiVdpau
+        mesa
         libvdpau-va-gl
+        libva-vdpau-driver
         #rocmPackages.clr.icd
       ];
     };

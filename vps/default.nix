@@ -11,6 +11,8 @@ with lib; {
   config = {
     wallpaper = ../resources/wallpapers/colorful_iridescent_bubbles-wallpaper-3440x1440.jpg;
 
+    home-manager.users.william = import ./william;
+
     users.users.william.openssh.authorizedKeys.keys = ["ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAICJ2b2UtfnyyWsNKR96dUK6l1iVaEUc1uTEf8X8VBZeC willbou2@gmail.com"];
     services.openssh = {
       enable = true;

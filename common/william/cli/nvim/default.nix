@@ -5,6 +5,10 @@
 }:
 with builtins; 
 {
+  home.persistence."/persist/home/william".directories = [
+    ".local/share/nvim"
+    ".local/state/nvim"
+  ];
   xdg.configFile."clangd/config.yaml".source = ./clangd.yaml;
   programs.nixvim = {
     enable = true;

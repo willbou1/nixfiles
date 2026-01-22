@@ -1,9 +1,15 @@
+{ pkgs, ...}:
 {
+  environment.systemPackages = with pkgs; [
+    pulseaudio # for old/standard pulseaudio cli tools
+    alsa-tools
+  ];
+
   hardware.bluetooth.enable = true;
 
-  services.pulseaudio.enable = false;
   security.rtkit.enable = true;
   services = {
+    pulseaudio.enable = false;
     pipewire = {
       enable = true;
       alsa.enable = true;

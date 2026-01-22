@@ -14,11 +14,12 @@ with lib; {
 
   config = {
     home = {
-      verticalDisplays = false;
+      verticalDisplays = true;
       gapSize = 20;
       borderSize = 5;
       monitors = with config.home; [
         {
+          # Philips ultrawide
           wlrName = "HDMI-A-1";
           xrandrName = "HDMI-A-0";
           width = 3440;
@@ -33,11 +34,12 @@ with lib; {
           vScale = 1;
         }
         {
+          # Alienware ultrawide
           wlrName = "DP-1";
           xrandrName = "DisplayPort-0";
           width = 3440;
           height = 1440;
-          rate = 100;
+          rate = 180;
           x = 0;
           y =
             if verticalDisplays

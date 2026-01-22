@@ -1,9 +1,9 @@
 case $BUTTON in
 	1)
-		alacritty -e "neomutt" &
+		$terminal -e "neomutt" &
 		;;
 	2)
-		alacritty -e "calcurse" &
+		$terminal -e "calcurse" &
 		;;
 	3)
 		notify-send "$(date)" &

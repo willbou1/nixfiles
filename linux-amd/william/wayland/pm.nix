@@ -1,4 +1,4 @@
-{config, ...}: let
+{ pkgs, config, ...}: let
   swaylock = config.programs.swaylock.package;
 in {
   services.swayidle = {
@@ -6,6 +6,11 @@ in {
       {
         timeout = 600;
         command = "${swaylock}/bin/swaylock -f --grace 0";
+      }
+      {
+        timeout = 700;
+        command = "${pkgs.hyprland}/bin/hyprctl dispatch dpms off";
+        resumeCommand = "${pkgs.hyprland}/bin/hyprctl dispatch dpms on";
       }
     ];
     events = [

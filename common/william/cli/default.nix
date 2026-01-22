@@ -52,6 +52,21 @@ with lib; {
       enable = true;
       enableFishIntegration = true;
     };
+    qalc = {
+      enable = true;
+      config = {
+        General = {
+          imaginary_j = true;
+          digit_grouping = true;
+        };
+        Mode = {
+          calculate_as_you_type = true;
+        };
+      };
+      functions = {
+        "RC" = "1 / (2 * pi * \\x ohms * \\y farads)";
+      };
+    };
   };
 
   home.packages = with pkgs; [
@@ -64,7 +79,5 @@ with lib; {
     aspell
     aspellDicts.en
     aspellDicts.fr
-
-    libqalculate
   ];
 }

@@ -29,12 +29,8 @@
         fi
     done
   '';
-  dic = pkgs.writeShellScriptBin "dic" ''
-    qutebrowser --target window 'https://korean.dict.naver.com/koendict/#/main'
-    qutebrowser --target tab 'https://koreanhanja.app/'
-  '';
 in {
-  home.packages = with pkgs; [
+  home.packages = [
     hyprrotate
   ];
   wayland.windowManager.hyprland = {

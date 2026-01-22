@@ -5,10 +5,9 @@
   ...
 }:
 with lib; {
-  #new version
-  imports = mine.autoInclude ./. [
+  imports = (mine.autoInclude ./. [
     ./deprecated
-  ];
+  ]) ++ [../../school.nix];
 
   options.home = {
     terminal = mkOption {
@@ -24,18 +23,21 @@ with lib; {
       type = types.int;
     };
   };
+
   config = {
     home.persistence."/persist/home/william" = {
       directories = [
         ".mozilla/firefox"
         ".zen"
         ".config/libreoffice"
+        ".config/Nextcloud"
       ];
       files = [
         ".config/deluge/hostlist.conf"
         ".config/deluge/gtk3ui.conf"
       ];
     };
+
     home.file."media".source =
       config.lib.file.mkOutOfStoreSymlink "/run/media/william";
 
@@ -55,6 +57,7 @@ with lib; {
     ];
 
     services = {
+      nextcloud-client.enable = true;
       udiskie = {
         enable = true;
         tray = "never";

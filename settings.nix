@@ -12,8 +12,6 @@
 
     # cli
     "kitty"
-    "neovim"
-    "neovim-unwrapped"
     "fastfetch"
 
     # apps
@@ -28,6 +26,7 @@
 
     # misc
     "OVMF"
+    "virtiofsd"
   ];
 
   # Nixpkgs-unstable will get patched with these PRs. The patched version can

@@ -1,45 +1,62 @@
 {
-  description = "flake for linux-laptop";
+  description = "All my NixOS systems including my tower, my laptop and my VPS";
 
   inputs = {
-    #nixpkgs.url = github:NixOS/nixpkgs/nixos-24.05;
+    # Common dependencies
     nixpkgs.url = ./devel/nixpkgs;
-
-    #unstable.url = github:NixOS/nixpkgs/nixos-unstable;
     unstable.url = ./devel/nixpkgs-unstable;
+    flake-compat.url = "github:edolstra/flake-compat";
+    flake-parts.url = "github:hercules-ci/flake-parts";
+    flake-utils = {
+      url = "github:numtide/flake-utils";
+      inputs.systems.follows = "systems";
+    };
+    systems.url = "github:nix-systems/default";
 
-    #sops-nix.url = github:Mic92/sops-nix;
-    sops-nix.url = ./devel/sops-nix;
+    sops-nix = {
+      url = ./devel/sops-nix;
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
 
-    #impermanence.url = github:nix-community/impermanence;
     impermanence.url = ./devel/impermanence;
 
     home-manager = {
-      #url = github:nix-community/home-manager/release-25.05;
       url = ./devel/home-manager;
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
     nixvim = {
-      #url = github:nix-community/nixvim/nixos-25.05;
       url = ./devel/nixvim;
+      inputs = {
+        nixpkgs.follows = "nixpkgs";
+        flake-parts.follows = "flake-parts";
+        systems.follows = "systems";
+        nuschtosSearch.inputs.flake-utils.follows = "flake-utils";
+      };
+    };
+
+    hosts = {
+      url = "github:StevenBlack/hosts";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    hosts.url = "github:StevenBlack/hosts";
-
-    #spicetify-nix.url = github:the-argus/spicetify-nix;
     spicetify-nix = {
       url = ./devel/spicetify-nix;
-      inputs.nixpkgs.follows = "unstable";
+      inputs = {
+        nixpkgs.follows = "nixpkgs";
+        systems.follows = "systems";
+      };
     };
 
     #notnft.url = github:chayleaf/notnft;
 
     neovim-nightly-overlay = {
-      #url = github:nix-community/neovim-nightly-overlay;
       url = ./devel/neovim-nightly-overlay;
-      inputs.nixpkgs.follows = "unstable";
+      inputs = {
+        nixpkgs.follows = "nixpkgs";
+        flake-parts.follows = "flake-parts";
+        hercules-ci-effects.inputs.flake-parts.follows = "neovim-nightly-overlay/flake-parts";
+      };
     };
 
     zen-browser = {
@@ -47,19 +64,37 @@
       inputs.nixpkgs.follows = "unstable";
     };
 
-    #emacs-overlay.url = github:nix-community/emacs-overlay;
     emacs-overlay = {
       url = ./devel/emacs-overlay;
       inputs.nixpkgs-stable.follows = "nixpkgs";
       inputs.nixpkgs.follows = "unstable";
     };
 
-    #stylix.url = github:danth/stylix/release-25.05;
-    stylix.url = ./devel/stylix;
+    stylix = {
+      url = ./devel/stylix;
+      inputs = {
+        nixpkgs.follows = "nixpkgs";
+        flake-parts.follows = "flake-parts";
+        systems.follows = "systems";
+        nur.follows = "nur";
+      };
+    };
 
-    nur.url = "github:nix-community/NUR";
+    nur = {
+      url = "github:nix-community/NUR";
+      inputs = {
+        nixpkgs.follows = "nixpkgs";
+        flake-parts.follows = "flake-parts";
+      };
+    };
 
-    nix-alien.url = "github:thiagokokada/nix-alien";
+    nix-alien = {
+      url = "github:thiagokokada/nix-alien";
+      inputs = {
+        nixpkgs.follows = "nixpkgs";
+        flake-compat.follows = "flake-compat";
+      };
+    };
   };
 
   outputs = {
@@ -84,21 +119,23 @@
       url = "https://patch-diff.githubusercontent.com/raw/NixOS/nixpkgs/pull/${toString p.id}.diff";
       inherit (p) sha256;
     });
-    patchNixpkgs = name: patches: unpatched: let
-      tools = unpatched.legacyPackages."x86_64-linux";
-    in
-      tools.applyPatches {
-        inherit name;
-        src = unpatched;
-        patches = map tools.fetchpatch patches;
-      };
+    patchNixpkgs = name: patches: unpatched:
+      if patches == [] then unpatched
+      else let
+        tools = unpatched.legacyPackages."x86_64-linux";
+      in
+        tools.applyPatches {
+          inherit name;
+          src = unpatched;
+          patches = map tools.fetchpatch patches;
+        };
     unstable = patchNixpkgs "nixpkgs-unstable-patched" (nixpkgsPRsToPatches settings.unstableNixpkgsPRs) inputs.unstable;
     commonNixosModules = [
       {
         nixpkgs.overlays = [
-          inputs.nur.overlays.default
           (import ./pkgs).overlay
           (import ./pkgs).nurOverlay
+          inputs.nur.overlays.default
           inputs.neovim-nightly-overlay.overlays.default
           inputs.emacs-overlay.overlays.default
           inputs.nix-alien.overlays.default
@@ -133,19 +170,7 @@
           inherit lib;
           inherit unstable;
         };
-        modules =
-          [
-            ./graphical
-            ./haskell_slay_slay
-            {
-              home-manager.sharedModules = [
-                ./graphical/william
-                ./haskell_slay_slay/william
-                ./school.nix
-              ];
-            }
-          ]
-          ++ commonNixosModules;
+        modules = [./graphical ./haskell_slay_slay] ++ commonNixosModules;
       };
       linux-amd = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
@@ -154,19 +179,7 @@
           inherit lib;
           inherit unstable;
         };
-        modules =
-          [
-            ./graphical
-            ./linux-amd
-            {
-              home-manager.sharedModules = [
-                ./graphical/william
-                ./linux-amd/william
-                ./school.nix
-              ];
-            }
-          ]
-          ++ commonNixosModules;
+        modules = [./graphical ./linux-amd] ++ commonNixosModules;
       };
       vps = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
@@ -175,16 +188,7 @@
           inherit lib;
           inherit unstable;
         };
-        modules =
-          [
-            ./vps
-            {
-              home-manager.sharedModules = [
-                ./vps/william
-              ];
-            }
-          ]
-          ++ commonNixosModules;
+        modules = [./vps] ++ commonNixosModules;
       };
     };
     homeConfigurations = {

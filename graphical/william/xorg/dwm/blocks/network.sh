@@ -8,7 +8,7 @@ conDev="$(echo "$stats" | awk '!/NAME/ && !/bridge/ {print $NF; exit}')"
 
 case $BUTTON in
         1)
-                alacritty -e nmtui &
+                $terminal -e nmtui &
                 ;;
         2)
 		notify-send  "Network" "$(nmcli dev show $conDev | grep -E "(ADDRESS)|(GATEWAY)|(DNS)|(DEVICE)" | sed "s/:\s\+/\t/g")" &

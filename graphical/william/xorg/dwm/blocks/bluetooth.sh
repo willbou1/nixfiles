@@ -12,7 +12,7 @@ case $BUTTON in
 		notify-send "Connected bluetooth devices" "$(bluetoothctl info | awk '/Name/ {sub(/^.*: /, "", $0); print}')"
                 ;;
         3)
-		alacritty -e "bluetoothctl" &
+		$terminal -e "bluetoothctl" &
                 ;;
 	4)
 		bluetoothctl power on > /dev/null 2>&1 &

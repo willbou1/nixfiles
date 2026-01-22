@@ -101,21 +101,21 @@
                 :class "wm_button"
                 :onclick "hyprctl dispatch fullscreen 0"
                 :tooltip "Toggle fullscreen"
-                "🗖"))
+                "󰊓"))
             (eventbox
               :cursor "pointer"
               (button
                 :class "wm_button"
                 :onclick "hyprctl dispatch togglefloating active"
                 :tooltip "Toggle floating"
-                "🗗"))
+                ""))
             (eventbox
               :cursor "pointer"
               (button
                 :class "wm_button wm_button_close"
                 :onclick "hyprctl dispatch killactive none"
                 :tooltip "Kill active window"
-                "🗙")))))
+                "")))))
       (box
         :orientation "h"
         :halign "center"

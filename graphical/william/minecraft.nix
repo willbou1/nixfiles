@@ -55,6 +55,7 @@ in {
   home.persistence."/persist/home/william" = {
     directories = [
       launcherPath
+      ".config/CurseForge"
     ];
     files = [
       ".hmcl.json"

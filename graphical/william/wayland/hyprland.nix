@@ -45,7 +45,6 @@ in {
     }
   '';
   wayland.windowManager.hyprland = {
-    #package = inputs.hyprland.packages.${pkgs.system}.default;
     enable = true;
     xwayland.enable = true;
     #enableNvidiaPatches = true;

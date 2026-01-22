@@ -30,9 +30,11 @@
     };
     # for easy SCPI access to my electronics lab
     extraHosts = ''
-      10.42.0.10 awg
       10.42.0.9 scope
+      10.42.0.10 awg
       10.42.0.11 psu
+      10.42.0.12 dmm
+      10.42.0.13 load
     '';
   };
   services = {

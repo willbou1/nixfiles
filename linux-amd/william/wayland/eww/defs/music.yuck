@@ -109,7 +109,7 @@
           :hexpand "false"
           (eventbox
             :cursor "pointer"
-            :onhover "${eww} update media_bar_class=bar_highlighted; ${eww} update media_bar_onchange=\"scripts/media_control --seek\""
+            :onhover "${eww} update media_bar_class=bar_highlighted; ${eww} update media_bar_onchange=\"scripts/media_control.sh --seek\""
             :onhoverlost "${eww} update media_bar_class=bar_normal; ${eww} update media_bar_onchange=\"true\""
             (scale
               :active false

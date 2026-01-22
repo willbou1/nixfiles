@@ -1,6 +1,6 @@
 case $BUTTON in
 	1)
-		alacritty -e btop &
+		$terminal -e btop &
 		;;
 	2)
 		{

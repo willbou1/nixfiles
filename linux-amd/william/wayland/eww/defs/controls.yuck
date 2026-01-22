@@ -58,6 +58,7 @@
 (defwidget brightness []
   (box
     :orientation "h"
+    :class "ram_box"
     :halign "center"
     :space-evenly false
     :vexpand false
@@ -158,6 +159,7 @@
   (box 
     :orientation "h"
     :space-evenly "false"
+    :halign "center"
     :class "ram_box"
     :vexpand "false"
     :hexpand "false"
@@ -248,6 +250,7 @@
     :orientation "h"
     :space-evenly "false"
     :class "ram_box"
+    :halign "center"
     :vexpand "false"
     :hexpand "false"
     (button

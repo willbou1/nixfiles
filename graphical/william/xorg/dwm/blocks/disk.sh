@@ -12,10 +12,10 @@ case $BUTTON in
 		eject > /dev/null 2>&1 &
                 ;;
 	4)
-		alacritty -e "vifmrun" &
+		$terminal -e "vifmrun" &
 		;;
 	5)
-		alacritty -e "vifmrun" &
+		$terminal -e "vifmrun" &
 		;;
 esac
 disown -a

@@ -6,7 +6,8 @@
 }:
 with builtins;
 with lib;
-with config.lib.stylix.colors.withHashtag; let
+with config.lib.stylix.colors;
+let
   vars = with config.home; {
     "@border@" = toString borderSize;
     "@out_gap@" = toString (gapSize * 1.5);
@@ -22,7 +23,7 @@ with config.lib.stylix.colors.withHashtag; let
     "@bar_right_width@" = "500";
     "@bar_wm_width@" = "460";
     "@bar_music_width@" = "320";
-    "@bar_controls_width@" = "570";
+    "@bar_controls_width@" = "590";
     "@bar_net_width@" = "380";
     "@bar_cpu_width@" = "810";
     "@bar_mem_width@" = "380";
@@ -30,46 +31,22 @@ with config.lib.stylix.colors.withHashtag; let
   };
   varNames = attrNames vars;
   varVals = attrValues vars;
-  scssColors = ''
-    $background: ${base00};
-    $foreground: ${base05};
-    $color0: ${base00};
-    $color1: ${base01};
-    $color2: ${base02};
-    $color3: ${base03};
-    $color4: ${base04};
-    $color5: ${base05};
-    $color6: ${base06};
-    $color7: ${base07};
-    $color8: ${base08};
-    $color9: ${base09};
-    $color10: ${base0A};
-    $color11: ${base0B};
-    $color12: ${base0C};
-    $color13: ${base0D};
-    $color14: ${base0E};
-    $color15: ${base0F};
-  '';
-  yuckColors = ''
-    (defvar background "${base00}")
-    (defvar foreground "${base05}")
-    (defvar color0 "${base00}")
-    (defvar color1 "${base01}")
-    (defvar color2 "${base02}")
-    (defvar color3 "${base03}")
-    (defvar color4 "${base04}")
-    (defvar color5 "${base05}")
-    (defvar color6 "${base06}")
-    (defvar color7 "${base07}")
-    (defvar color8 "${base08}")
-    (defvar color9 "${base09}")
-    (defvar color10 "${base0A}")
-    (defvar color11 "${base0B}")
-    (defvar color12 "${base0C}")
-    (defvar color13 "${base0D}")
-    (defvar color14 "${base0E}")
-    (defvar color15 "${base0F}")
-  '';
+  scssColors =
+    (mine.generateBase16ColorFile
+      withHashtag
+      (i: c: "$color${toString i}: ${c};")
+    ) + "\n" + ''
+      $background: ${withHashtag.base00};
+      $foreground: ${withHashtag.base05};
+    '';
+  yuckColors =
+    (mine.generateBase16ColorFile
+      withHashtag
+      (i: c: ''(defvar color${toString i} "${c}")'')
+    ) + "\n" + ''
+      (defvar background "${withHashtag.base00}")
+      (defvar foreground "${withHashtag.base05}")
+    '';
 in {
   options.home.ewwHeight = mkOption {
     type = types.int;

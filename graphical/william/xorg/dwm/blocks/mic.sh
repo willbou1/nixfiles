@@ -1,6 +1,6 @@
 case $BUTTON in
     1)
-        alacritty -t "ncpamixer" -e "ncpamixer" &
+        $terminal -t "ncpamixer" -e "ncpamixer" &
         ;;
     2)
         catia &

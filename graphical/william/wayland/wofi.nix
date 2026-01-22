@@ -1,24 +1,10 @@
-{config, ...}: {
-  # mine is better
-  stylix.targets.wofi.enable = false;
-  xdg.configFile."wofi/colors".text = with config.lib.stylix.colors.withHashtag; ''
-    ${base00}
-    ${base01}
-    ${base02}
-    ${base03}
-    ${base04}
-    ${base05}
-    ${base06}
-    ${base07}
-    ${base08}
-    ${base09}
-    ${base0A}
-    ${base0B}
-    ${base0C}
-    ${base0D}
-    ${base0E}
-    ${base0F}
-  '';
+{lib, config, ...}: 
+with lib; {
+  stylix.targets.wofi.enable = false; # mine is better
+
+  xdg.configFile."wofi/colors".text =
+    mine.generateBase16ColorFile config.lib.stylix.colors.withHashtag
+    (i: n: n);
 
   programs.wofi = {
     enable = true;

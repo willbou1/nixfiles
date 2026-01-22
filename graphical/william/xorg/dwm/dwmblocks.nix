@@ -53,16 +53,19 @@ with builtins; let
     };
 in {
   home.packages = [myDwmBlocks];
-  xdg.configFile = listToAttrs (map (n: {
-    name = "dwmblocks/${n}";
-    value.source =
-      if lib.hasSuffix "sh" n
-      then
-        pkgs.writeShellScript n
-        (''
-            terminal="${config.home.terminal}"
-          ''
-          + (readFile (./blocks + "/${n}")))
-      else ./blocks + "/${n}";
-  }) (attrNames (readDir ./blocks)));
+  xdg.configFile = listToAttrs
+    (map
+      (n: {
+        name = "dwmblocks/${n}";
+        value.source =
+          if lib.hasSuffix "sh" n then
+            pkgs.writeShellScript n
+              (''
+                  terminal="${config.home.terminal}"
+                ''
+                + (readFile (./blocks + "/${n}")))
+          else
+            ./blocks + "/${n}";
+      })
+      (attrNames (readDir ./blocks)));
 }

@@ -18,6 +18,7 @@
         '';
       })
       jetbrains.idea
+      jetbrains.clion
       jetbrains.dataspell
       jetbrains.pycharm
       jetbrains-toolbox

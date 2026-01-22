@@ -230,6 +230,8 @@ in {
         ",G" = "open -t https://github.com";
         ",t" = "config-cycle colors.webpage.darkmode.enabled";
         ",z" = "hint links spawn bash -c 'tmp=$(mktemp /tmp/qlink.XXXX.pdf); curl -L {hint-url} -o $tmp && zathura $tmp'";
+        ",m" = "spawn nmpv {url}";
+        ",M" = "hint --rapid links spawn nmpv {hint-url}";
       };
     };
     extraConfig = ''
