@@ -83,7 +83,7 @@ in {
           indicator_height = 0;
           gradients = true;
           gradient_round_only_edges = false;
-          gradient_rounding = 20;
+          gradient_rounding = 10;
           keep_upper_gap = false;
           gaps_in = floor (config.home.gapSize * 0.7);
           gaps_out = gaps_in;
@@ -144,6 +144,7 @@ in {
         "$mod,mouse:273,resizewindow"
       ];
       exec-once = [
+        "wava"
         "SVPManager"
         "element-desktop-nightly"
         "spotify"

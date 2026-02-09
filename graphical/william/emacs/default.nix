@@ -7,7 +7,7 @@
 with builtins;
 with lib; let
   themeConfig = config.lib.stylix.colors {
-    template = ./doom/doom-base16-theme.el.mustache;
+    template = ./base16-theme.el.mustache;
     extension = ".el";
   };
   useOverlay = true;
@@ -19,6 +19,81 @@ with lib; let
         withNativeCompilation = true;
       }
     else pkgs.emacs;
+  emacsWithPackages = (pkgs.emacsPackagesFor emacs).emacsWithPackages (epkgs: with epkgs; [
+    cmake-mode
+    rust-mode
+    haskell-mode
+    csharp-mode
+    lua-mode
+    jupyter
+
+    undo-tree
+    general
+    evil
+    evil-escape
+    evil-surround
+    evil-mc
+    evil-tex
+    evil-collection
+    ace-window
+
+    centaur-tabs
+    minimap
+
+    lsp-mode
+    lsp-ui
+    lsp-haskell
+    dap-mode
+    flycheck
+    helm
+    helm-lsp
+    helm-xref
+    helm-c-yasnippet
+    helm-tramp
+    helm-projectile
+    helm-descbinds
+    corfu
+    cape
+    orderless
+
+    tree-sitter
+    tree-sitter-langs
+
+    auctex
+    nix-mode
+
+    yasnippet
+    yasnippet-snippets
+
+    projectile
+    magit
+
+    diredfl
+
+    ligature
+    nerd-icons
+    org-modern
+
+    rainbow-delimiters
+    base16-theme
+    highlight-defined
+    highlight-numbers
+    rainbow-identifiers
+
+    smooth-scroll
+    dashboard
+    page-break-lines
+    olivetti
+
+    helpful
+    restart-emacs
+    dash
+    shut-up
+    f
+
+    copilot
+    gptel
+  ]);
 in rec {
   sops.secrets = {
     "emacs/ai-images-api-key" = {};
@@ -40,7 +115,7 @@ in rec {
 
   services.emacs = {
     enable = true;
-    package = emacs;
+    package = emacsWithPackages;
     extraOptions = mkIf debug [
       "--debug-init"
     ];
@@ -53,14 +128,16 @@ in rec {
     #  cmake
 
     #];
-    Service.WorkingDirectory = (toPath config.home.homeDirectory) + "/priv";
+    Service = {
+      WorkingDirectory = (toPath config.home.homeDirectory) + "/priv";
+      Nice = -10;
+    };
   };
 
   home = {
     persistence."/persist/home/william" = {
       directories = [
         ".config/emacs"
-        ".local/share/doom"
       ];
       # Tangled literate config
       files = map (n: ".config/doom/${n}.el") [
@@ -69,41 +146,33 @@ in rec {
         "custom"
       ];
     };
-    packages = [emacs];
+    packages = [emacsWithPackages];
   };
-  xdg.configFile."doom/init.el".source = ./doom/init.el;
-  xdg.configFile."doom/packages.el".source = ./doom/packages.el;
-  xdg.configFile."doom/config.org".text = with config.stylix; let
-    percentageOpacity = floor (opacity.terminal * 100);
-    fontSize = floor (fonts.sizes.terminal * 1.22);
-    bigFontSize = floor (fontSize * 1.5);
-    secrets = concatStringsSep "\n" (attrValues (mapAttrs (k: v: "(setq sops--${elemAt (split "/" k) 2} (f-read-text \"${config.sops.secrets.${k}.path}\"))") sops.secrets));
-  in
-    concatStringsSep "\n" [
-      ''
-        #+BEGIN_SRC elisp :tangle yes
-        (require 'f)
-      ''
-      secrets
-      ''
-        (setq doom-font (font-spec :family "${fonts.monospace.name}" :size ${toString fontSize} :weight 'semi-light)
-              doom-variable-pitch-font (font-spec :family "${fonts.sansSerif.name}" :size ${toString (fontSize - 1)})
-              doom-big-font (font-spec :family "${fonts.monospace.name}" :size ${toString bigFontSize}))
+  xdg.configFile = {
+    "emacs/init.el".text = with config.stylix; let
+      percentageOpacity = floor (opacity.terminal * 100);
+      fontSize = floor (fonts.sizes.terminal * 9);
+      secrets = concatStringsSep "\n" (attrValues (mapAttrs (k: v: "(setq sops--${elemAt (split "/" k) 2} (f-read-text \"${config.sops.secrets.${k}.path}\"))") sops.secrets));
+    in
+      concatStringsSep "\n" [
+        ''
+          ;; -*- lexical-binding: t; -*-
+          (require 'f)
+        ''
+        secrets
+        (readFile ./init.el)
+        ''
+          (set-face-attribute 'default nil :height ${toString fontSize})
+          (setq +theme-frame-alpha ${toString percentageOpacity})
+          (set-frame-parameter nil 'alpha-background ${toString percentageOpacity})
+          (add-to-list 'default-frame-alist '(alpha-background . ${toString percentageOpacity}))
 
-        (setq doom-theme 'doom-base16)
-        (set-frame-parameter nil 'alpha-background ${toString percentageOpacity})
-        (add-to-list 'default-frame-alist '(alpha-background . ${toString percentageOpacity}))
-      ''
-      "#+END_SRC\n"
-      (readFile ./doom/config.org)
-      ''
-        #+BEGIN_SRC elisp :tangle yes
-        (let ((playground-file (concat doom-private-dir "playground.el")))
-              (if (file-exists-p playground-file)
-                  (load playground-file)))
-        #+END_SRC
-      ''
-    ];
-  xdg.configFile."doom/themes/doom-base16-theme.el".source = themeConfig;
-  xdg.configFile."doom/splash".source = ./../../../resources/splash/emacs;
+          (provide 'init)
+          ;;;; init.el ends here
+        ''
+      ];
+    "emacs/config".source = ./config;
+    "emacs/splash".source = ./../../../resources/splash/emacs;
+    "emacs/themes/base16-stylix-theme.el".source = themeConfig;
+  };
 }

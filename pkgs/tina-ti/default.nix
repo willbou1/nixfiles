@@ -7,6 +7,7 @@
   copyDesktopItems,
   lib,
   stdenv,
+  requireFile,
   winePrefix ? "\$HOME/.local/share/tina-ti/wine",
   ...
 }:
@@ -36,7 +37,15 @@ in stdenv.mkDerivation rec {
   pname = "TINA-TI";
   version = "9.3.200.277";
 
-  src = ./Tina90-TIen.9.3.200.277.zip;
+  src = requireFile rec {
+    name = "Tina90-TIen.9.3.200.277.zip";
+    sha256 = "16i5yy43pg23vqjzc8xqllka31vysi20siwyj95by4hawais1s93";
+    message = ''
+      As Texas Instruments are not big into FOSS, the zip for TINA-TI's installer must be provided manually.
+      Add it to the Nix store with:
+        nix-store --add-fixed sha256 ${name}
+    '';
+  };
   dontUnpack = true;
 
   nativeBuildInputs = [

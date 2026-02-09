@@ -79,6 +79,7 @@ with lib; {
 
         # nix-related stuff
         nix-prefetch-github
+        nix-prefetch-git
         nix-output-monitor
         nix-alien
         cntr
@@ -118,6 +119,7 @@ with lib; {
         "nu" = "sudo nix flake update ";
         "shred" = "shred --remove";
         "cn" = "cd /etc/nixos";
+        "npu" = "nix-prefetch-url";
       };
     };
 

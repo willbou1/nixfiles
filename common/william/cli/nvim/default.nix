@@ -136,7 +136,7 @@ with builtins;
       cursorline = true;
       mouse = "ar";
       colorcolumn = "80";
-      clipboard = "unnamedplus";
+      # clipboard = "unnamedplus";
       fillchars.vert = "❙";
       tabstop = 4;
       shiftwidth = 4;

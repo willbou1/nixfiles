@@ -47,6 +47,12 @@
       ne = ''
         nix eval --json --file $argv | ${pkgs.jq}/bin/jq
       '';
+      npgh = ''
+        echo -e "fetchFromGitHub {\n$(nix-prefetch-github $argv | jq -Mr  'to_entries | map("  " + .key + " = " + (if (.value | type)== "string" then ("\"" + .value + "\"") else (.value | tostring) end) + ";") | .[]')\n}"
+      '';
+      npg = ''
+        echo -e "fetchgitt {\n$(nix-prefetch-git $argv --quiet | jq -Mr  'to_entries | map("  " + .key + " = " + (if (.value | type)== "string" then ("\"" + .value + "\"") else (.value | tostring) end) + ";") | .[]')\n}"
+      '';
     };
     interactiveShellInit = ''
       fish_vi_key_bindings

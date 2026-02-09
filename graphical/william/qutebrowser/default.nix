@@ -178,7 +178,7 @@ in {
         show = "multiple";
         position = "bottom";
         select_on_remove = "last-used";
-        mode_on_change = "restore";
+        mode_on_change = "normal";
         title.format = "{audio} {current_title}";
       };
       downloads = {

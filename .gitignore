@@ -11,5 +11,5 @@ result-*
 *.dmg
 
 crypto_keyfile.cpio.gz
-
 .ccls-cache/
+*.zip
