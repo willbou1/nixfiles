@@ -1,4 +1,3 @@
-
 ;; ------------------------------------- GC ------------------------------------
 (setq gc-cons-threshold most-positive-fixnum
       gc-cons-percentage 0.5)
@@ -15,10 +14,10 @@
 (make-directory "~/.config/emacs/playground/" t)
 (add-to-list 'load-path (expand-file-name "playground" user-emacs-directory))
 
-(savehist-mode 1)
 (setq-default warning-minimum-level :error)
 
 (require 'core)
+(require 'lib)
 
 (let ((playground-file "~/.config/emacs/playground/playground.el"))
   (if (file-exists-p playground-file)

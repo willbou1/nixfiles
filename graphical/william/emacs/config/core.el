@@ -5,7 +5,7 @@
 (require 'theme)
 (require 'keybindings)
 
-(setq help-window-select t
+(setq help-window-select nil
       user-full-name "William Boulanger")
 
 ;; -------------------------------- Line numbers -------------------------------
@@ -13,12 +13,27 @@
 (add-hook 'prog-mode-hook 'display-line-numbers-mode)
 (add-hook 'LaTeX-mode-hook 'display-line-numbers-mode)
 (add-hook 'dired-mode-hook 'display-line-numbers-mode)
+(add-hook 'org-mode-hook 'display-line-numbers-mode)
+
+(use-package 
+  smartparens
+  :config
+  (setq sp-hybrid-kill-excessive-wihtespace t)
+  (smartparens-global-mode))
+
+(use-package
+  evil-mc
+  :after evil
+  :config
+  (global-evil-mc-mode 1))
 
 ;; -------------------------------- Fill column --------------------------------
 (setq fill-column 80)
 (add-hook 'text-mode-hook #'auto-fill-mode)
-(add-hook 'prog-mode-hook #'electric-pair-mode)
+
 (add-hook 'prog-mode-hook #'hl-line-mode)
+(add-hook 'org-mode-hook #'hl-line-mode)
+(add-hook 'dired-mode-hook #'hl-line-mode)
 
 ;; (setq display-fill-column-indicator-column 80)
 ;; (add-hook 'prog-mode-hook 'display-fill-column-indicator-mode)
@@ -32,7 +47,8 @@
       delete-old-versions t
       kept-new-versions 6
       kept-old-versions 2
-      backup-directory-alist '(("." . "~/.config/emacs/backups/")))
+      backup-directory-alist '(("." . "~/.config/emacs/backups/"))
+      tramp-allow-unsafe-temporary-files t)
 
 ;; --------------------------------- Dashboard ---------------------------------
 (use-package
@@ -95,10 +111,15 @@
         corfu-auto-trigger "."
 	corfu-popupinfo-delay 0.6
         corfu-quit-no-match 'separator)
+  (defun set-up-completions ()
+    (add-to-list 'completion-at-point-functions #'cape-dict)
+    (add-to-list 'completion-at-point-functions #'cape-dabbrev)
+    (add-to-list 'completion-at-point-functions #'cape-file))
+  (add-hook 'prog-mode-hook #'set-up-completions)
+  (add-hook 'org-mode-hook #'set-up-completions)
   (global-corfu-mode)
   (corfu-popupinfo-mode)
-  (corfu-history-mode)
-  (add-to-list 'completion-at-point-functions #'cape-file))
+  (corfu-history-mode))
 
 (use-package
   orderless
@@ -139,12 +160,21 @@
       :action-transformer 'helm-apropos-action-transformer))
 
   (setq helm-apropos-show-short-doc t
-	helm-autoresize-max-height 45
-	helm-autoresize-min-height 10)
+        helm-M-x-show-short-doc t
+        helm-autoresize-max-height 45
+        helm-autoresize-min-height 10)
   (defadvice helm-persistent-help-string (around avoid-help-message activate)
     "Avoid help message")
   (defadvice helm-display-mode-line (after undisplay-header activate)
     (setq header-line-format nil))
+
+  (fset 'helm-display-mode-line #'ignore)
+  (add-hook 'helm-after-initialize-hook
+            (defun hide-mode-line-in-helm-buffer ()
+              "Hide mode line in `helm-buffer'."
+              (with-helm-buffer
+                (setq-local mode-line-format nil))))
+
   (helm-mode 1)
   (helm-autoresize-mode t))
 
@@ -160,7 +190,10 @@
 		   (rx "\*Async-native-compile-log\*")
 		   (rx "\*Warnings\*")
 		   (rx "\*Messages\*")
-		   (rx "\*Backtrace\*")))
+		   (rx "\*dashboard\*")
+		   (rx "\*scratch\*")
+		   (rx "\*Backtrace\*")
+           (rx "\*Org Preview LaTeX Output\*")))
     (add-to-list 'helm-boring-buffer-regexp-list r)))
 
 ;; ---------------------------------- Projects ---------------------------------
@@ -192,12 +225,20 @@
   (yas-global-mode 1))
 
 ;; ------------------------------------ Org ------------------------------------
-(setq org-directory "~/priv/documents/org/")
+(setq org-directory "~/priv/documents/org/"
+      org-confirm-babel-evaluate nil)
+
+(use-package
+  org-fragtog
+  :init
+  :hook (org-mode-hook . org-fragtog-mode)
+  :config
+  (plist-put org-format-latex-options :scale 2.0)
+  (plist-put org-format-latex-options :background "Transparent"))
 
 (use-package
   org-modern
-  :hook ((org-mode-hook . org-modern-mode)
-	 (org-agenda-finalize-hook . org-modern-mode))
+  :after org
   :config
   (setq rg-auto-align-tags nil
 	org-tags-column 0
@@ -208,7 +249,8 @@
 	org-hide-emphasis-markers t
 	org-pretty-entities t
 	org-agenda-tags-column 0
-	org-ellipsis "…"))
+	org-ellipsis "…")
+  (global-org-modern-mode))
 
 ;; ----------------------------------- LaTeX -----------------------------------
 (with-eval-after-load 'tex
@@ -235,7 +277,8 @@
    'org-babel-load-languages
    '((emacs-lisp . t)
      (python . t)
-     (jupyter . t))))
+     (jupyter . t)))
+  (add-hook 'org-babel-after-execute-hook #'org-redisplay-inline-images))
 
 ;; ------------------------------------ LSP ------------------------------------
 (use-package
@@ -279,3 +322,4 @@
         :key ""
         :models '(gpt-4o gpt-5))))
 
+(provide 'core)

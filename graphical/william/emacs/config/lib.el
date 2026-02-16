@@ -2,6 +2,17 @@
 
 (require 's)
 (require 'dash)
+(require 'color)
+
+(defun +obj-to-string (obj)
+  "Prints an object to a string handling escape sequences"
+  (s-replace-all (append '(("\n" . "\\n")
+			   ("\t" . "\\t")
+			   ("\r" . "\\r"))
+			 (mapcar (lambda (c) (cons (string (+ ?\C-a c))
+					      (string ?^ (+ ?A c))))
+				 (number-sequence 0 25)))
+		 (prin1-to-string obj)))
 
 (defun +override (original-symbol replacement)
   "Replace a builtin elisp function with a wrapper."
@@ -48,5 +59,40 @@ This checks in turn:
 	     (s-repeat (+ nb-quotient nb-remainder) "-")
 	     " " trimmed-text " "
 	     (s-repeat nb-quotient "-")))))
+
+(defun +set-default-frame-parameters (&rest params)
+  "Set the specified default frame parameters and apply them instantly."
+  (when (cl-oddp (length params))
+    (error "The number of parameters must be even!"))
+  (while params
+    (let ((k (pop params))
+          (v (pop params)))
+      (setf (alist-get k default-frame-alist) v)
+      (set-frame-parameter nil k v))))
+
+(defun +color-hex-to-rgb (hex-color)
+  "Converts a value like #RRGGBB to rgb"
+  (mapcar (lambda (component) (/ (float (string-to-number component 16)) 255))
+	  (list (substring hex-color 1 3)
+		(substring hex-color 3 5)
+		(substring hex-color 5 7))))
+
+(defun +color-modify-stylix (color hf sf lf)
+  "Modify a stylix color with HSL modifiers"
+  (defun clamp (x)
+    (max 0.0 (min 1.0 x)))
+  (let* ((color-hex (plist-get base16-stylix-theme-colors color))
+	 (color-rgb (+color-hex-to-rgb color-hex))
+	 (color-hsl (apply #'color-rgb-to-hsl color-rgb)))
+    (unless (null hf)
+      (setf (nth 0 color-hsl)
+	    (clamp (funcall hf (nth 0 color-hsl)))))
+    (unless (null sf)
+      (setf (nth 1 color-hsl)
+	    (clamp (funcall sf (nth 1 color-hsl)))))
+    (unless (null lf)
+      (setf (nth 2 color-hsl)
+	    (clamp (funcall lf (nth 2 color-hsl)))))
+    (apply #'color-rgb-to-hex (append (apply #'color-hsl-to-rgb color-hsl) '(2)))))
 
 (provide 'lib)

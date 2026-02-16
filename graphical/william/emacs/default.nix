@@ -67,12 +67,14 @@ with lib; let
 
     projectile
     magit
+    vterm
 
     diredfl
 
     ligature
     nerd-icons
     org-modern
+    org-fragtog
 
     rainbow-delimiters
     base16-theme
@@ -93,6 +95,7 @@ with lib; let
 
     copilot
     gptel
+    smartparens
   ]);
 in rec {
   sops.secrets = {
@@ -157,16 +160,18 @@ in rec {
       concatStringsSep "\n" [
         ''
           ;; -*- lexical-binding: t; -*-
+          (require 'savehist)
+          (add-to-list 'savehist-additional-variables '+theme-frame-alpha)
+          (savehist-mode 1)
+
+          (unless +theme-frame-alpha
+           (setq +theme-frame-alpha ${toString percentageOpacity}))
           (require 'f)
         ''
         secrets
         (readFile ./init.el)
         ''
           (set-face-attribute 'default nil :height ${toString fontSize})
-          (setq +theme-frame-alpha ${toString percentageOpacity})
-          (set-frame-parameter nil 'alpha-background ${toString percentageOpacity})
-          (add-to-list 'default-frame-alist '(alpha-background . ${toString percentageOpacity}))
-
           (provide 'init)
           ;;;; init.el ends here
         ''
