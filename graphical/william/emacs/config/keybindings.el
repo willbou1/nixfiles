@@ -95,58 +95,68 @@
 
   (let ((speed 3))
     (defhydra +hydra-resize-window (:hint nil)
-              ("<left>" (evil-window-left 1) "←")
-              ("<right>" (evil-window-right 1) "→")
-              ("<down>" (evil-window-down 1) "↓")
-              ("<up>" (evil-window-up 1) "↑")
+              "
+_h_: ←   _j_: ↓   _H_: w += 3   _J_: h += 3   _v_: ||   _r_: ⟳   _e_: Exchange   _m_: Maximize   _d_: Delete   _q_: Quit
+_l_: →   _k_: ↑   _L_: w -= 3   _K_: h -= 3   _s_: ==   _R_: ⟲   _i_: Isolate    _b_: Balance    _w_: Ace
+"
+              ("<left>" (evil-window-left 1))
+              ("<right>" (evil-window-right 1))
+              ("<down>" (evil-window-down 1))
+              ("<up>" (evil-window-up 1))
 
-              ("h" (evil-window-left 1) "←")
-              ("l" (evil-window-right 1) "→")
-              ("j" (evil-window-down 1) "↓")
-              ("k" (evil-window-up 1) "↑")
+              ("h" (evil-window-left 1))
+              ("l" (evil-window-right 1))
+              ("j" (evil-window-down 1))
+              ("k" (evil-window-up 1))
 
-              ("H" (evil-window-increase-width speed) "↑ width")
-              ("L" (evil-window-decrease-width speed) "↓ width")
-              ("J" (evil-window-increase-height speed) "↑ height")
-              ("K" (evil-window-decrease-height speed) "↓ height")
+              ("H" (evil-window-increase-width speed))
+              ("L" (evil-window-decrease-width speed))
+              ("J" (evil-window-increase-height speed))
+              ("K" (evil-window-decrease-height speed))
 
-              ("v" evil-window-vsplit "||")
-              ("s" evil-window-split "==")
-              ("e" evil-window-exchange "⮂")
-              ("i" delete-other-windows "+")
-              ("m" delete-other-windows "Max")
-              ("b" balance-windows "50/50")
-              ("d" evil-window-delete "x")
-              ("r" window-layout-rotate-clockwise "⟳")
-              ("R" window-layout-rotate-anticlockwise "⟲")
-              ("w" ace-window "Ace"))
+              ("v" evil-window-vsplit)
+              ("s" evil-window-split)
+              ("e" evil-window-exchange)
+              ("i" delete-other-windows)
+              ("m" maximize-window)
+              ("b" balance-windows)
+              ("d" evil-window-delete)
+              ("r" window-layout-rotate-clockwise)
+              ("R" window-layout-rotate-anticlockwise)
+              ("w" ace-window)
+              ("q" nil))
 
     (defhydra +hydra-resize-window-oneshot (:hint nil :exit t)
-              ("<left>" (evil-window-left 1) "←")
-              ("<right>" (evil-window-right 1) "→")
-              ("<down>" (evil-window-down 1) "↓")
-              ("<up>" (evil-window-up 1) "↑")
+              "
+_h_: ←   _j_: ↓   _H_: w += 3   _J_: h += 3   _v_: ||   _r_: ⟳   _e_: Exchange   _m_: Maximize   _d_: Delete   _q_: Quit
+_l_: →   _k_: ↑   _L_: w -= 3   _K_: h -= 3   _s_: ==   _R_: ⟲   _i_: Isolate    _b_: Balance    _w_: Ace
+"
+              ("<left>" (evil-window-left 1))
+              ("<right>" (evil-window-right 1))
+              ("<down>" (evil-window-down 1))
+              ("<up>" (evil-window-up 1))
 
-              ("h" (evil-window-left 1) "←")
-              ("l" (evil-window-right 1) "→")
-              ("j" (evil-window-down 1) "↓")
-              ("k" (evil-window-up 1) "↑")
+              ("h" (evil-window-left 1))
+              ("l" (evil-window-right 1))
+              ("j" (evil-window-down 1))
+              ("k" (evil-window-up 1))
 
-              ("H" (evil-window-increase-width speed) "↑ width")
-              ("L" (evil-window-decrease-width speed) "↓ width")
-              ("J" (evil-window-increase-height speed) "↑ height")
-              ("K" (evil-window-decrease-height speed) "↓ height")
+              ("H" (evil-window-increase-width speed))
+              ("L" (evil-window-decrease-width speed))
+              ("J" (evil-window-increase-height speed))
+              ("K" (evil-window-decrease-height speed))
 
-              ("v" evil-window-vsplit "||")
-              ("s" evil-window-split "==")
-              ("e" evil-window-exchange "⮂")
-              ("i" delete-other-windows "+")
-              ("m" delete-other-windows "Max")
-              ("b" balance-windows "50/50")
-              ("d" evil-window-delete "x")
-              ("r" window-layout-rotate-clockwise "⟳")
-              ("R" window-layout-rotate-anticlockwise "⟲")
-              ("w" ace-window "Ace")))
+              ("v" evil-window-vsplit)
+              ("s" evil-window-split)
+              ("e" evil-window-exchange)
+              ("i" delete-other-windows)
+              ("m" maximize-window)
+              ("b" balance-windows)
+              ("d" evil-window-delete)
+              ("r" window-layout-rotate-clockwise)
+              ("R" window-layout-rotate-anticlockwise)
+              ("w" ace-window)
+              ("q" nil)))
 
   (define-normal-key
     :prefix "SPC"
@@ -165,7 +175,7 @@
     "<backspace>" '(dashboard-open :which-key "Dashboard")
     "TAB" '(ace-window :which-key "Other window")
     "SPC" '((lambda () (interactive)
-	      (switch-to-buffer (other-buffer))) :which-key "Other buffer")
+              (switch-to-buffer (other-buffer))) :which-key "Other buffer")
     "p"  '(:prefix-command project-prefix-map		:which-key "Project")
     "h"  '(:prefix-command help-prefix-map		:which-key "Help")
     "b"  '(:prefix-command buffer-prefix-map		:which-key "Buffer")
@@ -179,17 +189,17 @@
     :prefix "SPC l"
     :prefix-command 'latex-prefix-map
     "c" '((lambda ()
-	    (interactive)
-	    (save-buffer)
-	    (TeX-save-document (TeX-master-file))
-	    (TeX-command TeX-command-default
-			 'TeX-master-file
-			 -1))
-	  :which-key "Compile")
+            (interactive)
+            (save-buffer)
+            (TeX-save-document (TeX-master-file))
+            (TeX-command TeX-command-default
+                         'TeX-master-file
+                         -1))
+          :which-key "Compile")
     "v" '((lambda ()
-	    (interactive)
-	    (TeX-command "View" 'TeX-master-file -1))
-	  :which-key "View")
+            (interactive)
+            (TeX-command "View" 'TeX-master-file -1))
+          :which-key "View")
     )
   (define-normal-key
     :prefix "SPC o"
@@ -209,9 +219,9 @@
     :prefix "SPC t"
     :prefix-command 'toggle-prefix-map
     "c" '((lambda () (interactive)
-	    (require 'copilot)
-	    (copilot-mode)
-	    ) :which-key "Copilot")
+            (require 'copilot)
+            (copilot-mode)
+            ) :which-key "Copilot")
     "l" '(display-line-numbers-mode :which-key "Line numbers")
     "s" '(tramp-revert-buffer-with-sudo :which-key "Sudo")
     )

@@ -13,10 +13,10 @@ with config.lib.stylix.colors.withHashtag; {
     targets.vim.enable = false;
     image = wallpaper;
     opacity = {
-      applications = 0.93;
-      desktop = 0.75;
-      popups = 0.85;
-      terminal = 0.75;
+      applications = 0.86;
+      desktop = 0.72;
+      popups = 0.80;
+      terminal = 0.72;
     };
     fonts = with pkgs; {
       serif = {

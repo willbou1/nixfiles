@@ -134,30 +134,6 @@
 (use-package
   helm
   :config
-  (defun helm-def-source--emacs-variables (&optional default)
-    (helm-build-in-buffer-source "Variables"
-      :init (lambda ()
-	      (helm-apropos-init
-	       (lambda (x)
-		 (and (boundp x) (not (keywordp x)) (not (class-p x))))
-	       default))
-      :fuzzy-match helm-apropos-fuzzy-match
-      :filtered-candidate-transformer
-      (delq nil (list (and (null helm-apropos-fuzzy-match)
-			   'helm-apropos-default-sort-fn)
-		      (and (null (memq 'helm-apropos helm-commands-using-frame))
-			   #'helm-apropos-short-doc-transformer)))
-      :nomark t
-      :persistent-action (lambda (candidate)
-			   (helm-elisp--persistent-help
-			    candidate 'helm-describe-variable))
-      :persistent-help "Toggle describe variable"
-      :keymap helm-apropos-map
-      :action '(("Describe variable" . helm-describe-variable)
-		("Find variable" . helm-find-variable)
-		("Info lookup" . helm-info-lookup-symbol)
-		("Set variable" . helm-set-variable))
-      :action-transformer 'helm-apropos-action-transformer))
 
   (setq helm-apropos-show-short-doc t
         helm-M-x-show-short-doc t
@@ -186,10 +162,45 @@
   helm-command
   :after helm
   :config
+  (defun helm-apropos-short-doc-transformer (candidates source)
+    (if helm-apropos-show-short-doc
+	(let* ((width (window-width (get-buffer-window (helm-buffer-get))))
+	       (cand-max-length (ceiling (* 0.35 width)))
+	       (val-max-length (ceiling (* 0.17 width)))
+	       (padding 3)
+	       (cand-max-length-with-padding (+ padding cand-max-length))
+	       (val-max-length-with-padding (+ padding val-max-length)))
+	  (cl-loop for cand in candidates
+		   for canonical = (intern-soft cand)
+		   for doc = (helm-get-first-line-documentation canonical)
+		   for variablep = (equal "Variables" (alist-get 'name source))
+		   for val = (if variablep
+				 (truncate-string-to-width (+obj-to-string (symbol-value canonical))
+							   val-max-length 0 nil t))
+		   collect (cons (format "%s%s%s%s%s"
+					 (truncate-string-to-width cand cand-max-length 0 nil t)
+					 (if (or val doc)
+					     (helm-make-separator cand cand-max-length-with-padding)
+					   "")
+					 (if val
+					     (propertize
+					      val 'face 'helm-ff-symlink)
+					   "")
+					 (if val
+					     (helm-make-separator val val-max-length-with-padding)
+					   "")
+					 (if doc
+					     (propertize
+					      doc 'face 'helm-M-x-short-doc)
+					   ""))
+				 cand)))
+      candidates))
+
   (dolist (r (list (rx "\*helpful")
 		   (rx "\*Async-native-compile-log\*")
 		   (rx "\*Warnings\*")
 		   (rx "\*Messages\*")
+		   (rx "\*Help\*")
 		   (rx "\*dashboard\*")
 		   (rx "\*scratch\*")
 		   (rx "\*Backtrace\*")

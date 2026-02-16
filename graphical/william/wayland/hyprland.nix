@@ -96,7 +96,7 @@ in {
         blur = {
           enabled = true;
           size = 5;
-          passes = 1;
+          passes = 2;
           special = true;
           popups = true;
         };

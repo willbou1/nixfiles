@@ -95,4 +95,20 @@ This checks in turn:
 	    (clamp (funcall lf (nth 2 color-hsl)))))
     (apply #'color-rgb-to-hex (append (apply #'color-hsl-to-rgb color-hsl) '(2)))))
 
+(defun +visible-buffer-windows ()
+  (let ((selected-window (selected-window)))
+    (mapcar (lambda (g)
+	      (let* ((buffer (car g))
+		     (windows (mapcar #'cdr (cdr g)))
+		     (activep (not (null (any (lambda (w) (eq w selected-window)) windows)))))
+		(append
+		 (list buffer activep)
+		 windows)))
+	    (seq-group-by #'car
+			  (mapcar (lambda (w)
+				    (cons (window-buffer w)
+					  w))
+				  (window-list))))))
+
+
 (provide 'lib)

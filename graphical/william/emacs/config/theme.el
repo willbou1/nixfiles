@@ -48,12 +48,16 @@
   (set-face-foreground face (plist-get base16-stylix-theme-colors :base02)))
 (set-face-background 'fringe (plist-get base16-stylix-theme-colors :base01))
 
+(defcustom +theme-gap 2
+           "Size of the gaps")
+(defcustom +theme-internal-gap 0
+           "Size of the internal gaps")
 (add-hook 'post-command-hook
           (lambda ()
             (+set-default-frame-parameters
-              'right-divider-width 2
-              'bottom-divider-width 2
-              'internal-border-width 0)
+              'right-divider-width +theme-gap
+              'bottom-divider-width +theme-gap
+              'internal-border-width +theme-internal-gap)
             (dolist (buf (list " *Minibuf-0*" " *Minibuf-1*" " *Echo Area 0*" " *Echo Area 1*"))
               (when (get-buffer buf)
                 (with-current-buffer buf
@@ -86,7 +90,13 @@
       :base01
       (lambda (h) (- h 0.01))
       nil
-      (lambda (v) (- v 0.1)))))
+      (lambda (v) (- v 0.1))))
+
+  (set-face-attribute 'org-level-1 nil :height 1.3 :weight 'bold)
+  (set-face-attribute 'org-level-2 nil :height 1.2 :weight 'bold)
+  (set-face-attribute 'org-level-3 nil :height 1.0)
+  (set-face-attribute 'org-level-4 nil :height 0.9)
+  (set-face-attribute 'org-level-5 nil :height 0.8))
 
 ;; --------------------------------- Feebleline --------------------------------
 (with-eval-after-load
@@ -190,7 +200,26 @@
 ;; ---------------------------- Syntax highlighting ----------------------------
 (use-package
   rainbow-delimiters
-  :hook (prog-mode-hook . rainbow-delimiters-mode))
+  :hook (prog-mode-hook . rainbow-delimiters-mode)
+  :config
+  (defun +rainbow-delimiters-pick-face (depth match _loc)
+    "Return a vibrant face for DEPTH, cycling through hues every 20°."
+    (let* ((hue-step (/ 720 rainbow-delimiters-max-face-count))
+	   (hue (mod (* depth hue-step) 360))
+	   (s 0.6)
+	   (l 0.4)
+	   (color (apply #'color-rgb-to-hex
+			 (append (color-hsl-to-rgb (/ hue 360.0) s l) '(2)))))
+      (let ((face (intern
+		   (if match
+		       (format "+rainbow-delimiters-depth-%d-face" depth)
+		     "+rainbow-delimiters-unmatched-face"))))
+	(unless (facep face)
+	  (make-face face))
+	(set-face-foreground face (if match color "red"))
+	face)))
+  (setq rainbow-delimiters-pick-face-function #'+rainbow-delimiters-pick-face
+	rainbow-delimiters-max-face-count 15))
 
 (use-package
   rainbow-identifiers
@@ -215,12 +244,6 @@
 ;; --------------------------------- Ultrawide ---------------------------------
 (use-package
   olivetti
-  :hook ((prog-mode-hook . olivetti-mode)
-	 (helm-major-mode-hook . olivetti-mode)
-	 (Man-mode-hook . olivetti-mode)
-	 (dired-mode-hook . olivetti-mode)
-	 (org-mode-hook . olivetti-mode)
-	 (LaTeX-mode-hook . olivetti-mode))
   :config
   (setq-default olivetti-body-width 130))
 
@@ -229,6 +252,89 @@
   smooth-scroll
   :config
   (setq smooth-scroll/vscroll-step-size 1)
-  (smooth-scroll-mode))
+  (add-hook 'server-after-make-frame-hook #'smooth-scroll-mode))
+
+;; ----------------------------------- EShell ----------------------------------
+(with-eval-after-load 'eshell
+  (require 'ansi-color)
+  (defun eshell-handle-ansi-color ()
+    (ansi-color-apply-on-region eshell-last-output-start
+				eshell-last-output-end))
+  (add-to-list 'eshell-output-filter-functions 'eshell-handle-ansi-color)
+
+  (setq eshell-prompt-function
+	(lambda ()
+          (concat
+           (propertize (user-login-name)
+                       'face `(:foreground ,(plist-get base16-stylix-theme-colors :base0A)))
+           (if (eq (system-name) "linux-amd")
+               "@"
+	     "")
+           (if (eq (system-name) "linux-amd")
+	       (propertize (system-name)
+			   'face '(:foreground "cyan"))
+	     "")
+           ":"
+           (propertize (abbreviate-file-name (eshell/pwd))
+                       'face `(:foreground ,(plist-get base16-stylix-theme-colors :base0E)))
+           (propertize (if (= (user-uid) 0) " # " " $ ")
+		       'face `(:foreground ,(plist-get base16-stylix-theme-colors :base09)))))))
+
+;; --------------------------------- Ace Window --------------------------------
+(with-eval-after-load 'ace-window
+  (set-face-attribute
+   'aw-leading-char-face nil
+   :box t
+   :foreground (plist-get base16-stylix-theme-colors :base09)))
+
+;; --------------------------- Dynamic window shading --------------------------
+(defvar +theme-active-window-remaps nil)
+(defun +theme-highlight-window ()
+  "Hightlight the active window differently from the other window."
+  (dolist (buffer-windows (+visible-buffer-windows))
+    (pcase-let* ((`(,buffer ,activep ,windows) buffer-windows)
+		 (l-modifier (lambda (l) (- l 0.1)))
+		 (s-modifier (lambda (l) (- l 0.2)))
+		 (bg
+		  (if activep
+		      (+color-modify-stylix :base01 nil nil nil)
+		    (+color-modify-stylix :base01 nil s-modifier l-modifier)
+		    ))
+		 (line-number-fg
+		  (if activep
+		      (+color-modify-stylix :base0D nil nil nil)
+		    (+color-modify-stylix :base0D nil s-modifier l-modifier)
+		    ))
+		 (line-number-fg-current
+		  (if activep
+		      (+color-modify-stylix :base03 nil nil nil)
+		    (+color-modify-stylix :base03 nil s-modifier l-modifier)
+		    )))
+      (with-current-buffer buffer
+	(when +theme-active-window-remaps
+	  (mapc #'face-remap-remove-relative +theme-active-window-remaps))
+	(setq +theme-active-window-remaps
+	      (list
+	       (face-remap-add-relative 'window-divider
+					:foreground bg)
+	       (face-remap-add-relative 'window-divider-first-pixel
+					:foreground bg)
+	       (face-remap-add-relative 'window-divider-last-pixel
+					:background bg)
+	       (face-remap-add-relative 'fringe
+					:background bg)
+	       (face-remap-add-relative 'line-number
+					:background bg
+					:foreground line-number-fg)
+	       (face-remap-add-relative 'line-number-current-line
+					:background bg
+					:foreground line-number-fg-current)
+	       (face-remap-add-relative 'hl-line
+					:background bg)
+	       ))))))
+
+(add-hook 'window-selection-change-functions
+          (lambda (&rest _) (+theme-highlight-window)))
+(add-hook 'buffer-list-update-hook #'+theme-highlight-window)
 
 (provide 'theme)
