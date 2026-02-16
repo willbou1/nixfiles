@@ -35,6 +35,7 @@ in {
   ];
   wayland.windowManager.hyprland = {
     plugins = [pkgs.hyprlandPlugins.hyprgrass];
+
     settings = {
       env = [
         #"AQ_DRM_DEVICES,/dev/dri/by-path/pci-0000:00:02.0-card"
@@ -48,6 +49,8 @@ in {
         ",XF86MonBrightnessDown,exec, ${pkgs.brillo}/bin/brillo -u 150000 -U 5"
         ",XF86MonBrightnessUp,exec, ${pkgs.brillo}/bin/brillo -u 150000 -A 5"
       ];
+
+      plugin.touch_gestures.long_press_delay = 1000;
     };
     extraConfig = ''
       device {

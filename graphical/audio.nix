@@ -1,7 +1,7 @@
-{ pkgs, ...}:
+{pkgs, ...}:
 {
   environment.systemPackages = with pkgs; [
-    pulseaudio # for old/standard pulseaudio cli tools
+    pulseaudio # for pactl command
     alsa-tools
   ];
 
@@ -16,44 +16,32 @@
       alsa.support32Bit = true;
       pulse.enable = true;
       jack.enable = true;
-      #wireplumber.configPackages = with pkgs; [
-      #    (writeTextDir "share/wireplumber/main.lua.d/51-disable-suspension.lua" ''
-      #        table.insert (alsa_monitor.rules, {
-      #            matches = {
-      #                {
-      #                    -- Matches all sources.
-      #                    { "node.name", "matches", "alsa_input.*" },
-      #                },
-      #                {
-      #                    -- Matches all sinks.
-      #                    { "node.name", "matches", "alsa_output.*" },
-      #                },
-      #            },
-      #            apply_properties = {
-      #                ["session.suspend-timeout-seconds"] = 0,  -- 0 disables suspend
-      #            },
-      #        })
-      #    '')
-      #    (writeTextDir "share/wireplumber/bluetooth.lua.d/51-disable-suspension.lua" ''
-      #        table.insert (bluez_monitor.rules, {
-      #            matches = {
-      #                {
-      #                    -- Matches all sources.
-      #                    -- Note: bluez_input, not alsa_input
-      #                    { "node.name", "matches", "bluez_input.*" },
-      #                },
-      #                {
-      #                    -- Matches all sinks.
-      #                    -- Note: bluez_output, not alsa_output
-      #                    { "node.name", "matches", "bluez_output.*" },
-      #                },
-      #            },
-      #            apply_properties = {
-      #                ["session.suspend-timeout-seconds"] = 0,  -- 0 disables suspend
-      #            },
-      #        })
-      #    '')
-      #];
+      wireplumber.extraConfig = {
+        "disable-suspension" = {
+          "monitor.alsa.rules" = [
+            {
+              matches = [
+                { "node.name" = "alsa_input.*"; }
+                { "node.name" = "alsa_output.*"; }
+              ];
+              actions.update-props = {
+                "session.suspend-timeout-seconds" = 0;
+              };
+            }
+          ];
+          "monitor.bluez.rules" = [
+            {
+              matches = [
+                { "node.name" = "bluez_input.*"; }
+                { "node.name" = "bluez_output.*"; }
+              ];
+              actions.update-props = {
+                "session.suspend-timeout-seconds" = 0;
+              };
+            }
+          ];
+        };
+      };
     };
   };
 }

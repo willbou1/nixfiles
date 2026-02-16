@@ -164,7 +164,7 @@ in rec {
           (add-to-list 'savehist-additional-variables '+theme-frame-alpha)
           (savehist-mode 1)
 
-          (unless +theme-frame-alpha
+          (unless (boundp '+theme-frame-alpha)
            (setq +theme-frame-alpha ${toString percentageOpacity}))
           (require 'f)
         ''

@@ -68,6 +68,7 @@ with lib; {
         lm_sensors
         vlock
         file
+        zip
         unzip
         lsof
         lftp
@@ -83,6 +84,7 @@ with lib; {
         nix-output-monitor
         nix-alien
         cntr
+        manix
       ];
       persistence."/persist" = {
         hideMounts = true;

@@ -13,7 +13,7 @@ with lib; {
   home-manager.users.william = import ./william;
 
   environment.shellAliases = {
-    "nr" = "sudo nixos-rebuild --impure --show-trace --flake '/etc/nixos?submodules=1#linux-amd' switch &| nom";
+    "nr" = "sudo nixos-rebuild --impure --keep-going --show-trace --flake '/etc/nixos?submodules=1#linux-amd' switch &| nom";
   };
 
   programs.i3lock = {

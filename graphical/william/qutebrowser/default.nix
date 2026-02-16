@@ -13,7 +13,8 @@ with lib; let
   );
 
   permissions = {
-    notification = "notifications";
+    notification = "notification";
+    noNotification = "noNotification";
     clipboard = "clipboard";
     protocol = "protocol";
     call = "call";
@@ -27,6 +28,8 @@ with lib; let
         toMerge = map (p:
           if p == notification
           then {content.notifications.enabled = true;}
+          else if p == noNotification
+          then {content.notifications.enabled = false;}
           else if p == clipboard
           then {content.javascript.clipboard = "access";}
           else if p == protocol
@@ -91,6 +94,15 @@ in {
     domainSettings = with permissions;
       siteSettings [
         {
+          domain = "vault.ourmiraculous.com";
+          permissions = [clipboard];
+        }
+        {
+          domain = "discord.com";
+          permissions = [call];
+          light = true;
+        }
+        {
           domain = "teams.microsoft.com";
           permissions = [notification clipboard call];
           light = true;
@@ -101,7 +113,7 @@ in {
         }
         {
           domain = "www.netflix.com";
-          permissions = [notification];
+          permissions = [noNotification];
         }
         {
           domain = "github.com";

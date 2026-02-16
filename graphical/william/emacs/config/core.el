@@ -82,13 +82,26 @@
 	initial-buffer-choice 'dashboard-open)
   (set-face-underline 'dashboard-items-face nil)
   (set-face-underline 'dashboard-no-items-face nil)
-  (add-hook 'dashboard-mode-hook 'dashboard-jump-to-recents)
   (add-hook 'server-after-make-frame-hook 'dashboard-open)
+
+  (defun +dashboard-jump-to-recents ()
+    (interactive)
+    (if (fboundp 'dashboard-jump-to-recents)
+      (dashboard-jump-to-recents)
+      (message "No recent files available.")))
+
+  (defun +dashboard-jump-to-projects ()
+    (interactive)
+    (if (fboundp 'dashboard-jump-to-projects)
+      (dashboard-jump-to-projects)
+      (message "No projects available.")))
+
+  (add-hook 'dashboard-mode-hook '+dashboard-jump-to-recents)
   (general-define-key
    :states 'normal
    :keymaps 'dashboard-mode-map
-   "r" #'dashboard-jump-to-recents
-   "p" #'dashboard-jump-to-projects)
+   "r" #'+dashboard-jump-to-recents
+   "p" #'+dashboard-jump-to-projects)
   (dashboard-setup-startup-hook))
 
 (use-package helpful

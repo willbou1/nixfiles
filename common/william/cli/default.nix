@@ -3,13 +3,15 @@
   lib,
   ...
 }:
-with lib; {
+with lib;
+{
   imports = mine.autoInclude ./. [];
 
-  home.persistence."/persist/home/william".directories = [
-    ".local/share/zoxide"
-    ".config/qalculate"
-  ];
+  home.persistence."/persist/home/william" = {
+    directories = [
+      ".local/share/zoxide"
+    ];
+  };
 
   programs = {
     ssh = {

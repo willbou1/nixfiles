@@ -16,7 +16,6 @@ with lib; {
 
   environment = {
     systemPackages = with pkgs; [
-      pulseaudio
       exfat
       zsa-udev-rules
     ];

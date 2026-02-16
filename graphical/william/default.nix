@@ -42,18 +42,22 @@ with lib; {
       config.lib.file.mkOutOfStoreSymlink "/run/media/william";
 
     home.packages = with pkgs; [
-      libreoffice-fresh
-      #gimp
+      dconf
       playerctl
       hyprpaper
       swww
-      dconf
+
+      wally-cli
+
+      libreoffice-fresh
+      #gimp
       helvum
       steam
-      wally-cli
-      #zen-browser
       bitwig-studio
       qalculate-gtk
+
+      #zen-browser
+      firefox
     ];
 
     services = {
