@@ -44,6 +44,7 @@ in {
     "/home/william" = {
       device = "none";
       fsType = "tmpfs";
+      neededForBoot = true;
       options = ["size=10G" "mode=777"];
     };
     "/persist" = {

@@ -3,8 +3,10 @@
 
   inputs = {
     # Common dependencies
-    nixpkgs.url = ./devel/nixpkgs;
-    unstable.url = ./devel/nixpkgs-unstable;
+    # nixpkgs.url = ./devel/nixpkgs;
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.11";
+    # nixpkgs-unstable.url = ./devel/nixpkgs-unstable;
+    unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
     flake-compat.url = "github:edolstra/flake-compat";
     flake-parts.url = "github:hercules-ci/flake-parts";
     flake-utils = {
@@ -14,19 +16,23 @@
     systems.url = "github:nix-systems/default";
 
     sops-nix = {
-      url = ./devel/sops-nix;
+      # url = ./devel/sops-nix;
+      url = "github:Mic92/sops-nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    impermanence.url = ./devel/impermanence;
+    # impermanence.url = ./devel/impermanence;
+    impermanence.url = "github:nix-community/impermanence";
 
     home-manager = {
-      url = ./devel/home-manager;
+      # url = ./devel/home-manager;
+      url = "github:nix-community/home-manager/release-25.11";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
     nixvim = {
-      url = ./devel/nixvim;
+      # url = ./devel/nixvim;
+      url = "github:nix-community/nixvim/nixos-25.11";
       inputs = {
         nixpkgs.follows = "nixpkgs";
         flake-parts.follows = "flake-parts";
@@ -41,7 +47,8 @@
     };
 
     spicetify-nix = {
-      url = ./devel/spicetify-nix;
+      # url = ./devel/spicetify-nix;
+      url = "github:Gerg-L/spicetify-nix";
       inputs = {
         nixpkgs.follows = "nixpkgs";
         systems.follows = "systems";
@@ -51,7 +58,8 @@
     #notnft.url = github:chayleaf/notnft;
 
     neovim-nightly-overlay = {
-      url = ./devel/neovim-nightly-overlay;
+      # url = ./devel/neovim-nightly-overlay;
+      url = "github:nix-community/neovim-nightly-overlay";
       inputs = {
         nixpkgs.follows = "nixpkgs";
         flake-parts.follows = "flake-parts";
@@ -60,18 +68,21 @@
     };
 
     zen-browser = {
-      url = "github:MarceColl/zen-browser-flake";
-      inputs.nixpkgs.follows = "unstable";
+      url = "github:youwen5/zen-browser-flake";
+      inputs = {
+        nixpkgs.follows = "nixpkgs";
+      };
     };
 
     emacs-overlay = {
-      url = ./devel/emacs-overlay;
+      url = "github:nix-community/emacs-overlay";
       inputs.nixpkgs-stable.follows = "nixpkgs";
       inputs.nixpkgs.follows = "unstable";
     };
 
     stylix = {
-      url = ./devel/stylix;
+      # url = ./devel/stylix;
+      url = "github:nix-community/stylix/release-25.11";
       inputs = {
         nixpkgs.follows = "nixpkgs";
         flake-parts.follows = "flake-parts";

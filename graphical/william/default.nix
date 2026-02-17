@@ -25,7 +25,7 @@ with lib; {
   };
 
   config = {
-    home.persistence."/persist/home/william" = {
+    home.persistence."/persist" = {
       directories = [
         ".mozilla/firefox"
         ".zen"
@@ -56,8 +56,9 @@ with lib; {
       bitwig-studio
       qalculate-gtk
 
-      #zen-browser
-      firefox
+      zen-browser
+
+      texlivePackages.scheme-full
     ];
 
     services = {

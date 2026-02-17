@@ -5,7 +5,7 @@
 }: let
   spicePkgs = inputs.spicetify-nix.legacyPackages.${pkgs.system};
 in {
-  home.persistence."/persist/home/william".directories = [
+  home.persistence."/persist".directories = [
     ".config/spotify"
   ];
   programs.spicetify = {

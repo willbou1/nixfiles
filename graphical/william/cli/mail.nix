@@ -3,7 +3,7 @@
   lib,
   ...
 }: {
-  home.persistence."/persist/home/william".directories = [
+  home.persistence."/persist".directories = [
     "Mail"
   ];
   sops.secrets."mail_pass/willbou2" = {};

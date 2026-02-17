@@ -4,19 +4,10 @@
 {
   # OOP
   home = {
-    persistence."/persist/home/william".directories = [
-      "eclipse-workspace"
+    persistence."/persist".directories = [
       ".config/JetBrains"
     ];
     packages = with pkgs; [
-      (symlinkJoin {
-        name = "x11-eclipse";
-        paths = [eclipses.eclipse-java];
-        buildInputs = [makeWrapper];
-        postBuild = ''
-          wrapProgram $out/bin/eclipse --set GDK_BACKEND x11
-        '';
-      })
       jetbrains.idea
       jetbrains.clion
       jetbrains.dataspell

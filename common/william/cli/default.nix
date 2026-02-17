@@ -7,7 +7,7 @@ with lib;
 {
   imports = mine.autoInclude ./. [];
 
-  home.persistence."/persist/home/william" = {
+  home.persistence."/persist" = {
     directories = [
       ".local/share/zoxide"
     ];

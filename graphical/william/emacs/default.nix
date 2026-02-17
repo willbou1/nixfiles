@@ -67,7 +67,6 @@ with lib; let
 
     projectile
     magit
-    vterm
 
     diredfl
 
@@ -138,7 +137,7 @@ in rec {
   };
 
   home = {
-    persistence."/persist/home/william" = {
+    persistence."/persist" = {
       directories = [
         ".config/emacs"
       ];

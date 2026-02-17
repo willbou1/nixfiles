@@ -40,7 +40,6 @@ with lib; {
       useUserPackages = true;
       users.william = import ./william;
       sharedModules = [
-        inputs.impermanence.nixosModules.home-manager.impermanence
         inputs.sops-nix.homeManagerModules.sops
         inputs.nixvim.homeManagerModules.nixvim
         inputs.spicetify-nix.homeManagerModules.default

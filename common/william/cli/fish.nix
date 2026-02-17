@@ -1,5 +1,5 @@
 {pkgs, ...}: {
-  home.persistence."/persist/home/william".directories = [
+  home.persistence."/persist".directories = [
     ".local/share/fish"
   ];
   programs.fish = {

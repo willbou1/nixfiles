@@ -20,7 +20,7 @@ in {
     bitwarden-cli
     keyutils
   ];
-  home.persistence."/persist/home/william" = {
+  home.persistence."/persist" = {
     directories = [
       ".config/Bitwarden"
     ];

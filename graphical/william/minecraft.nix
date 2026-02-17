@@ -52,7 +52,7 @@ in {
     "minecraft/not_after" = {};
   };
 
-  home.persistence."/persist/home/william" = {
+  home.persistence."/persist" = {
     directories = [
       launcherPath
       ".config/CurseForge"

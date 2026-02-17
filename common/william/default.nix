@@ -13,12 +13,11 @@ with lib; {
     defaultSopsFile = ./secrets.yaml;
     age.sshKeyPaths = ["/home/william/.ssh/id_ed25519"];
   };
-  home.persistence."/persist/home/william" = {
+  home.persistence."/persist" = {
     directories = [
       ".gnupg"
       ".ssh"
     ];
-    allowOther = true;
   };
 
   home.packages = with pkgs; [

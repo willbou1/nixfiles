@@ -5,7 +5,7 @@
 }:
 with builtins; 
 {
-  home.persistence."/persist/home/william".directories = [
+  home.persistence."/persist".directories = [
     ".local/share/nvim"
     ".local/state/nvim"
   ];
@@ -79,15 +79,30 @@ with builtins;
       lsp = {
         enable = true;
         servers = {
-          java_language_server.enable = true;
+          java_language_server = {
+            enable = true;
+            package = null;
+          };
           hls = {
             enable = true;
             installGhc = false;
           };
-          texlab.enable = true;
-          cmake.enable = true;
-          bashls.enable = true;
-          fish_lsp.enable = true;
+          texlab = {
+           enable = true;
+            package = null;
+          };
+          cmake = {
+            enable = true;
+            package = null;
+          };
+          bashls = {
+            enable = true;
+            package = null;
+          };
+          fish_lsp = {
+            enable = true;
+            package = null;
+          };
           clangd = {
             enable = true;
             cmd = [
@@ -101,10 +116,19 @@ with builtins;
             installCargo = false;
             installRustc = false;
           };
-          cssls.enable = true;
-          omnisharp.enable = true;
+          cssls = {
+            enable = true;
+            package = null;
+          };
+          omnisharp = {
+            enable = true;
+            package = null;
+          };
           nil_ls.enable = true;
-          gopls.enable = true;
+          gopls = {
+            enable = true;
+            package = null;
+          };
         };
       };
       lspkind.enable = true;
@@ -136,7 +160,7 @@ with builtins;
       cursorline = true;
       mouse = "ar";
       colorcolumn = "80";
-      # clipboard = "unnamedplus";
+      clipboard = "unnamedplus";
       fillchars.vert = "❙";
       tabstop = 4;
       shiftwidth = 4;

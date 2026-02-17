@@ -39,14 +39,14 @@ with config.lib.stylix.colors.withHashtag; let
     }
   '';
 in {
-  home.persistence."/persist/home/william".directories = [
+  home.persistence."/persist".directories = [
     ".config/Element"
     ".config/Element-Nightly"
   ];
   home.packages = with pkgs; [
     element-desktop
-    #nur.repos.willbou1.element-desktop-nightly
-    element-desktop-nightly
+    nur.repos.willbou1.element-desktop-nightly
+    #element-desktop-nightly
   ];
   xdg.configFile = {
     "Element/config.json".text = ''

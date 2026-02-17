@@ -29,7 +29,7 @@ in {
     novnc
   ];
 
-  home.persistence."/persist/home/william" = {
+  home.persistence."/persist" = {
     files = [
       ".ngspice_history"
     ];

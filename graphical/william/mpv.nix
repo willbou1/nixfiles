@@ -54,7 +54,7 @@ in {
       })
       svpWrapper
     ];
-    persistence."/persist/home/william".directories = [
+    persistence."/persist".directories = [
       ".local/state/mpv"
       ".local/share/SVP4"
     ];

@@ -63,7 +63,7 @@ in {
     "x-scheme-handler/about" = "org.qutebrowser.qutebrowser.desktop";
     "x-scheme-handler/unknown" = "org.qutebrowser.qutebrowser.desktop";
   };
-  home.persistence."/persist/home/william" = {
+  home.persistence."/persist" = {
     directories = [
       ".local/share/qutebrowser"
     ];
