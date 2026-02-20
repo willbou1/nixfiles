@@ -119,10 +119,14 @@
 
 (custom-set-faces
  '(font-lock-comment-face
-   ((t (:family "Liberation Serif" :italic t :height 215))))
+   ((t (:family "Liberation Serif" :italic t :height 1.15))))
  '(font-lock-doc-face
-   ((t (:family "Liberation Serif" :italic t :height 215))))
- '(font-lock-string-face  ((t (:italic t)))))
+   ((t (:family "Liberation Serif" :italic t :height 1.15))))
+ '(font-lock-string-face  ((t (:italic t))))
+ '(line-number
+   ((t (:inherit default))))
+ '(line-number-current-line
+   ((t (:inherit default :weight bold)))))
 
 (font-lock-add-keywords
  'emacs-lisp-mode
@@ -233,13 +237,25 @@
   highlight-numbers
   :hook (prog-mode-hook . highlight-numbers-mode))
 
+(with-eval-after-load
+  'font-latex
+  (set-face-foreground 'font-latex-math-face (plist-get base16-stylix-theme-colors :base04)))
+
+;; ----------------------------------- Dired -----------------------------------
 (use-package
   diredfl
   :hook (dired-mode . diredfl-mode))
 
-(with-eval-after-load
-  'font-latex
-  (set-face-foreground 'font-latex-math-face (plist-get base16-stylix-theme-colors :base04)))
+(with-eval-after-load 'dired-subtree
+  (setq dired-subtree-line-prefix "")
+  (dotimes (i 6)
+    (let ((bg (+color-modify-stylix :base01
+				    nil
+				    (lambda (s) (- s 0.1))
+				    (lambda (l) (- l (* i -0.06))))))
+      (set-face-attribute (intern (format "dired-subtree-depth-%d-face" (+ 1 i))) nil
+			  :background bg
+			  :extend t))))
 
 ;; --------------------------------- Ultrawide ---------------------------------
 (use-package
@@ -251,7 +267,7 @@
 (use-package
   smooth-scroll
   :config
-  (setq smooth-scroll/vscroll-step-size 1)
+  (setq smooth-scroll/vscroll-step-size 2)
   (add-hook 'server-after-make-frame-hook #'smooth-scroll-mode))
 
 ;; ----------------------------------- EShell ----------------------------------
@@ -288,50 +304,85 @@
    :foreground (plist-get base16-stylix-theme-colors :base09)))
 
 ;; --------------------------- Dynamic window shading --------------------------
+(let ((l-modifier (lambda (l) (- l 0.1)))
+      (s-modifier (lambda (l) (- l 0.2))))
+  (defvar +theme-highlight-window-bg
+    (+color-modify-stylix :base01 nil nil nil))
+  (defvar +theme-highlight-window-bg-inactive
+    (+color-modify-stylix :base01 nil s-modifier l-modifier))
+  (defvar +theme-highlight-window-line-number-fg
+    (+color-modify-stylix :base0D nil nil nil))
+  (defvar +theme-highlight-window-line-number-fg-inactive
+    (+color-modify-stylix :base0D nil s-modifier l-modifier))
+  (defvar +theme-highlight-window-current-line-number-fg
+    (+color-modify-stylix :base03 nil nil nil))
+  (defvar +theme-highlight-window-current-line-number-fg-inactive
+    (+color-modify-stylix :base03 nil s-modifier l-modifier)))
+
+(defvar +theme-last-selected-window nil
+  "The previously active window for theme highlighting.")
 (defvar +theme-active-window-remaps nil)
+
 (defun +theme-highlight-window ()
-  "Hightlight the active window differently from the other window."
-  (dolist (buffer-windows (+visible-buffer-windows))
-    (pcase-let* ((`(,buffer ,activep ,windows) buffer-windows)
-		 (l-modifier (lambda (l) (- l 0.1)))
-		 (s-modifier (lambda (l) (- l 0.2)))
-		 (bg
-		  (if activep
-		      (+color-modify-stylix :base01 nil nil nil)
-		    (+color-modify-stylix :base01 nil s-modifier l-modifier)
-		    ))
-		 (line-number-fg
-		  (if activep
-		      (+color-modify-stylix :base0D nil nil nil)
-		    (+color-modify-stylix :base0D nil s-modifier l-modifier)
-		    ))
-		 (line-number-fg-current
-		  (if activep
-		      (+color-modify-stylix :base03 nil nil nil)
-		    (+color-modify-stylix :base03 nil s-modifier l-modifier)
-		    )))
-      (with-current-buffer buffer
-	(when +theme-active-window-remaps
-	  (mapc #'face-remap-remove-relative +theme-active-window-remaps))
-	(setq +theme-active-window-remaps
-	      (list
-	       (face-remap-add-relative 'window-divider
-					:foreground bg)
-	       (face-remap-add-relative 'window-divider-first-pixel
-					:foreground bg)
-	       (face-remap-add-relative 'window-divider-last-pixel
-					:background bg)
-	       (face-remap-add-relative 'fringe
-					:background bg)
-	       (face-remap-add-relative 'line-number
-					:background bg
-					:foreground line-number-fg)
-	       (face-remap-add-relative 'line-number-current-line
-					:background bg
-					:foreground line-number-fg-current)
-	       (face-remap-add-relative 'hl-line
-					:background bg)
-	       ))))))
+  "Highlight the currently selected window differently from the last selected one."
+  (let* ((current (selected-window))
+         (last +theme-last-selected-window)
+         ;; Colors for active/inactive
+         (bg-active +theme-highlight-window-bg)
+         (bg-inactive +theme-highlight-window-bg-inactive)
+         (ln-fg-active +theme-highlight-window-line-number-fg)
+         (ln-fg-inactive +theme-highlight-window-line-number-fg-inactive)
+         (ln-cur-fg-active +theme-highlight-window-current-line-number-fg)
+         (ln-cur-fg-inactive +theme-highlight-window-current-line-number-fg-inactive))
+    
+    ;; Restore the last window to inactive
+    (when (window-live-p last)
+      (with-current-buffer (window-buffer last)
+        (when +theme-active-window-remaps
+          (mapc #'face-remap-remove-relative +theme-active-window-remaps))
+        (setq +theme-active-window-remaps
+              (list
+               (face-remap-add-relative 'window-divider :foreground bg-inactive)
+               (face-remap-add-relative 'window-divider-first-pixel :foreground bg-inactive)
+               (face-remap-add-relative 'window-divider-last-pixel :background bg-inactive)
+               (face-remap-add-relative 'fringe :background bg-inactive)
+               (face-remap-add-relative 'line-number
+                                        :background bg-inactive
+                                        :foreground ln-fg-inactive
+                                        :extend t)
+               (face-remap-add-relative 'line-number-current-line
+                                        :background bg-inactive
+                                        :foreground ln-cur-fg-inactive
+                                        :extend t)
+               (face-remap-add-relative 'hl-line
+                                        :background bg-inactive
+                                        :extend t)))))
+
+    ;; Highlight the current window as active
+    (when (window-live-p current)
+      (with-current-buffer (window-buffer current)
+        (when +theme-active-window-remaps
+          (mapc #'face-remap-remove-relative +theme-active-window-remaps))
+        (setq +theme-active-window-remaps
+              (list
+               (face-remap-add-relative 'window-divider :foreground bg-active)
+               (face-remap-add-relative 'window-divider-first-pixel :foreground bg-active)
+               (face-remap-add-relative 'window-divider-last-pixel :background bg-active)
+               (face-remap-add-relative 'fringe :background bg-active)
+               (face-remap-add-relative 'line-number
+                                        :background bg-active
+                                        :foreground ln-fg-active
+                                        :extend t)
+               (face-remap-add-relative 'line-number-current-line
+                                        :background bg-active
+                                        :foreground ln-cur-fg-active
+                                        :extend t)
+               (face-remap-add-relative 'hl-line
+                                        :background bg-active
+                                        :extend t)))))
+
+    ;; Update last selected window
+    (setq +theme-last-selected-window current)))
 
 (add-hook 'window-selection-change-functions
           (lambda (&rest _) (+theme-highlight-window)))

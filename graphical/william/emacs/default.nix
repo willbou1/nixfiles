@@ -69,6 +69,7 @@ with lib; let
     magit
 
     diredfl
+    dired-subtree
 
     ligature
     nerd-icons

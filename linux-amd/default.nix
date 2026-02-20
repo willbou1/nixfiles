@@ -14,6 +14,7 @@ with lib; {
 
   environment.shellAliases = {
     "nr" = "sudo nixos-rebuild --impure --keep-going --show-trace --flake '/etc/nixos#linux-amd' switch &| nom";
+    "no" = "nixos-options --flake '/etc/nixos#linux-amd'";
   };
 
   programs.i3lock = {
@@ -31,12 +32,12 @@ with lib; {
 
   # 20 cores used total
   nix.settings = {
-    max-jobs = 5;
+    max-jobs = 6;
     cores = 4;
   };
 
   # linux-amd is in my room so I'm not that concerned
   security.sudo.extraConfig = ''
-    Defaults timestamp_timeout=20
+    Defaults timestamp_timeout=30
   '';
 }

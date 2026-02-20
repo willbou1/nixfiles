@@ -21,6 +21,7 @@ with lib; {
   };
   environment.shellAliases = {
     "nr" = "sudo nixos-rebuild --impure --keep-going --show-trace --flake '/etc/nixos#haskell_slay_slay' switch &| nom";
+    "no" = "nixos-options --flake '/etc/nixos#haskell_slay_slay'";
   };
   services.deluge.config.download_location = "/srv/torrents";
 

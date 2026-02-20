@@ -66,14 +66,29 @@
     :keymaps 'override
     :states '(visual))
 
-  (general-define-key
-    :keymaps 'override
-    "C-S-c" '(clipboard-kill-ring-save :which-key "Copy")
-    "C-S-v" '(clipboard-yank :which-key "Paste")
-   )
+  (general-create-definer define-everywhere
+    :keymaps 'override)
 
   (general-define-key
-    :states '(normal visual insert)
+    :states 'normal
+    :keymaps 'dashboard-mode-map
+    "r" #'+dashboard-jump-to-recents
+    "p" #'+dashboard-jump-to-projects)
+
+  (with-eval-after-load 'dired
+    (general-define-key
+     :states 'normal
+     :keymaps 'dired-mode-map
+     "a" #'dired-find-file
+     "RET" (lambda () (interactive)
+	     (if (f-directory? (dired-get-file-for-visit))
+		 (dired-find-alternate-file)
+	       (dired-find-file)))))
+
+  (define-everywhere
+    "C-S-c" '(clipboard-kill-ring-save :which-key "Copy")
+    "C-S-v" '(clipboard-yank :which-key "Paste")
+
     "C-h" #'sp-kill-hybrid-sexp
     "C-k" #'sp-kill-sexp
     "C-a" #'evil-mc-make-all-cursors
@@ -81,6 +96,9 @@
     "C-p" #'evil-mc-make-and-goto-prev-match
     "C-x" #'evil-mc-make-cursor-here
     "C-b" #'evil-mc-undo-all-cursors
+    "C-w" (lambda (pair) (interactive "cPair: ")
+	    (sp-wrap-with-pair (char-to-string pair)))
+    "C-n" #'sp-rewrap-sexp
     )
 
   (defun my-indent-after-paste (beg end)
@@ -93,70 +111,141 @@
               (lambda (&rest args)
 		(my-indent-after-paste (mark t) (point))))
 
-  (let ((speed 3))
-    (defhydra +hydra-resize-window (:hint nil)
-              "
+  (defmacro +hydra-custom (name desc &rest opts)
+    "Take a description of the form ([OPTIONS] DOC HEADS...) and generate a Hydra for it."
+    (unless (symbolp desc)
+      (error "+hydra-custom: DESC must be a symbol"))
+    (unless (boundp desc)
+      (error "+hydra-custom: %s is unbound" desc))
+    (let* ((desc-value (symbol-value desc))
+	   (fst-value (car desc-value))
+	   (additional-opts (if (listp fst-value) fst-value))
+	   (doc-and-heads (if (listp fst-value) (cdr desc-value) desc-value)))
+      `(defhydra ,name (:hint nil ,@opts ,@additional-opts)
+	 ,@doc-and-heads)))
+
+  (defconst +hydra-org-table--desc
+    '((:foreign-keys run)
+      ""
+      ("n" org-table-create)
+      ("J" org-table-move-row-down)
+      ("K" org-table-move-row-up)
+      ("l" org-table-next-field)
+      ("h" org-table-previous-field)
+      ("L" org-table-move-column-right)
+      ("H" org-table-move-column-left)
+      ("r" org-table-insert-row)
+      ("c" org-table-insert-column)
+      ("C" org-table-delete-column)
+      ("b" org-table-blank-field)
+      ("e" org-table-edit-field)
+      ("v" org-table-copy-down)
+      ("a" org-table-align)
+      ("m" org-table-recalculate) ; Give us the Mathhhh
+      ("s" org-table-sort-lines)
+      ("d" org-table-kill-row)
+      ("o" org-table-toggle-coordinate-overlays)
+      ("<escape>" nil)
+      ("q" nil)))
+  (+hydra-custom +hydra-org-table +hydra-org-table--desc)
+  (+hydra-custom +hydra-org-table-oneshot +hydra-org-table--desc :exit t)
+
+  (defconst +hydra-org-insert--desc
+    '(( :foreign-keys run)
+      ""
+      ("d" org-insert-drawer)
+      ("b" (org-insert-structure-template "src"))
+      ("B" org-insert-structure-template)
+      ("l" org-insert-link)
+      ("h" org-insert-heading)
+      ("H" org-insert-heading-respect-content)
+      ("S" org-insert-subheading)
+      ("i" org-insert-item)
+      ("t" org-insert-todo-heading)
+      ("T" org-insert-todo-subheading)
+      (":" org-insert-time-stamp)
+      ("<escape>" nil)
+      ("q" nil)))
+  (+hydra-custom +hydra-org-insert +hydra-org-insert--desc)
+  (+hydra-custom +hydra-org-insert-oneshot +hydra-org-insert--desc :exit t)
+
+  (defconst +hydra-org--desc
+    '(( :foreign-keys run)
+      "
+  _h_: ↑ heading   _l_: ↑ item  _b_: ↑ block   _<_: Demote    _m_: Mark       _i_: Insert   _x_: Execute   _u_: Undo     _n_: Narrow
+  _H_: ↓ heading   _L_: ↓ item  _B_: ↓ block   _>_: Promote   _M_: Mark sub   _d_: Delete   _e_: Edit      _r_: Refile   _w_: Widen
+  "
+      ("h" org-next-visible-heading)
+      ("H" org-previous-visible-heading)
+      ("l" org-next-item)
+      ("L" org-previous-item)
+      ("l" org-next-link)
+      ("L" org-previous-link)
+      ("b" org-next-block)
+      ("B" org-previous-block)
+      (">" org-promote-subtree)
+      ("<" org-demote-subtree)
+      ("m" (if (org-in-src-block-p)
+	       (org-babel-mark-block)
+	     (org-mark-element)))
+      ("M" org-mark-subtree)
+      ("i" +hydra-org-insert-oneshot/body)
+      ("I" +hydra-org-insert/body)
+      ("d" (if (use-region-p)
+	       (call-interactively #'evil-delete)
+	     (org-cut-subtree)))
+      ("n" org-narrow-to-element)
+      ("w" widen)
+      ("u" evil-undo)
+      ("c" org-toggle-checkbox)
+      ("t" +hydra-org-table-oneshot/body)
+      ("T" +hydra-org-table/body)
+      ("r" org-refile)
+      ("p" org-set-property)
+      ("x" (if (use-region-p)
+              (org-babel-execute-region)
+              (org-babel-execute-src-block-maybe)))
+      ("X" org-babel-execute-buffer)
+      ("e" org-edit-special :exit t)
+      ("<escape>" nil)
+      ("q" nil)))
+  (+hydra-custom +hydra-org +hydra-org--desc)
+  (+hydra-custom +hydra-org-oneshot +hydra-org--desc :exit t)
+
+  (defconst +hydra-window--desc
+      (let ((speed 3))
+        `("
 _h_: ←   _j_: ↓   _H_: w += 3   _J_: h += 3   _v_: ||   _r_: ⟳   _e_: Exchange   _m_: Maximize   _d_: Delete   _q_: Quit
 _l_: →   _k_: ↑   _L_: w -= 3   _K_: h -= 3   _s_: ==   _R_: ⟲   _i_: Isolate    _b_: Balance    _w_: Ace
 "
-              ("<left>" (evil-window-left 1))
-              ("<right>" (evil-window-right 1))
-              ("<down>" (evil-window-down 1))
-              ("<up>" (evil-window-up 1))
+          ("<left>" (evil-window-left 1))
+          ("<right>" (evil-window-right 1))
+          ("<down>" (evil-window-down 1))
+          ("<up>" (evil-window-up 1))
 
-              ("h" (evil-window-left 1))
-              ("l" (evil-window-right 1))
-              ("j" (evil-window-down 1))
-              ("k" (evil-window-up 1))
+          ("h" (evil-window-left 1))
+          ("l" (evil-window-right 1))
+          ("j" (evil-window-down 1))
+          ("k" (evil-window-up 1))
 
-              ("H" (evil-window-increase-width speed))
-              ("L" (evil-window-decrease-width speed))
-              ("J" (evil-window-increase-height speed))
-              ("K" (evil-window-decrease-height speed))
+          ("H" (evil-window-increase-width ,speed))
+          ("L" (evil-window-decrease-width ,speed))
+          ("J" (evil-window-increase-height ,speed))
+          ("K" (evil-window-decrease-height ,speed))
 
-              ("v" evil-window-vsplit)
-              ("s" evil-window-split)
-              ("e" evil-window-exchange)
-              ("i" delete-other-windows)
-              ("m" maximize-window)
-              ("b" balance-windows)
-              ("d" evil-window-delete)
-              ("r" window-layout-rotate-clockwise)
-              ("R" window-layout-rotate-anticlockwise)
-              ("w" ace-window)
-              ("q" nil))
-
-    (defhydra +hydra-resize-window-oneshot (:hint nil :exit t)
-              "
-_h_: ←   _j_: ↓   _H_: w += 3   _J_: h += 3   _v_: ||   _r_: ⟳   _e_: Exchange   _m_: Maximize   _d_: Delete   _q_: Quit
-_l_: →   _k_: ↑   _L_: w -= 3   _K_: h -= 3   _s_: ==   _R_: ⟲   _i_: Isolate    _b_: Balance    _w_: Ace
-"
-              ("<left>" (evil-window-left 1))
-              ("<right>" (evil-window-right 1))
-              ("<down>" (evil-window-down 1))
-              ("<up>" (evil-window-up 1))
-
-              ("h" (evil-window-left 1))
-              ("l" (evil-window-right 1))
-              ("j" (evil-window-down 1))
-              ("k" (evil-window-up 1))
-
-              ("H" (evil-window-increase-width speed))
-              ("L" (evil-window-decrease-width speed))
-              ("J" (evil-window-increase-height speed))
-              ("K" (evil-window-decrease-height speed))
-
-              ("v" evil-window-vsplit)
-              ("s" evil-window-split)
-              ("e" evil-window-exchange)
-              ("i" delete-other-windows)
-              ("m" maximize-window)
-              ("b" balance-windows)
-              ("d" evil-window-delete)
-              ("r" window-layout-rotate-clockwise)
-              ("R" window-layout-rotate-anticlockwise)
-              ("w" ace-window)
-              ("q" nil)))
+          ("v" evil-window-vsplit)
+          ("s" evil-window-split)
+          ("e" evil-window-exchange)
+          ("i" delete-other-windows)
+          ("m" maximize-window)
+          ("b" balance-windows)
+          ("d" evil-window-delete)
+          ("r" window-layout-rotate-clockwise)
+          ("R" window-layout-rotate-anticlockwise)
+          ("w" ace-window)
+          ("q" nil))))
+  (+hydra-custom +hydra-window +hydra-window--desc)
+  (+hydra-custom +hydra-window-oneshot +hydra-window--desc :exit t)
 
   (define-normal-key
     :prefix "SPC"
@@ -165,13 +254,20 @@ _l_: →   _k_: ↑   _L_: w -= 3   _K_: h -= 3   _s_: ==   _R_: ⟲   _i_: Isol
     "," '(helm-buffers-list				:which-key "Find buffer")
     "." '(helm-projectile				:which-key "Find file")
     "g" '(magit						:which-key "Magit")
-    "/" '((lambda () (term "fish"))				:which-key "Terminal")
+    "/" '((lambda () (interactive)
+            (let ((default-directory (if (buffer-file-name)
+                                       (file-name-directory (buffer-file-name))
+                                       default-directory)))
+              (start-process "kitty" nil "kitty" "-d" default-directory))
+            ) :which-key "Terminal")
     "f" '(helm-do-grep-ag				:which-key "Find")
     "s" '(helm-yas-complete				:which-key "Snippet")
     "r" '(helm-tramp					:which-key "Tramp")
     "d" '(dired						:which-key "Dired")
-    "w" '(+hydra-resize-window-oneshot/body	:which-key "Window oneshot")
-    "W" '(+hydra-resize-window/body			:which-key "Window")
+    "w" '(+hydra-window-oneshot/body	:which-key "Window oneshot")
+    "W" '(+hydra-window/body			:which-key "Window")
+    "o" '(+hydra-org-oneshot/body	:which-key "Org oneshot")
+    "O" '(+hydra-org/body			:which-key "Org")
     "<backspace>" '(dashboard-open :which-key "Dashboard")
     "TAB" '(ace-window :which-key "Other window")
     "SPC" '((lambda () (interactive)
@@ -183,7 +279,6 @@ _l_: →   _k_: ↑   _L_: w -= 3   _K_: h -= 3   _s_: ==   _R_: ⟲   _i_: Isol
     "c"  '(:prefix-command code-prefix-map		:which-key "Code")
     "l"  '(:prefix-command latex-prefix-map		:which-key "LaTeX")
     "t"  '(:prefix-command toggle-prefix-map		:which-key "Toggle")
-    "o"  '(:prefix-command org-prefix-map		:which-key "Org")
     )
   (define-normal-key
     :prefix "SPC l"
@@ -200,20 +295,6 @@ _l_: →   _k_: ↑   _L_: w -= 3   _K_: h -= 3   _s_: ==   _R_: ⟲   _i_: Isol
             (interactive)
             (TeX-command "View" 'TeX-master-file -1))
           :which-key "View")
-    )
-  (define-normal-key
-    :prefix "SPC o"
-    :prefix-command 'org-prefix-map
-    "e" '((lambda () (interactive)
-            (if (use-region-p)
-              (org-babel-execute-region)
-              (org-babel-execute-src-block-maybe))) :which-key "Block or region")
-    "E" '(org-babel-execute-buffer :which-key "Buffer")
-    "b" '(org-next-block :which-key "Next block")
-    "B" '(org-previous-block :which-key "Previous block")
-    "s" '(org-edit-src-code :which-key "Source")
-    "L" '(org-edit-latex-fragment :which-key "Edit LaTeX")
-    "i" '(org-insert-structure-template :which-key "Insert")
     )
   (define-normal-key
     :prefix "SPC t"
@@ -249,6 +330,12 @@ _l_: →   _k_: ↑   _L_: w -= 3   _K_: h -= 3   _s_: ==   _R_: ⟲   _i_: Isol
     "s" '(+describe-foo-at-point		:which-key "Symbol")
     "e" '(view-echo-area-messages	:which-key "Messages")
     "a" '(+theme-set-frame-alpha	:which-key "Alpha")
+    "N" '((lambda () (interactive)
+	    (dired "/sudo::/etc/nixos")
+	    ) :which-key "Nixos config")
+    "E" '((lambda () (interactive)
+	    (dired "/sudo::/etc/nixos/graphical/william/emacs")
+	    ) :which-key "Emacs config")
     )
   (define-normal-key
     :prefix "SPC p"

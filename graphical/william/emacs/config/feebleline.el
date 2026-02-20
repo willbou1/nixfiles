@@ -78,7 +78,7 @@
     (feebleline-file-mode           :pre " " :face feebleline-file-mode-face)
     (feebleline-file-owner           :pre "" :face feebleline-file-owner-face)
     (feebleline-git-branch          :pre "" :face feebleline-git-face :align right)
-    (feebleline-file-size          :post " " :align right)
+    (feebleline-buffer-size          :post " " :align right)
     (feebleline-major-mode          :post "" :face feebleline-major-mode-face :align right)
     (feebleline-line-number         :pre " " :post "" :fmt "%s" :align right)
     (feebleline-column-number       :pre ":" :post " " :fmt "%s" :align right)
@@ -169,29 +169,33 @@
       (car mode-name)
     mode-name))
 
-(defun feebleline-file-size ()
-  "Return current file size."
-  (when buffer-file-name
-    (file-size-human-readable (file-attribute-size
-			       (file-attributes buffer-file-name)))))
+(defun feebleline-buffer-size ()
+  "Return the size of the buffer’s content in a human-readable format."
+    (let ((size (buffer-size)))
+      (cond
+        ((> size 1e6) (format "%.1fM" (/ size 1e6)))
+        ((> size 1e3) (format "%.1fk" (/ size 1e3)))
+        (t (format "%d" size)))))
 
 (defun feebleline-file-owner ()
-  "Return current file owner."
-  (when buffer-file-name
+  "Return file owner, unless file is remote."
+  (if (and (buffer-file-name) (file-remote-p (buffer-file-name)))
+    ""
     (let* ((attrs (file-attributes buffer-file-name))
-	   (uid (file-attribute-user-id attrs))
-	   (gid (file-attribute-group-id attrs))
-	   (user-name (user-login-name uid))
-	   (group-name (group-name gid)))
+           (uid (file-attribute-user-id attrs))
+           (gid (file-attribute-group-id attrs))
+           (user-name (user-login-name uid))
+           (group-name (group-name gid)))
       (concat user-name ":" group-name))))
 
 (defun feebleline-file-mode ()
-  "Return current file mode."
-  (when buffer-file-name
+  "Return current file mode, unless file is remote."
+  (if (and (buffer-file-name) (file-remote-p (buffer-file-name)))
+    ""
     (let ((file-mode (file-attribute-modes (file-attributes buffer-file-name))))
       (if (= ?- (aref file-mode 0))
-	  (substring file-mode 1)
-	file-mode))))
+          (substring file-mode 1)
+        file-mode))))
 
 (defmacro feebleline-append-msg-function (&rest b)
   "Macro for adding B to the feebleline mode-line, at the end."

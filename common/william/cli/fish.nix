@@ -1,7 +1,10 @@
 {pkgs, ...}: {
-  home.persistence."/persist".directories = [
-    ".local/share/fish"
-  ];
+  home = {
+    persistence."/persist".directories = [
+      ".local/share/fish"
+    ];
+    packages = with pkgs; [fish-lsp];
+  };
   programs.fish = {
     enable = true;
     shellAliases = {

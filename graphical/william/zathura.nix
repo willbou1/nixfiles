@@ -5,6 +5,11 @@
 }:
 with builtins;
 with lib; {
+  home.persistence."/persist" = {
+    files = [
+      ".local/share/zathura/bookmarks.sqlite"
+    ];
+  };
   xdg.mimeApps.defaultApplications."application/pdf" = ["zathura.desktop"];
   stylix.targets.zathura.enable = false;
   programs.zathura = {
@@ -13,6 +18,7 @@ with lib; {
               with config.lib.stylix;
       let
         highlightTransparency = 0.5;
+        overTransparency = 0.2 * opacity.terminal;
         getColorCh = colorName: channel: colors."${colorName}-rgb-${channel}";
         rgb =
           color:
@@ -34,22 +40,22 @@ with lib; {
         default-bg = rgba "base00" opacity.terminal;
         default-fg = rgb "base01" ;
         statusbar-fg = rgb "base04";
-        statusbar-bg = rgba "base02" opacity.terminal;
-        inputbar-bg = rgba "base00" opacity.terminal;
+        statusbar-bg = rgba "base03" overTransparency;
+        inputbar-bg = rgba "base00" overTransparency;
         inputbar-fg = rgb "base07";
-        notification-bg = rgba "base00" opacity.terminal;
+        notification-bg = rgba "base00" overTransparency;
         notification-fg = rgb "base07";
-        notification-error-bg = rgba "base00" opacity.terminal;
+        notification-error-bg = rgba "base00" overTransparency;
         notification-error-fg = rgb "base08";
-        notification-warning-bg = rgba "base00" opacity.terminal;
+        notification-warning-bg = rgba "base00" overTransparency;
         notification-warning-fg = rgb "base08";
         highlight-color = rgba "base0A" highlightTransparency;
         highlight-active-color = rgba "base0D" highlightTransparency;
-        completion-bg = rgba "base01" opacity.terminal;
+        completion-bg = rgba "base01" overTransparency;
         completion-fg = rgb "base0D";
         completion-highlight-fg = rgb "base07";
-        completion-highlight-bg = rgb "base0D";
-        recolor-lightcolor = rgba "base00" 0.30;
+        completion-highlight-bg = rgba "base0D" overTransparency;
+        recolor-lightcolor = rgba "base00" 0.55;
         recolor-darkcolor = rgb "base06";
       };
   };

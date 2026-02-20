@@ -17,25 +17,37 @@ with lib;
     ssh = {
       enable = true;
       enableDefaultConfig = false;
-      matchBlocks."*" = {
-        forwardAgent = false;
-        addKeysToAgent = "no";
-        compression = false;
-        serverAliveInterval = 0;
-        serverAliveCountMax = 3;
-        hashKnownHosts = false;
-        userKnownHostsFile = "~/.ssh/known_hosts";
-        controlMaster = "no";
-        controlPath = "~/.ssh/master-%r@%n:%p";
-        controlPersist = "no";
+      matchBlocks = {
+        "*" = {
+          forwardAgent = false;
+          addKeysToAgent = "no";
+          compression = false;
+          serverAliveInterval = 30;
+          serverAliveCountMax = 3;
+          hashKnownHosts = false;
+          userKnownHostsFile = "~/.ssh/known_hosts";
+          controlMaster = "auto";
+          controlPath = "~/.ssh/control-%C";
+          controlPersist = "600";
+        };
+        "ourmiraculous" = {
+          hostname = "ourmiraculous.com";
+          port = 2223;
+          user = "william";
+        };
       };
       extraConfig = "AddKeysToAgent yes";
     };
     git = {
       enable = true;
-      settings.user = {
-        name = "William Boulanger";
-        email = "willbou2@gmail.com";
+      settings = {
+        user = {
+          name = "William Boulanger";
+          email = "willbou2@gmail.com";
+        };
+        safe.directory = [
+          "/etc/nixos"
+        ];
       };
     };
     btop = {
@@ -76,6 +88,7 @@ with lib;
     lolcat
     progress
     fd
+    bash-language-server
 
     weechat
     aspell

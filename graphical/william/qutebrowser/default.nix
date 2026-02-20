@@ -94,6 +94,10 @@ in {
     domainSettings = with permissions;
       siteSettings [
         {
+          domain = "chatgpt.com";
+          permissions = [clipboard];
+        }
+        {
           domain = "vault.ourmiraculous.com";
           permissions = [clipboard];
         }

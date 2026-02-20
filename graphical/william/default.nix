@@ -58,7 +58,8 @@ with lib; {
 
       zen-browser
 
-      texlivePackages.scheme-full
+      texlive.combined.scheme-full
+      texlab
     ];
 
     services = {

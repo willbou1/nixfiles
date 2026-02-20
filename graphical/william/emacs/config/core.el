@@ -4,6 +4,7 @@
 (require 'lib)
 (require 'theme)
 (require 'keybindings)
+(require 'menu)
 
 (setq help-window-select nil
       user-full-name "William Boulanger")
@@ -27,13 +28,20 @@
   :config
   (global-evil-mc-mode 1))
 
+;; ----------------------------------- Dired -----------------------------------
+(with-eval-after-load 'dired
+  (put 'dired-find-alternate-file 'disabled nil))
+
+(use-package 
+  dired-subtree
+  :after dired)
+
 ;; -------------------------------- Fill column --------------------------------
 (setq fill-column 80)
 (add-hook 'text-mode-hook #'auto-fill-mode)
 
-(add-hook 'prog-mode-hook #'hl-line-mode)
-(add-hook 'org-mode-hook #'hl-line-mode)
-(add-hook 'dired-mode-hook #'hl-line-mode)
+(setq global-hl-line-sticky-flag t)
+(global-hl-line-mode 1)
 
 ;; (setq display-fill-column-indicator-column 80)
 ;; (add-hook 'prog-mode-hook 'display-fill-column-indicator-mode)
@@ -48,7 +56,8 @@
       kept-new-versions 6
       kept-old-versions 2
       backup-directory-alist '(("." . "~/.config/emacs/backups/"))
-      tramp-allow-unsafe-temporary-files t)
+      tramp-allow-unsafe-temporary-files t
+      tramp-default-method "ssh")
 
 ;; --------------------------------- Dashboard ---------------------------------
 (use-package
@@ -72,7 +81,7 @@
 	dashboard-startup-banner "~/.config/fastfetch/images/image1.png"
 	dashboard-image-banner-max-height 300
 	dashboard-page-separator "\n\f\n"
-	dashboard-center-content t
+	dashboard-center-content nil
 	dashboard-vertically-center-content t
 	dashboard-show-shortcuts t
 	dashboard-display-icons-p t
@@ -97,11 +106,6 @@
       (message "No projects available.")))
 
   (add-hook 'dashboard-mode-hook '+dashboard-jump-to-recents)
-  (general-define-key
-   :states 'normal
-   :keymaps 'dashboard-mode-map
-   "r" #'+dashboard-jump-to-recents
-   "p" #'+dashboard-jump-to-projects)
   (dashboard-setup-startup-hook))
 
 (use-package helpful
@@ -122,14 +126,22 @@
 	corfu-preview-current nil
         corfu-auto-delay 0.2
         corfu-auto-trigger "."
-	corfu-popupinfo-delay 0.6
-        corfu-quit-no-match 'separator)
+	corfu-popupinfo-delay 0.7
+        corfu-quit-no-match 'separator
+	dabbrev-check-all-buffers nil)
   (defun set-up-completions ()
-    (add-to-list 'completion-at-point-functions #'cape-dict)
-    (add-to-list 'completion-at-point-functions #'cape-dabbrev)
-    (add-to-list 'completion-at-point-functions #'cape-file))
+    "Add CAPE sources on top of existing completion-at-point-functions."
+    (setq-local completion-at-point-functions
+		(append
+		 (list (cape-capf-super
+			#'cape-dabbrev
+			#'cape-file
+			#'cape-elisp-block
+			#'cape-dict))
+		 completion-at-point-functions)))
   (add-hook 'prog-mode-hook #'set-up-completions)
   (add-hook 'org-mode-hook #'set-up-completions)
+  (add-hook 'emacs-lisp-mode-hook #'set-up-completions)
   (global-corfu-mode)
   (corfu-popupinfo-mode)
   (corfu-history-mode))
@@ -143,89 +155,15 @@
 	orderless-component-separator " +\\|[/]")
   (add-to-list 'orderless-matching-styles 'char-fold-to-regexp))
 
-;; ------------------------------------ Helm -----------------------------------
-(use-package
-  helm
-  :config
-
-  (setq helm-apropos-show-short-doc t
-        helm-M-x-show-short-doc t
-        helm-autoresize-max-height 45
-        helm-autoresize-min-height 10)
-  (defadvice helm-persistent-help-string (around avoid-help-message activate)
-    "Avoid help message")
-  (defadvice helm-display-mode-line (after undisplay-header activate)
-    (setq header-line-format nil))
-
-  (fset 'helm-display-mode-line #'ignore)
-  (add-hook 'helm-after-initialize-hook
-            (defun hide-mode-line-in-helm-buffer ()
-              "Hide mode line in `helm-buffer'."
-              (with-helm-buffer
-                (setq-local mode-line-format nil))))
-
-  (helm-mode 1)
-  (helm-autoresize-mode t))
-
-(use-package
-  helm-autoloads
-  :after helm)
-
-(use-package
-  helm-command
-  :after helm
-  :config
-  (defun helm-apropos-short-doc-transformer (candidates source)
-    (if helm-apropos-show-short-doc
-	(let* ((width (window-width (get-buffer-window (helm-buffer-get))))
-	       (cand-max-length (ceiling (* 0.35 width)))
-	       (val-max-length (ceiling (* 0.17 width)))
-	       (padding 3)
-	       (cand-max-length-with-padding (+ padding cand-max-length))
-	       (val-max-length-with-padding (+ padding val-max-length)))
-	  (cl-loop for cand in candidates
-		   for canonical = (intern-soft cand)
-		   for doc = (helm-get-first-line-documentation canonical)
-		   for variablep = (equal "Variables" (alist-get 'name source))
-		   for val = (if variablep
-				 (truncate-string-to-width (+obj-to-string (symbol-value canonical))
-							   val-max-length 0 nil t))
-		   collect (cons (format "%s%s%s%s%s"
-					 (truncate-string-to-width cand cand-max-length 0 nil t)
-					 (if (or val doc)
-					     (helm-make-separator cand cand-max-length-with-padding)
-					   "")
-					 (if val
-					     (propertize
-					      val 'face 'helm-ff-symlink)
-					   "")
-					 (if val
-					     (helm-make-separator val val-max-length-with-padding)
-					   "")
-					 (if doc
-					     (propertize
-					      doc 'face 'helm-M-x-short-doc)
-					   ""))
-				 cand)))
-      candidates))
-
-  (dolist (r (list (rx "\*helpful")
-		   (rx "\*Async-native-compile-log\*")
-		   (rx "\*Warnings\*")
-		   (rx "\*Messages\*")
-		   (rx "\*Help\*")
-		   (rx "\*dashboard\*")
-		   (rx "\*scratch\*")
-		   (rx "\*Backtrace\*")
-           (rx "\*Org Preview LaTeX Output\*")))
-    (add-to-list 'helm-boring-buffer-regexp-list r)))
-
 ;; ---------------------------------- Projects ---------------------------------
 (use-package
   projectile
   :config
   (setq projectile-project-search-path '("~/priv/code"
-					 "~/priv/documents"))
+					 "~/priv/documents")
+        projectile-completion-system 'helm
+        projectile-enable-caching t
+        projectile-indexing-method 'hybrid)
   (projectile-mode 1))
 
 ;; --------------------------------- Treesitter --------------------------------
@@ -281,9 +219,17 @@
   (setq TeX-PDF-mode t
 	TeX-auto-save t
         TeX-source-correlate-mode t
-        TeX-source-correlate-start-server nil)
+        TeX-source-correlate-start-server nil
+	org-preview-latex-default-process 'dvisvgm
+	org-latex-packages-alist
+	'(("" "tikz" t)
+	  ("" "tikz-cd" t)
+	  ("" "circuitikz" t)
+	  ("" "pgfplots" t))
+	)
   (setcar (cdr (assoc 'output-pdf TeX-view-program-selection))
 	  "Zathura")
+  (plist-put org-format-latex-options :scale 1.7)
   (add-hook 'LaTeX-mode-hook (lambda ()
                                (require 'tex-fold)
                                (TeX-fold-mode 1)
