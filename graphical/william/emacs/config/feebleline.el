@@ -61,14 +61,13 @@
 
 (defun feebleline-git-branch ()
   "Return current git branch, unless file is remote."
-  (if (and (buffer-file-name) (file-remote-p (buffer-file-name)))
-      ""
+  (if (and (buffer-file-name) (not (file-remote-p (buffer-file-name))))
     (let ((branch (shell-command-to-string
                    "git rev-parse --symbolic-full-name --abbrev-ref HEAD 2>/dev/null")))
       (string-trim (replace-regexp-in-string
                     "^HEAD" "(detached HEAD)"
                     branch)))
-    ))
+    ""))
 
 (defcustom feebleline-msg-functions
   '(
@@ -165,9 +164,11 @@
 
 (defun feebleline-major-mode ()
   "Return current major mode."
-  (if (consp mode-name)
+  (if (null mode-name)
+    ""
+    (if (consp mode-name)
       (car mode-name)
-    mode-name))
+      mode-name)))
 
 (defun feebleline-buffer-size ()
   "Return the size of the buffer’s content in a human-readable format."
@@ -179,23 +180,28 @@
 
 (defun feebleline-file-owner ()
   "Return file owner, unless file is remote."
-  (if (and (buffer-file-name) (file-remote-p (buffer-file-name)))
-    ""
+  (if (and (buffer-file-name) (not (file-remote-p (buffer-file-name))))
     (let* ((attrs (file-attributes buffer-file-name))
-           (uid (file-attribute-user-id attrs))
-           (gid (file-attribute-group-id attrs))
-           (user-name (user-login-name uid))
-           (group-name (group-name gid)))
-      (concat user-name ":" group-name))))
+	   (uid (file-attribute-user-id attrs))
+	   (gid (file-attribute-group-id attrs)))
+      (if (or (null uid) (null gid))
+	  ""
+	(let ((user-name (user-login-name uid))
+	      (group-name (group-name gid)))
+	  (concat user-name ":" group-name))))
+    ""))
 
 (defun feebleline-file-mode ()
   "Return current file mode, unless file is remote."
-  (if (and (buffer-file-name) (file-remote-p (buffer-file-name)))
-    ""
+  (if (and (buffer-file-name) (not (file-remote-p (buffer-file-name))))
     (let ((file-mode (file-attribute-modes (file-attributes buffer-file-name))))
-      (if (= ?- (aref file-mode 0))
-          (substring file-mode 1)
-        file-mode))))
+      (if (null file-mode)
+	  ""
+	(if (= ?- (aref file-mode 0))
+	    (substring file-mode 1)
+	  file-mode)))
+    ""))
+
 
 (defmacro feebleline-append-msg-function (&rest b)
   "Macro for adding B to the feebleline mode-line, at the end."
@@ -225,13 +231,17 @@
   "Some default settings for EMACS < 25."
   (set-face-attribute 'mode-line nil :height 0.1))
 
+;(defun feebleline--insert-ignore-errors ()
+;  "Insert stuff into the echo area, ignoring potential errors."
+;  (unless (current-message)
+;    (condition-case err (feebleline--insert)
+;      (error (unless (equal feebleline-last-error-shown err)
+;               (setq feebleline-last-error-shown err)
+;               (message (format "feebleline error: %s" err)))))))
 (defun feebleline--insert-ignore-errors ()
   "Insert stuff into the echo area, ignoring potential errors."
   (unless (current-message)
-    (condition-case err (feebleline--insert)
-      (error (unless (equal feebleline-last-error-shown err)
-               (setq feebleline-last-error-shown err)
-               (message (format "feebleline error: %s" err)))))))
+    (feebleline--insert)))
 
 (defun feebleline--force-insert ()
   "Insert stuff into the echo area even if it's displaying something."
