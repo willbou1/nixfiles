@@ -5,9 +5,11 @@
   ...
 }:
 with lib; {
-  imports = (mine.autoInclude ./. [
-    ./deprecated
-  ]) ++ [../../school.nix];
+  imports =
+    (mine.autoInclude ./. [
+      ./deprecated
+    ])
+    ++ [../../school.nix];
 
   options.home = {
     terminal = mkOption {

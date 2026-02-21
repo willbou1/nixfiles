@@ -1,4 +1,8 @@
-{ pkgs, config, ...}: let
+{
+  pkgs,
+  config,
+  ...
+}: let
   swaylock = config.programs.swaylock.package;
 in {
   services.swayidle = {

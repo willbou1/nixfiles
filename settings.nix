@@ -22,7 +22,6 @@
     "modrinth-app"
     "firefox"
     "kicad"
-    "gimp"
 
     # misc
     "OVMF"

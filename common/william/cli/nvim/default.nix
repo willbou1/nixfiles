@@ -3,8 +3,7 @@
   pkgs,
   ...
 }:
-with builtins; 
-{
+with builtins; {
   home.persistence."/persist".directories = [
     ".local/share/nvim"
     ".local/state/nvim"
@@ -88,7 +87,7 @@ with builtins;
             installGhc = false;
           };
           texlab = {
-           enable = true;
+            enable = true;
             package = null;
           };
           cmake = {

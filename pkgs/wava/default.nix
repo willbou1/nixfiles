@@ -14,16 +14,15 @@
   imagemagick,
   librsvg,
   stdenv,
-  fetchgit
+  fetchgit,
 }:
-
 stdenv.mkDerivation {
   name = "wava";
 
   src = fetchgit {
     url = "https://github.com/Dominara1/wava";
     rev = "43710cbbd60b219325015196e36ace1b749ffd1f";
-    hash = "sha256-U+ZqFKKU5QhxErp7CBadCJbCnVk8EQSzKn9JSPqPG8Y=";
+    hash = "sha256-xUEER7m4y3RaVkT1Mym1+ZJxBUPnpzZ9F5pp0FyVIss=";
     leaveDotGit = true;
   };
 

@@ -8,16 +8,17 @@ with lib;
 with builtins; let
   xrandrCommands =
     concatStrings
-      (map 
-        (m: ''xrandr \
-          --output ${m.xrandrName} \
-          --mode ${toString m.width}x${toString m.height} \
-          --rate ${toString m.rate} \
-          --scale ${toString (1.0 / m.hScale)}x${toString (1.0 / m.vScale)} \
-          --pos ${toString m.x}x${toString m.y}
-        '')
-        config.home.monitors
-      );
+    (
+      map
+      (m: ''        xrandr \
+                  --output ${m.xrandrName} \
+                  --mode ${toString m.width}x${toString m.height} \
+                  --rate ${toString m.rate} \
+                  --scale ${toString (1.0 / m.hScale)}x${toString (1.0 / m.vScale)} \
+                  --pos ${toString m.x}x${toString m.y}
+      '')
+      config.home.monitors
+    );
 in {
   imports = mine.autoInclude ./. [
     ./rofi

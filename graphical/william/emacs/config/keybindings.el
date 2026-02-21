@@ -331,10 +331,10 @@ _l_: →   _k_: ↑   _L_: w -= 3   _K_: h -= 3   _s_: ==   _R_: ⟲   _i_: Isol
     "e" '(view-echo-area-messages	:which-key "Messages")
     "a" '(+theme-set-frame-alpha	:which-key "Alpha")
     "N" '((lambda () (interactive)
-	    (dired "/sudo::/etc/nixos")
+	    (dired "/etc/nixos")
 	    ) :which-key "Nixos config")
     "E" '((lambda () (interactive)
-	    (dired "/sudo::/etc/nixos/graphical/william/emacs")
+	    (dired "/etc/nixos/graphical/william/emacs")
 	    ) :which-key "Emacs config")
     )
   (define-normal-key

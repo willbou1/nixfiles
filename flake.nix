@@ -22,7 +22,13 @@
     };
 
     # impermanence.url = ./devel/impermanence;
-    impermanence.url = "github:nix-community/impermanence";
+    impermanence = {
+      url = "github:nix-community/impermanence";
+      inputs = {
+        home-manager.follows = "home-manager";
+        nixpkgs.follows = "nixpkgs";
+      };
+    };
 
     home-manager = {
       # url = ./devel/home-manager;
@@ -131,7 +137,8 @@
       inherit (p) sha256;
     });
     patchNixpkgs = name: patches: unpatched:
-      if patches == [] then unpatched
+      if patches == []
+      then unpatched
       else let
         tools = unpatched.legacyPackages."x86_64-linux";
       in

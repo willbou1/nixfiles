@@ -14,76 +14,81 @@
     persistence."/persist".directories = [
       "/etc/ssh"
     ];
-    systemPackages = [pkgs.sops];
+    systemPackages = with pkgs; [
+      sops
+      pinentry-curses
+    ];
   };
 
   programs = {
     gnupg.agent = {
       enable = true;
-      pinentryPackage = pkgs.pinentry-curses;
+      pinentryPackage = pkgs.pinentry-qt;
       enableSSHSupport = true;
     };
   };
 
   security = {
     sudo = {
-      extraRules = [{
-        commands = [
+      extraRules = [
         {
-          command = "${pkgs.systemd}/bin/systemctl suspend";
-          options = [ "NOPASSWD" ];
+          commands = [
+            {
+              command = "${pkgs.systemd}/bin/systemctl suspend";
+              options = ["NOPASSWD"];
+            }
+            {
+              command = "${pkgs.systemd}/bin/reboot";
+              options = ["NOPASSWD"];
+            }
+            {
+              command = "${pkgs.systemd}/bin/poweroff";
+              options = ["NOPASSWD"];
+            }
+          ];
         }
-        {
-          command = "${pkgs.systemd}/bin/reboot";
-          options = [ "NOPASSWD" ];
-        }
-        {
-          command = "${pkgs.systemd}/bin/poweroff";
-          options = [ "NOPASSWD" ];
-        }
-        ];
-      }];
+      ];
       execWheelOnly = true;
     };
     pam = {
       loginLimits = [
-      {
-        domain = "*";
-        type = "soft";
-        item = "nproc";
-        value = "1000";
-      }
-      {
-        domain = "*";
-        type = "hard";
-        item = "nproc";
-        value = "2000";
-      }
-      {
-        domain = "william";
-        type = "soft";
-        item = "nproc";
-        value = "3000";
-      }
-      {
-        domain = "william";
-        type = "hard";
-        item = "nproc";
-        value = "4000";
-      }
-      {
-        domain = "william";
-        type = "soft";
-        item = "nofile";
-        value = "8000";
-      }
-      {
-        domain = "william";
-        type = "hard";
-        item = "nofile";
-        value = "10000";
-      }
+        {
+          domain = "*";
+          type = "soft";
+          item = "nproc";
+          value = "1000";
+        }
+        {
+          domain = "*";
+          type = "hard";
+          item = "nproc";
+          value = "2000";
+        }
+        {
+          domain = "william";
+          type = "soft";
+          item = "nproc";
+          value = "3000";
+        }
+        {
+          domain = "william";
+          type = "hard";
+          item = "nproc";
+          value = "4000";
+        }
+        {
+          domain = "william";
+          type = "soft";
+          item = "nofile";
+          value = "8000";
+        }
+        {
+          domain = "william";
+          type = "hard";
+          item = "nofile";
+          value = "10000";
+        }
       ];
     };
   };
-             }
+}

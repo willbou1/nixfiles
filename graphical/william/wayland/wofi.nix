@@ -1,4 +1,8 @@
-{lib, config, ...}: 
+{
+  lib,
+  config,
+  ...
+}:
 with lib; {
   stylix.targets.wofi.enable = false; # mine is better
 

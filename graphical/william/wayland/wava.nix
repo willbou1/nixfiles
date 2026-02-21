@@ -1,6 +1,10 @@
-{pkgs, lib, config, ...}:
-with lib;
 {
+  pkgs,
+  lib,
+  config,
+  ...
+}:
+with lib; {
   home.packages = with pkgs; [wava];
 
   xdg.configFile."wava/config".text = generators.toINI {} {
@@ -89,24 +93,23 @@ with lib;
     };
 
     color = with config.stylix.opacity;
-            with config.lib.stylix.colors.withHashtag;
-      {
-        background = "\"${base00}\"";
-        foreground = "\"${base05}\"";
+    with config.lib.stylix.colors.withHashtag; {
+      background = "\"${base00}\"";
+      foreground = "\"${base05}\"";
 
-        foreground_opacity = applications;
-        background_opacity = terminal;
+      foreground_opacity = applications;
+      background_opacity = terminal;
 
-        gradient_count = 8;
-        gradient_color_1 = "\"${base08}\"";
-        gradient_color_2 = "\"${base09}\"";
-        gradient_color_3 = "\"${base0A}\"";
-        gradient_color_4 = "\"${base0B}\"";
-        gradient_color_5 = "\"${base0C}\"";
-        gradient_color_6 = "\"${base0D}\"";
-        gradient_color_7 = "\"${base0E}\"";
-        gradient_color_8 = "\"${base0F}\"";
-      };
+      gradient_count = 8;
+      gradient_color_1 = "\"${base08}\"";
+      gradient_color_2 = "\"${base09}\"";
+      gradient_color_3 = "\"${base0A}\"";
+      gradient_color_4 = "\"${base0B}\"";
+      gradient_color_5 = "\"${base0C}\"";
+      gradient_color_6 = "\"${base0D}\"";
+      gradient_color_7 = "\"${base0E}\"";
+      gradient_color_8 = "\"${base0F}\"";
+    };
 
     filter = {
       name = "default";
@@ -145,13 +148,12 @@ with lib;
       sensitivity = 60.0;
     };
 
-
     eq = {
-      "1" = 1;# bass
+      "1" = 1; # bass
       "2" = 1;
-      "3" = 1;# midtone
+      "3" = 1; # midtone
       "4" = 1;
-      "5" = 1;# treble
+      "5" = 1; # treble
     };
   };
 }

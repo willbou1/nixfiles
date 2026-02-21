@@ -12,8 +12,8 @@
     tlp = {
       enable = true;
       settings = {
-        DISK_IDLE_SECS_ON_AC=2;
-        DISK_IDLE_SECS_ON_BAT=2;
+        DISK_IDLE_SECS_ON_AC = 2;
+        DISK_IDLE_SECS_ON_BAT = 2;
 
         CPU_SCALING_GOVERNOR_ON_AC = "powersave";
         CPU_SCALING_GOVERNOR_ON_BAT = "powersave";

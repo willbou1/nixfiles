@@ -3,8 +3,7 @@
   lib,
   ...
 }:
-with lib;
-{
+with lib; {
   imports = mine.autoInclude ./. [];
 
   home.persistence."/persist" = {
@@ -20,15 +19,16 @@ with lib;
       matchBlocks = {
         "*" = {
           forwardAgent = false;
-          addKeysToAgent = "no";
+          addKeysToAgent = "yes";
           compression = false;
           serverAliveInterval = 30;
           serverAliveCountMax = 3;
-          hashKnownHosts = false;
+          hashKnownHosts = true;
           userKnownHostsFile = "~/.ssh/known_hosts";
           controlMaster = "auto";
           controlPath = "~/.ssh/control-%C";
           controlPersist = "600";
+          identityFile = "~/.ssh/id_ed25519";
         };
         "ourmiraculous" = {
           hostname = "ourmiraculous.com";
@@ -36,7 +36,6 @@ with lib;
           user = "william";
         };
       };
-      extraConfig = "AddKeysToAgent yes";
     };
     git = {
       enable = true;

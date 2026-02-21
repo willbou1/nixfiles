@@ -13,8 +13,12 @@ with builtins; let
   '';
   passwordScripts = concatStringsSep "\n" (map passwordScript users);
   databases = [
-    "vaultwarden" "synapse" "mautrix-meta-facebook" "mautrix-meta-instagram"
-    "mautrix-discord" "grafana"
+    "vaultwarden"
+    "synapse"
+    "mautrix-meta-facebook"
+    "mautrix-meta-instagram"
+    "mautrix-discord"
+    "grafana"
   ];
 in {
   system.activationScripts.createPostgresqlDir.text = ''
@@ -28,10 +32,12 @@ in {
         mode = "0440";
         owner = "postgres";
       };
-    in listToAttrs (map (d: {
-      name = "postgresql/${d}";
-      value = commonProps;
-    }) databases);
+    in
+      listToAttrs (map (d: {
+          name = "postgresql/${d}";
+          value = commonProps;
+        })
+        databases);
   };
   services.postgresql = {
     enable = true;
@@ -45,7 +51,8 @@ in {
       map (u: {
         name = u;
         ensureDBOwnership = true;
-      }) databases;
+      })
+      databases;
   };
 
   systemd.services.postgresql.postStart = ''

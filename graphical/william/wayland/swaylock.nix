@@ -1,5 +1,4 @@
-{pkgs, ...}:
-{
+{pkgs, ...}: {
   services.swayidle = {
     enable = true;
     systemdTarget = "hyprland-session.target";

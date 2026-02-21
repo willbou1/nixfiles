@@ -5,8 +5,7 @@
   ...
 }:
 with lib;
-with config.lib.stylix;
-let
+with config.lib.stylix; let
   kicadThemes = pkgs.fetchFromGitHub {
     owner = "pointhi";
     repo = "kicad-color-schemes";
@@ -41,10 +40,9 @@ in {
   };
 
   xdg = {
-    configFile."kicad/${kicadVersion}/colors/wdark.json".source =
-      "${kicadThemes}/wdark/wdark.json";
-    dataFile."ltspice/wine/drive_c/users/william/AppData/Roaming/LTspice.ini".text=
-      with lib.generators; toINI {} {
+    configFile."kicad/${kicadVersion}/colors/wdark.json".source = "${kicadThemes}/wdark/wdark.json";
+    dataFile."ltspice/wine/drive_c/users/william/AppData/Roaming/LTspice.ini".text = with lib.generators;
+      toINI {} {
         Options = {
           LastRunVersion = pkgs.ltspice.version;
           HighestRunVersion = pkgs.ltspice.version;
@@ -124,40 +122,40 @@ in {
           WarnOnNoIndRser = true;
         };
         Colors = {
-          SchematicColor12      = intColor "00"; # background
+          SchematicColor12 = intColor "00"; # background
           NetlistBackgroundColor = intColor "00";
-          Grid                  = intColor "03";
-          InActiveAxis          = intColor "02";
+          Grid = intColor "03";
+          InActiveAxis = intColor "02";
 
-          SchematicColor0  = intColor "0C"; # wires
-          SchematicColor1  = intColor "0D"; # components
-          SchematicColor2  = intColor "0B"; # power nets
-          SchematicColor3  = intColor "08"; # ground
-          SchematicColor4  = intColor "03"; # inactive
-          SchematicColor5  = intColor "05"; # labels
-          SchematicColor6  = intColor "05"; # labels
-          SchematicColor7  = intColor "0C"; # SPICE directives
-          SchematicColor8  = intColor "0A"; # highlight
-          SchematicColor9  = intColor "0D"; # alternate comp
+          SchematicColor0 = intColor "0C"; # wires
+          SchematicColor1 = intColor "0D"; # components
+          SchematicColor2 = intColor "0B"; # power nets
+          SchematicColor3 = intColor "08"; # ground
+          SchematicColor4 = intColor "03"; # inactive
+          SchematicColor5 = intColor "05"; # labels
+          SchematicColor6 = intColor "05"; # labels
+          SchematicColor7 = intColor "0C"; # SPICE directives
+          SchematicColor8 = intColor "0A"; # highlight
+          SchematicColor9 = intColor "0D"; # alternate comp
           SchematicColor10 = intColor "08"; # errors
           SchematicColor11 = intColor "04"; # comments
           SchematicColor13 = intColor "0B"; # active net
 
-          NetlistNormalTextColor  = intColor "05";
+          NetlistNormalTextColor = intColor "05";
           NetlistCommentTextColor = intColor "03";
-          NetlistDotcmdTextColor  = intColor "0D";
-          ContinuationLineColor   = intColor "0C";
+          NetlistDotcmdTextColor = intColor "0D";
+          ContinuationLineColor = intColor "0C";
 
-          WaveColor0  = intColor "00"; # hidden
-          WaveColor1  = intColor "05"; # default trace
-          WaveColor2  = intColor "0B";
-          WaveColor3  = intColor "0D";
-          WaveColor4  = intColor "0C";
-          WaveColor5  = intColor "0A";
-          WaveColor6  = intColor "08";
-          WaveColor7  = intColor "0E";
-          WaveColor8  = intColor "09";
-          WaveColor9  = intColor "0D";
+          WaveColor0 = intColor "00"; # hidden
+          WaveColor1 = intColor "05"; # default trace
+          WaveColor2 = intColor "0B";
+          WaveColor3 = intColor "0D";
+          WaveColor4 = intColor "0C";
+          WaveColor5 = intColor "0A";
+          WaveColor6 = intColor "08";
+          WaveColor7 = intColor "0E";
+          WaveColor8 = intColor "09";
+          WaveColor9 = intColor "0D";
           WaveColor10 = intColor "0B";
           WaveColor11 = intColor "04";
           WaveColor12 = intColor "01";

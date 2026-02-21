@@ -18,7 +18,7 @@ with lib; let
 in {
   boot.initrd.kernelModules = ["vfio" "vfio_iommu_type1" "vfio_pci"];
   boot.kernelModules = ["kvmfr"];
-  boot.extraModulePackages = mkBefore (with config.boot.kernelPackages; [ kvmfr ]);
+  boot.extraModulePackages = mkBefore (with config.boot.kernelPackages; [kvmfr]);
 
   environment = {
     persistence."/persist".directories = [

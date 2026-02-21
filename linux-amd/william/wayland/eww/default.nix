@@ -6,8 +6,7 @@
 }:
 with builtins;
 with lib;
-with config.lib.stylix.colors;
-let
+with config.lib.stylix.colors; let
   vars = with config.home; {
     "@border@" = toString borderSize;
     "@out_gap@" = toString (gapSize * 1.5);
@@ -32,18 +31,24 @@ let
   varNames = attrNames vars;
   varVals = attrValues vars;
   scssColors =
-    (mine.generateBase16ColorFile
+    (
+      mine.generateBase16ColorFile
       withHashtag
       (i: c: "$color${toString i}: ${c};")
-    ) + "\n" + ''
+    )
+    + "\n"
+    + ''
       $background: ${withHashtag.base00};
       $foreground: ${withHashtag.base05};
     '';
   yuckColors =
-    (mine.generateBase16ColorFile
+    (
+      mine.generateBase16ColorFile
       withHashtag
       (i: c: ''(defvar color${toString i} "${c}")'')
-    ) + "\n" + ''
+    )
+    + "\n"
+    + ''
       (defvar background "${withHashtag.base00}")
       (defvar foreground "${withHashtag.base05}")
     '';

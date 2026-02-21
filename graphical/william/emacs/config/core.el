@@ -166,16 +166,6 @@
         projectile-indexing-method 'hybrid)
   (projectile-mode 1))
 
-;; --------------------------------- Treesitter --------------------------------
-(use-package
-  tree-sitter)
-
-(use-package
-  tree-sitter-langs
-  :after tree-sitter
-  :config
-  (add-hook 'tree-sitter-after-on-hook #'tree-sitter-hl-mode))
-
 ;; Symbols
 (setq prettify-symbols-unprettify-at-point t)
 (add-hook 'prog-mode-hook #'prettify-symbols-mode)
@@ -233,21 +223,22 @@
   (add-hook 'LaTeX-mode-hook (lambda ()
                                (require 'tex-fold)
                                (TeX-fold-mode 1)
+			       (TeX-fold-buffer)
 
                                (require 'evil-tex)
-                               (evil-tex-mode)))
-  (add-hook 'find-file-hook #'TeX-fold-buffer t))
+                               (evil-tex-mode))))
 
 ;; ---------------------------------- Jupyter ----------------------------------
 (use-package
   jupyter
   :config
   (setq jupyter-eval-use-overlays t)
-  (org-babel-do-load-languages
-   'org-babel-load-languages
-   '((emacs-lisp . t)
-     (python . t)
-     (jupyter . t)))
+  (with-eval-after-load 'org-babel
+    (org-babel-do-load-languages
+     'org-babel-load-languages
+     '((emacs-lisp . t)
+       (python . t)
+       (jupyter . t))))
   (add-hook 'org-babel-after-execute-hook #'org-redisplay-inline-images))
 
 ;; ------------------------------------ LSP ------------------------------------
@@ -261,8 +252,7 @@
 (use-package
   lsp-ui
   :after lsp-mode
-  :config
-  (lsp-ui-mode))
+  :hook (lsp-mode-hook . lsp-ui-mode))
 
 ;; ------------------------------------ DAP ------------------------------------
 (use-package

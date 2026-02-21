@@ -19,84 +19,89 @@ with lib; let
         withNativeCompilation = true;
       }
     else pkgs.emacs;
-  emacsWithPackages = (pkgs.emacsPackagesFor emacs).emacsWithPackages (epkgs: with epkgs; [
-    cmake-mode
-    rust-mode
-    haskell-mode
-    csharp-mode
-    lua-mode
-    jupyter
+  emacsWithPackages = (pkgs.emacsPackagesFor emacs).emacsWithPackages (epkgs:
+    with epkgs; [
+      # Languages
+      cmake-mode
+      rust-mode
+      haskell-mode
+      csharp-mode
+      lua-mode
+      jupyter
+      auctex
+      nix-mode
+      fish-mode
 
-    undo-tree
-    general
-    evil
-    evil-escape
-    evil-surround
-    evil-mc
-    evil-tex
-    evil-collection
-    ace-window
+      # Editing
+      undo-tree
+      general
+      evil
+      evil-escape
+      evil-surround
+      evil-mc
+      evil-tex
+      evil-collection
+      smartparens
+      ace-window
+      minimap
 
-    centaur-tabs
-    minimap
+      # LSP and debugging
+      lsp-mode
+      lsp-ui
+      lsp-haskell
+      dap-mode
+      flycheck
 
-    lsp-mode
-    lsp-ui
-    lsp-haskell
-    dap-mode
-    flycheck
-    helm
-    helm-lsp
-    helm-xref
-    helm-c-yasnippet
-    helm-tramp
-    helm-projectile
-    helm-descbinds
-    corfu
-    cape
-    orderless
+      # Completion
+      helm
+      helm-lsp
+      helm-xref
+      helm-c-yasnippet
+      helm-tramp
+      helm-projectile
+      helm-descbinds
+      corfu
+      cape
+      orderless
 
-    tree-sitter
-    tree-sitter-langs
+      yasnippet
+      yasnippet-snippets
+      projectile
+      magit
 
-    auctex
-    nix-mode
+      # Org
+      org-modern
+      org-fragtog
 
-    yasnippet
-    yasnippet-snippets
+      # Theme
+      ligature
+      nerd-icons
+      rainbow-delimiters
+      base16-theme
+      highlight-defined
+      highlight-numbers
+      rainbow-identifiers
+      diredfl
+      smooth-scroll
+      dashboard
+      page-break-lines
+      olivetti
 
-    projectile
-    magit
+      dired-subtree
+      helpful
+      restart-emacs
+      default-text-scale
 
-    diredfl
-    dired-subtree
+      # Libs
+      dash
+      shut-up
+      f
+      s
 
-    ligature
-    nerd-icons
-    org-modern
-    org-fragtog
-
-    rainbow-delimiters
-    base16-theme
-    highlight-defined
-    highlight-numbers
-    rainbow-identifiers
-
-    smooth-scroll
-    dashboard
-    page-break-lines
-    olivetti
-
-    helpful
-    restart-emacs
-    dash
-    shut-up
-    f
-
-    copilot
-    gptel
-    smartparens
-  ]);
+      # AI
+      copilot
+      gptel
+    ]);
 in rec {
   sops.secrets = {
     "emacs/ai-images-api-key" = {};
@@ -125,12 +130,6 @@ in rec {
     client.enable = true;
   };
   systemd.user.services.emacs = {
-    #path = with pkgs; [
-    #  clang
-    #  gnumake
-    #  cmake
-
-    #];
     Service = {
       WorkingDirectory = (toPath config.home.homeDirectory) + "/priv";
       Nice = -10;
