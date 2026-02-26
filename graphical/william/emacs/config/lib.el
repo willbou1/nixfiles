@@ -70,6 +70,7 @@ This checks in turn:
       (setf (alist-get k default-frame-alist) v)
       (set-frame-parameter nil k v))))
 
+;; ----------------------------------- Colors ----------------------------------
 (defun +color-hex-to-rgb (hex-color)
   "Converts a value like #RRGGBB to rgb"
   (mapcar (lambda (component) (/ (float (string-to-number component 16)) 255))
@@ -77,12 +78,11 @@ This checks in turn:
 		(substring hex-color 3 5)
 		(substring hex-color 5 7))))
 
-(defun +color-modify-stylix (color hf sf lf)
-  "Modify a stylix color with HSL modifiers"
+(defun +color-modify-hex (color hf sf lf)
+  "Modify a hex color with HSL modifiers"
   (defun clamp (x)
     (max 0.0 (min 1.0 x)))
-  (let* ((color-hex (plist-get base16-stylix-theme-colors color))
-	 (color-rgb (+color-hex-to-rgb color-hex))
+  (let* ((color-rgb (+color-hex-to-rgb color))
 	 (color-hsl (apply #'color-rgb-to-hsl color-rgb)))
     (unless (null hf)
       (setf (nth 0 color-hsl)
@@ -95,6 +95,21 @@ This checks in turn:
 	    (clamp (funcall lf (nth 2 color-hsl)))))
     (apply #'color-rgb-to-hex (append (apply #'color-hsl-to-rgb color-hsl) '(2)))))
 
+(defun +color-modify-stylix (color hf sf lf)
+  "Modify a stylix color with HSL modifiers"
+  (+color-modify-hex (plist-get base16-stylix-theme-colors color) hf sf lf))
+
+(defun +color-remove-bg-from-hue (hue theta)
+  "Transform HUE [0, 1] to exclude the hue of the background symmetrically. The size of the exclusion regino
+is two times THETA."
+  (let ((bg-hue (car (apply #'color-rgb-to-hsl
+			    (+color-hex-to-rgb
+			     (plist-get base16-stylix-theme-colors :base00))))))
+    (mod (* (- 1 (* 2 theta))
+	    (+ hue bg-hue theta))
+	 1.0)))
+
+;; ----------------------------- Buffers & Windows -----------------------------
 (defun +visible-buffer-windows ()
   (let ((selected-window (selected-window)))
     (mapcar (lambda (g)

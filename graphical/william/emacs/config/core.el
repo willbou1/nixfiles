@@ -19,7 +19,10 @@
 (use-package 
   smartparens
   :config
-  (setq sp-hybrid-kill-excessive-wihtespace t)
+  (setq sp-hybrid-kill-excessive-whitespace t)
+  (sp-with-modes 'emacs-lisp-mode
+    (sp-local-pair "'" nil :actions nil))
+  (add-hook 'eval-expression-minibuffer-setup-hook #'smartparens-mode)
   (smartparens-global-mode))
 
 (use-package
@@ -48,7 +51,8 @@
 
 ;; --------------------------- Backups and autosaves ---------------------------
 (make-directory "~/.config/emacs/backups/" t)
-(setq make-backup-files t
+(setq auto-save-no-message t
+      make-backup-files t
       backup-by-copying t
       backup-by-copying-when-linked t
       version-control t
@@ -106,12 +110,15 @@
       (message "No projects available.")))
 
   (add-hook 'dashboard-mode-hook '+dashboard-jump-to-recents)
+  (add-hook 'dashboard-mode-hook 'page-break-lines-mode)
   (dashboard-setup-startup-hook))
 
 (use-package helpful
   :config
-  (setq helm-describe-function-function #'helpful-function
-        helm-describe-variable-function #'helpful-variable))
+  (setq helpful-max-buffers 2)
+  (with-eval-after-load 'helm
+    (setq helm-describe-function-function #'helpful-function
+	  helm-describe-variable-function #'helpful-variable)))
 
 ;; --------------------------------- Clipboard ---------------------------------
 (setq select-enable-clipboard nil)
@@ -170,6 +177,48 @@
 (setq prettify-symbols-unprettify-at-point t)
 (add-hook 'prog-mode-hook #'prettify-symbols-mode)
 
+;; ---------------------------------- Treesit ----------------------------------
+(let ((languages '(css
+		   html
+		   (javascript :mode js)
+		   json
+		   (typescript :dir "typescript/src")
+		   (tsx :repo "typescript" :dir "tsx/src")
+		   c
+		   (cpp :mode c++)
+		   (glsl :owner "tree-sitter-grammars")
+		   rust go
+		   bash
+		   python
+		   ;; TODO (nix :owner "nix-community") reenable once there is a ts mode
+		   (lua :owner "tjdevries")
+		   (markdown :owner "ikatyang")
+		   (yaml :owner "ikatyang")
+		   toml)))
+  (setq treesit-language-source-alist
+	(--map (if (consp it)
+		   (cl-destructuring-bind (n &key repo dir owner mode) it
+		     (let ((owner (or owner "tree-sitter"))
+			   (repo (or repo (symbol-name n))))
+		       `(,n . (,(concat "https://github.com/" owner
+					"/tree-sitter-" repo) "master" ,dir))))
+		 `(,it . (,(concat "https://github.com/tree-sitter/tree-sitter-"
+				   (symbol-name it))))) languages)
+	major-mode-remap-alist
+	(--map (if (consp it)
+		   (cl-destructuring-bind (n &key repo dir owner mode) it
+		     (let ((n (symbol-name (or mode n))))
+		       (cons (intern (concat n "-mode"))
+			     (intern (concat n "-ts-mode")))))
+		 (cons (intern (concat (symbol-name it) "-mode"))
+		       (intern (concat (symbol-name it) "-ts-mode")))) languages))
+  (defun treesit-install-all-language-grammars ()
+    "Install all treesitter language grammers at once (When using w/o NixOS)"
+    (interactive)
+    (mapc (lambda (l) (unless (treesit-language-available-p l)
+		   (treesit-install-language-grammar l)))
+	  (mapcar #'car treesit-language-source-alist))))
+
 ;; ---------------------------------- Snippets ---------------------------------
 (use-package
   yasnippet
@@ -177,13 +226,25 @@
   (yas-global-mode 1))
 
 ;; ------------------------------------ Org ------------------------------------
-(setq org-directory "~/priv/documents/org/"
-      org-confirm-babel-evaluate nil)
+(use-package
+  org
+  :config
+  (setq org-directory "~/priv/documents/org/"
+	org-confirm-babel-evaluate nil
+	org-return-follows-link t))
+
+(use-package
+  org-appear
+  :hook (org-mode . org-appear-mode))
+
+(use-package
+  toc-org
+  :hook (org-mode . toc-org-mode))
 
 (use-package
   org-fragtog
   :init
-  :hook (org-mode-hook . org-fragtog-mode)
+  :hook (org-mode . org-fragtog-mode)
   :config
   (plist-put org-format-latex-options :scale 2.0)
   (plist-put org-format-latex-options :background "Transparent"))
@@ -244,20 +305,20 @@
 ;; ------------------------------------ LSP ------------------------------------
 (use-package
   lsp-mode
-  :hook ((c-mode-hook . lsp-deferred)
-	 (c++-mode-hook . lsp-deferred)
-	 (haskell-mode-hook . lsp-deferred)
-	 (rust-mode-hook . lsp-deferred)))
+  :hook ((c-mode . lsp-deferred)
+	 (c++-mode . lsp-deferred)
+	 (haskell-mode . lsp-deferred)
+	 (rust-mode . lsp-deferred)))
 
 (use-package
   lsp-ui
   :after lsp-mode
-  :hook (lsp-mode-hook . lsp-ui-mode))
+  :hook (lsp-mode . lsp-ui-mode))
 
 ;; ------------------------------------ DAP ------------------------------------
 (use-package
   dap-lldb
-  :hook (c++-mode-hook . (lambda () (require 'dap-lldb)))
+  :hook (c++-mode . (lambda () (require 'dap-lldb)))
   :init
   (setq dap-auto-configure-features '(sessions locals controls tooltip))
   :config

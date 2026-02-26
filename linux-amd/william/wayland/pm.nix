@@ -4,12 +4,18 @@
   ...
 }: let
   swaylock = config.programs.swaylock.package;
+  lock = pkgs.writeShellScript "lock" ''
+    if ! ${pkgs.procps}/bin/pgrep '.*swaylock.*'; then
+        ${swaylock}/bin/swaylock -f "$@"
+        disown -a
+    fi
+  '';
 in {
   services.swayidle = {
     timeouts = [
       {
         timeout = 600;
-        command = "${swaylock}/bin/swaylock -f --grace 0";
+        command = "${lock} --grace 0";
       }
       {
         timeout = 700;
@@ -20,7 +26,7 @@ in {
     events = [
       {
         event = "before-sleep";
-        command = "${swaylock}/bin/swaylock -f --grace 0";
+        command = "${lock} --grace 0";
       }
     ];
   };

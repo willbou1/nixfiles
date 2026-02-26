@@ -40,7 +40,7 @@ with lib; {
       users.william = import ./william;
       sharedModules = [
         inputs.sops-nix.homeManagerModules.sops
-        inputs.nixvim.homeManagerModules.nixvim
+        inputs.nixvim.homeModules.nixvim
         inputs.spicetify-nix.homeManagerModules.default
         ../modules/home-manager
       ];

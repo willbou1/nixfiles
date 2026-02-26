@@ -158,7 +158,7 @@
           inputs.emacs-overlay.overlays.default
           inputs.nix-alien.overlays.default
           (final: prev: {
-            zen-browser = inputs.zen-browser.packages.${final.system}.default;
+            zen-browser = inputs.zen-browser.packages.${final.stdenv.hostPlatform.system}.default;
             unstable = import unstable {
               inherit (final) system config;
               overlays = [

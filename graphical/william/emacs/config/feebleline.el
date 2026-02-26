@@ -1,3 +1,5 @@
+;; -*- lexical-binding: t; -*-
+
 ;;; feebleline.el --- Replace modeline with a slimmer proxy
 
 ;; Copyright 2018 Benjamin Lindqvist
@@ -271,7 +273,9 @@ Returns a pair with desired column and string."
         (let* ((fragment (apply 'feebleline--insert-func idx))
                (align (car fragment))
                (string (cadr fragment)))
-          (push string (symbol-value align))))
+          (push string (if (eq 'left align)
+			   left
+			 right))))
       (with-current-buffer feebleline--minibuf
         (erase-buffer)
         (let* ((left-string (string-join (reverse left)))

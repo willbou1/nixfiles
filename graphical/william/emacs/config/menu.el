@@ -9,6 +9,7 @@
 	helm-M-x-show-short-doc t
 	helm-autoresize-max-height 45
 	helm-autoresize-min-height 30
+	helm-candidate-number-limit 150
 	helm-input-idle-delay 0.1
 	helm-display-function
 	(lambda (buf &rest args)
@@ -76,8 +77,7 @@
 				 cand)))
       candidates))
 
-  (dolist (r (list (rx "\*helpful")
-		   (rx "\*Async-native-compile-log\*")
+  (dolist (r (list (rx "\*Async-native-compile-log\*")
 		   (rx "\*Warnings\*")
 		   (rx "\*Messages\*")
 		   (rx "\*Help\*")

@@ -21,6 +21,19 @@ with lib; let
     else pkgs.emacs;
   emacsWithPackages = (pkgs.emacsPackagesFor emacs).emacsWithPackages (epkgs:
     with epkgs; [
+      # Custom sources
+      (trivialBuild {
+        pname = "combobulate";
+        version = "unstable";
+
+        src = pkgs.fetchFromGitHub {
+          owner = "mickeynp";
+          repo = "combobulate";
+          rev = "38773810b5e532f25d11c6d1af02c3a8dffeacd7";
+          hash = "sha256-gW0j0asfH4My+mBSt8pj3d51PigGWzFUhETydUI9xEg=";
+        };
+      })
+      
       # Languages
       cmake-mode
       rust-mode
@@ -70,8 +83,38 @@ with lib; let
       magit
 
       # Org
+      toc-org
+      org-appear
       org-modern
       org-fragtog
+
+      (treesit-grammars.with-grammars (p: with p; [
+        tree-sitter-css
+        tree-sitter-html
+        tree-sitter-javascript
+        tree-sitter-json
+        tree-sitter-typescript
+        tree-sitter-tsx
+
+        tree-sitter-c
+        tree-sitter-cpp
+        tree-sitter-glsl
+        tree-sitter-rust
+        tree-sitter-go
+        tree-sitter-lua
+        tree-sitter-python
+        tree-sitter-nix
+
+        tree-sitter-elisp
+        
+        tree-sitter-bash
+        tree-sitter-fish
+
+        tree-sitter-markdown
+        tree-sitter-markdown-inline
+        tree-sitter-yaml
+        tree-sitter-toml
+      ]))
 
       # Theme
       ligature

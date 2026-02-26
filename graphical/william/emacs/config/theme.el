@@ -208,12 +208,17 @@
   :config
   (defun +rainbow-delimiters-pick-face (depth match _loc)
     "Return a vibrant face for DEPTH, cycling through hues every 20°."
-    (let* ((hue-step (/ 720 rainbow-delimiters-max-face-count))
+    (let* (
+	   (hue-step (/ 740 rainbow-delimiters-max-face-count))
 	   (hue (mod (* depth hue-step) 360))
-	   (s 0.6)
-	   (l 0.4)
+	   (s 0.5)
+	   (l 0.5)
 	   (color (apply #'color-rgb-to-hex
-			 (append (color-hsl-to-rgb (/ hue 360.0) s l) '(2)))))
+			 (append (color-hsl-to-rgb
+				  (+color-remove-bg-from-hue
+				   (+ 0.5 (/ hue 360.0)) 0.08)
+				  s l)
+				 '(2)))))
       (let ((face (intern
 		   (if match
 		       (format "+rainbow-delimiters-depth-%d-face" depth)
@@ -249,10 +254,8 @@
 (with-eval-after-load 'dired-subtree
   (setq dired-subtree-line-prefix "")
   (dotimes (i 6)
-    (let ((bg (+color-modify-stylix :base01
-				    nil
-				    (lambda (s) (- s 0.1))
-				    (lambda (l) (- l (* i -0.06))))))
+    (let ((bg (+color-modify-stylix :base01 nil nil
+				    (lambda (l) (- l 0.15 (* i 0.03))))))
       (set-face-attribute (intern (format "dired-subtree-depth-%d-face" (+ 1 i))) nil
 			  :background bg
 			  :extend t))))
