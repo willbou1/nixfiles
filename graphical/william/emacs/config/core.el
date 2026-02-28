@@ -7,6 +7,10 @@
 (require 'menu)
 
 (setq help-window-select nil
+      aw-ignored-buffers '(" *MINIMAP*")
+      minimap-minimum-width 18
+      scroll-margin 3
+      scroll-conservatively 10
       user-full-name "William Boulanger")
 
 ;; -------------------------------- Line numbers -------------------------------
@@ -16,20 +20,26 @@
 (add-hook 'dired-mode-hook 'display-line-numbers-mode)
 (add-hook 'org-mode-hook 'display-line-numbers-mode)
 
-(use-package 
-  smartparens
-  :config
+(use-package smartparens
+  :hook ((prog-mode . smartparens-mode)
+	 (eval-expression-minibuffer-setup . smartparens-mode))
+  :init
   (setq sp-hybrid-kill-excessive-whitespace t)
-  (sp-with-modes 'emacs-lisp-mode
-    (sp-local-pair "'" nil :actions nil))
-  (add-hook 'eval-expression-minibuffer-setup-hook #'smartparens-mode)
-  (smartparens-global-mode))
+  :config
+  (sp-with-modes '(emacs-lisp-mode minibuffer-mode)
+    (sp-local-pair "'" nil :actions nil)
+    (sp-local-pair "`" nil :actions nil)))
 
 (use-package
   evil-mc
   :after evil
   :config
   (global-evil-mc-mode 1))
+
+(use-package
+  direnv
+  :commands direnv-mode
+  :hook (find-file . direnv-mode))
 
 ;; ----------------------------------- Dired -----------------------------------
 (with-eval-after-load 'dired
@@ -292,14 +302,15 @@
 ;; ---------------------------------- Jupyter ----------------------------------
 (use-package
   jupyter
-  :config
+  :after (org direnv)
+  :init
   (setq jupyter-eval-use-overlays t)
-  (with-eval-after-load 'org-babel
-    (org-babel-do-load-languages
-     'org-babel-load-languages
-     '((emacs-lisp . t)
-       (python . t)
-       (jupyter . t))))
+  :config
+  (org-babel-do-load-languages
+   'org-babel-load-languages
+   '((emacs-lisp . t)
+     (python . t)
+     (jupyter . t)))
   (add-hook 'org-babel-after-execute-hook #'org-redisplay-inline-images))
 
 ;; ------------------------------------ LSP ------------------------------------

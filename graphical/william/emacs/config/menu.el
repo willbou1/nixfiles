@@ -9,6 +9,7 @@
 	helm-M-x-show-short-doc t
 	helm-autoresize-max-height 45
 	helm-autoresize-min-height 30
+	split-width-threshold 0
 	helm-candidate-number-limit 150
 	helm-input-idle-delay 0.1
 	helm-display-function
@@ -83,6 +84,7 @@
 		   (rx "\*Help\*")
 		   (rx "\*dashboard\*")
 		   (rx "\*scratch\*")
+		   (rx "\*direnv\*")
 		   (rx "\*Backtrace\*")
            (rx "\*Org Preview LaTeX Output\*")))
     (add-to-list 'helm-boring-buffer-regexp-list r)))

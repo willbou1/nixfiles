@@ -6,42 +6,28 @@
   systemctl = config.systemd.user.systemctlPath;
   brillo = "${pkgs.brillo}/bin/brillo";
   brilloDim = pkgs.writeShellScript "brilloDim" ''
-    if ! ${pkgs.procps}/bin/pgrep '.*swaylock.*'; then
-        echo 0 > /sys/devices/platform/dell-laptop/leds/dell::kbd_backlight/brightness
-        ${brillo} -O
-        ${brillo} -u 150000 -S 0
-    fi
+    echo 0 > /sys/devices/platform/dell-laptop/leds/dell::kbd_backlight/brightness
+    ${brillo} -O
+    ${brillo} -u 150000 -S 0
   '';
   brilloRestore = pkgs.writeShellScript "brilloRestore" ''
-    if ! ${pkgs.procps}/bin/pgrep '.*swaylock.*'; then
-        echo 1 > /sys/devices/platform/dell-laptop/leds/dell::kbd_backlight/brightness
-        ${brillo} -u 150000 -I
-    fi
+    echo 1 > /sys/devices/platform/dell-laptop/leds/dell::kbd_backlight/brightness
+    ${brillo} -u 150000 -I
   '';
   lock = pkgs.writeShellScript "lock" ''
-    if ! ${pkgs.procps}/bin/pgrep '.*swaylock.*'; then
-        {
-            ${config.programs.swaylock.package}/bin/swaylock "$@"
-            ${brilloRestore}
-        } &
-        disown -a
-    fi
-  '';
-  resumeLock = pkgs.writeShellScript "lock" ''
-    if ! ${pkgs.procps}/bin/pgrep '.*swaylock.*'; then
-        ${config.programs.swaylock.package}/bin/swaylock "$@" &
-        disown -a
+    if ! ${pkgs.procps}/bin/pgrep -x hyprlock; then
+        ${pkgs.hyprlock}/bin/hyprlock "$@" &
     fi
   '';
 in {
   wayland.windowManager.hyprland.settings.bind = [
-    "$mod,Q,exec,${brilloDim}; ${lock} --grace 0"
+    "$mod,Q,exec,${lock}"
   ];
   services.swayidle = {
     events = [
       {
         event = "after-resume";
-        command = "${resumeLock} --grace 0";
+        command = "${lock}";
       }
     ];
     timeouts = [
@@ -52,7 +38,7 @@ in {
       }
       {
         timeout = 600;
-        command = "${lock} --grace 0";
+        command = "${lock}";
       }
       {
         timeout = 700;

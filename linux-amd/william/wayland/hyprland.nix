@@ -1,4 +1,4 @@
-{config, ...}: let
+{pkgs, config, ...}: let
   reserved = toString (config.home.gapSize / 2 + config.home.ewwHeight);
 in {
   wayland.windowManager.hyprland.settings = {
@@ -25,7 +25,7 @@ in {
     ];
     bind = [
       "$mod SHIFT,W,exec,looking-glass-client -f /dev/kvmfr1"
-      "$mod,Q,exec,${config.programs.swaylock.package}/bin/swaylock --grace 0"
+      "$mod,Q,exec,${pkgs.hyprlock}/bin/hyprlock"
     ];
   };
 }

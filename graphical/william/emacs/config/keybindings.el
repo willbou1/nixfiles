@@ -90,16 +90,18 @@
     "C-S-c" '(clipboard-kill-ring-save			:which-key "Copy")
     "C-S-v" '(clipboard-yank				:which-key "Paste")
 
-    "C-h" #'sp-kill-hybrid-sexp
-    "C-k" #'sp-kill-sexp
-    "C-a" #'evil-mc-make-all-cursors
     "C-n" #'evil-mc-make-and-goto-next-match
     "C-p" #'evil-mc-make-and-goto-prev-match
-    "C-x" #'evil-mc-make-cursor-here
-    "C-b" #'evil-mc-undo-all-cursors
+    "C-a" #'evil-mc-make-all-cursors
+    "C-c" #'evil-mc-make-cursor-here
+    "C-x" #'evil-mc-undo-all-cursors
+
+    "C-h" #'sp-kill-hybrid-sexp
+    "C-k" #'sp-kill-sexp
     "C-w" (lambda (pair) (interactive "cPair: ")
 	    (sp-wrap-with-pair (char-to-string pair)))
-    "C-n" #'sp-rewrap-sexp
+    "C-S-w" #'sp-rewrap-sexp
+    "C-f" #'sp-unwrap-sexp
     )
 
   (defun my-indent-after-paste (beg end)
@@ -260,8 +262,10 @@ _l_: →   _k_: ↑   _L_: w -= 3   _K_: h -= 3   _s_: ==   _R_: ⟲   _i_: Isol
     ":" '(async-shell-command :which-key "Async $")
     "é" '(helm-for-files				:which-key "Find file")
     "g" '(magit						:which-key "Magit")
-    "$" '((lambda () (interactive)
-	    (start-process "kitty" nil "kitty" "-d" default-directory)
+    "$" '((lambda ()
+	    (interactive)
+	    (let ((process-environment initial-environment))
+	      (start-process "kitty" nil "kitty" "-d" default-directory)))(
 	    )						:which-key "Terminal")
     "|" '((lambda (command) (interactive "sShell command: ")
 	    (if (use-region-p)
@@ -373,6 +377,9 @@ _l_: →   _k_: ↑   _L_: w -= 3   _K_: h -= 3   _s_: ==   _R_: ⟲   _i_: Isol
     :prefix-command 'buffer-prefix-map
     "k" '(kill-current-buffer				:which-key "Kill")
     "e" '(epa-encrypt-region				:which-key "Encrypt region")
+    "b" '((lambda () (interactive)
+	    (let ((helm-boring-buffer-regexp-list '()))
+	      (helm-buffers-list))) :which-key "All buffers")
     )
 ;; ----------------------------------- ELisp -----------------------------------
   (define-normal-key
@@ -417,9 +424,10 @@ _l_: →   _k_: ↑   _L_: w -= 3   _K_: h -= 3   _s_: ==   _R_: ⟲   _i_: Isol
 	     (+eval-region (car paragraph-bounds) (cdr paragraph-bounds))))))))
 
   (defun +eval-region (start end)
-    "Evaluate the region from START to END as ELisp code."
     (interactive "r")
-    (message "%S" (eval (read (buffer-substring-no-properties start end)))))
+    (let* ((text (buffer-substring-no-properties start end))
+           (forms (read (concat "(progn " text "\n)"))))
+      (message "%S" (eval forms))))
 
   (define-visual-key
     :prefix "SPC"

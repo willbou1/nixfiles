@@ -73,7 +73,7 @@
 
 (defcustom feebleline-msg-functions
   '(
-    (feebleline-file-directory       :pre " " :post "" :face feebleline-dir-face)
+    (feebleline-file-directory       :pre "" :post "" :face feebleline-dir-face)
     (feebleline-file-or-buffer-name :post "" :face font-lock-keyword-face)
     (feebleline-file-modified-star  :post "" :face font-lock-warning-face)
     (feebleline-file-mode           :pre " " :face feebleline-file-mode-face)
@@ -82,7 +82,7 @@
     (feebleline-buffer-size          :post " " :align right)
     (feebleline-major-mode          :post "" :face feebleline-major-mode-face :align right)
     (feebleline-line-number         :pre " " :post "" :fmt "%s" :align right)
-    (feebleline-column-number       :pre ":" :post " " :fmt "%s" :align right)
+    (feebleline-column-number       :pre ":" :post "" :fmt "%s" :align right)
     ;; (feebleline-project-name        :align right)
     )
   "Fixme -- document me."
@@ -176,9 +176,9 @@
   "Return the size of the buffer’s content in a human-readable format."
     (let ((size (buffer-size)))
       (cond
-        ((> size 1e6) (format "%.1fM" (/ size 1e6)))
-        ((> size 1e3) (format "%.1fk" (/ size 1e3)))
-        (t (format "%d" size)))))
+        ((> size 1e6) (format "%.1f MB" (/ size 1e6)))
+        ((> size 1e3) (format "%.1f kB" (/ size 1e3)))
+        (t (format "%d B" size)))))
 
 (defun feebleline-file-owner ()
   "Return file owner, unless file is remote."

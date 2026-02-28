@@ -80,6 +80,7 @@ with lib; let
       yasnippet
       yasnippet-snippets
       projectile
+      direnv
       magit
 
       # Org
@@ -191,7 +192,11 @@ in rec {
         "custom"
       ];
     };
-    packages = [emacsWithPackages];
+    packages = with pkgs; [
+      emacsWithPackages
+      direnv
+      nix-direnv
+    ];
   };
   xdg.configFile = {
     "emacs/init.el".text = with config.stylix; let

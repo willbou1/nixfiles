@@ -153,26 +153,26 @@ in {
         # Make sure to clean up after xorg session
         "${pkgs.dbus}/bin/dbus-update-activation-environment --systemd XAUTHORITY XDG_SESSION_ID"
       ];
-      windowrule = [
+      windowrule = let fakeOpacity = toString (config.stylix.opacity.applications * 1.1); in [
         "idleinhibit fullscreen,class:.*"
 
-        "opacity 0.93 0.93 1.0,class:org.qutebrowser.qutebrowser"
-        "opacity 0.93,class:firefox"
+        "opacity ${fakeOpacity} ${fakeOpacity} 1.0,class:org.qutebrowser.qutebrowser"
+        "opacity ${fakeOpacity} ${fakeOpacity} 1.0,class:zen"
 
         "workspace 4,class:mpv"
 
-        "opacity 0.85,class:Element(-Nightly)*"
+        "opacity ${fakeOpacity},class:Element(-Nightly)*"
         "workspace 5 silent,class:Element(-Nightly)*"
 
-        "opacity 0.85,class:deluge"
+        "opacity ${fakeOpacity},class:deluge"
 
-        "opacity 0.85 override 0.85 override 0.85 override,workspace:6"
+        "opacity ${fakeOpacity} override 0.85 override 0.85 override,workspace:6"
         "workspace 6 silent,title:(.*)(Spotify)(.*)"
 
         "float,class:SVPManager"
         "workspace 9 silent,class:SVPManager"
 
-        "opacity 0.75,class:udiskie"
+        "opacity ${fakeOpacity},class:udiskie"
 
         "bordercolor 0x${hexOpacity + base0E},title:private"
       ];

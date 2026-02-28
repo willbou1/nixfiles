@@ -65,6 +65,12 @@
                                                  `((default (:background ,(plist-get base16-stylix-theme-colors
                                                                                      :base01))))))))))
 
+;; ---------------------------------- Minimap ----------------------------------
+(set-face-background 'minimap-active-region-background
+		     (plist-get base16-stylix-theme-colors :base01))
+(set-face-background 'minimap-current-line-face
+		     (plist-get base16-stylix-theme-colors :base0A))
+
 ;; ------------------------------------ Org ------------------------------------
 (with-eval-after-load
   'org
