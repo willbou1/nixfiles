@@ -61,15 +61,19 @@
 (require 'cl-macs)
 (autoload 'magit-get-current-branch "magit")
 
+(defvar-local feebleline--git-cache nil)
+(defvar-local feebleline--git-cache-time 0)
+
 (defun feebleline-git-branch ()
-  "Return current git branch, unless file is remote."
-  (if (and (buffer-file-name) (not (file-remote-p (buffer-file-name))))
-    (let ((branch (shell-command-to-string
-                   "git rev-parse --symbolic-full-name --abbrev-ref HEAD 2>/dev/null")))
-      (string-trim (replace-regexp-in-string
-                    "^HEAD" "(detached HEAD)"
-                    branch)))
-    ""))
+  (when (buffer-file-name)
+    (let ((now (float-time)))
+      (when (> (- now feebleline--git-cache-time) 2)
+        (setq feebleline--git-cache-time now)
+        (setq feebleline--git-cache
+              (string-trim
+               (shell-command-to-string
+                "git rev-parse --abbrev-ref HEAD 2>/dev/null"))))
+      feebleline--git-cache)))
 
 (defcustom feebleline-msg-functions
   '(
@@ -240,10 +244,15 @@
 ;      (error (unless (equal feebleline-last-error-shown err)
 ;               (setq feebleline-last-error-shown err)
 ;               (message (format "feebleline error: %s" err)))))))
+
+(defvar feebleline--last-render nil)
+
 (defun feebleline--insert-ignore-errors ()
-  "Insert stuff into the echo area, ignoring potential errors."
-  (unless (current-message)
-    (feebleline--insert)))
+  (let ((msg (current-message)))
+    ;; redraw unless a REAL message is shown
+    (unless (or (active-minibuffer-window)
+		(and msg (not (string-empty-p msg))))
+      (feebleline--insert))))
 
 (defun feebleline--force-insert ()
   "Insert stuff into the echo area even if it's displaying something."

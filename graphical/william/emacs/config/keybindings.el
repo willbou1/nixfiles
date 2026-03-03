@@ -70,6 +70,11 @@
     :keymaps 'override)
 
   (general-define-key
+   :states '(normal motion)
+   :keymaps 'special-mode-map
+   "<escape>" #'quit-window)
+
+  (general-define-key
     :states 'normal
     :keymaps 'dashboard-mode-map
     "r" #'+dashboard-jump-to-recents
@@ -87,8 +92,8 @@
 
 ;; ------------------------------------ Misc -----------------------------------
   (define-everywhere
-    "C-S-c" '(clipboard-kill-ring-save			:which-key "Copy")
-    "C-S-v" '(clipboard-yank				:which-key "Paste")
+    "C-S-c" '(clipboard-kill-ring-save				:which-key "Copy")
+    "C-S-v" '(clipboard-yank					:which-key "Paste")
 
     "C-n" #'evil-mc-make-and-goto-next-match
     "C-p" #'evil-mc-make-and-goto-prev-match
@@ -217,8 +222,13 @@
   (+hydra-custom +hydra-org-oneshot +hydra-org--desc :exit t)
 
 ;; ---------------------------------- Windows ----------------------------------
-  (defconst +hydra-window--desc
-      (let ((speed 3))
+  (defun +hydra-window--desc-base (select-new-window)
+    (let ((speed 3)
+	  (split (lambda (direction)
+		   (lambda () (interactive)
+		     (let ((new-window (split-window (selected-window) nil direction)))
+		       (when select-new-window
+			 (select-window new-window)))))))
         `("
 _h_: ←   _j_: ↓   _H_: w += 3   _J_: h += 3   _v_: ||   _r_: ⟳   _e_: Exchange   _m_: Maximize   _d_: Delete   _q_: Quit
 _l_: →   _k_: ↑   _L_: w -= 3   _K_: h -= 3   _s_: ==   _R_: ⟲   _i_: Isolate    _b_: Balance    _w_: Ace
@@ -238,8 +248,10 @@ _l_: →   _k_: ↑   _L_: w -= 3   _K_: h -= 3   _s_: ==   _R_: ⟲   _i_: Isol
           ("J" (evil-window-increase-height ,speed))
           ("K" (evil-window-decrease-height ,speed))
 
-          ("v" evil-window-vsplit)
-          ("s" evil-window-split)
+          ("v" ,(funcall split 'right))
+          ("V" ,(funcall split 'left))
+          ("s" ,(funcall split 'below))
+          ("S" ,(funcall split 'above))
           ("e" evil-window-exchange)
           ("i" delete-other-windows)
           ("m" maximize-window)
@@ -248,50 +260,59 @@ _l_: →   _k_: ↑   _L_: w -= 3   _K_: h -= 3   _s_: ==   _R_: ⟲   _i_: Isol
           ("r" window-layout-rotate-clockwise)
           ("R" window-layout-rotate-anticlockwise)
           ("w" ace-window)
+	  ("<escape>" nil)
           ("q" nil))))
+  (defconst +hydra-window--desc (+hydra-window--desc-base nil))
+  (defconst +hydra-window--desc-oneshot (+hydra-window--desc-base t))
   (+hydra-custom +hydra-window +hydra-window--desc)
-  (+hydra-custom +hydra-window-oneshot +hydra-window--desc :exit t)
+  (+hydra-custom +hydra-window-oneshot +hydra-window--desc-oneshot :exit t)
 
   ;; ------------------------------------ Root -----------------------------------
   (define-normal-key
+    "<backspace>" #'evil-jump-backward
+    "S-<backspace>" #'evil-jump-forward
+    "C-<backspace>" #'evil-visual-restore
+    )
+  (define-normal-key
     :prefix "SPC"
-    "SPC" '(helm-M-x					:which-key "M-x")
-    ";" '(eval-expression				:which-key "Eval")
-    "," '(helm-buffers-list				:which-key "Find buffer")
-    "." '(helm-projectile				:which-key "Projectile")
-    ":" '(async-shell-command :which-key "Async $")
-    "é" '(helm-for-files				:which-key "Find file")
-    "g" '(magit						:which-key "Magit")
+    "SPC" '(helm-M-x						:which-key "M-x")
+    ";" '(eval-expression					:which-key "Eval")
+    "," '(helm-buffers-list					:which-key "Find buffer")
+    "." '(helm-projectile					:which-key "Projectile")
+    ":" '(async-shell-command					:which-key "Async $")
+    "é" '(helm-for-files					:which-key "Find file")
+    "g" '(magit							:which-key "Magit")
     "$" '((lambda ()
 	    (interactive)
 	    (let ((process-environment initial-environment))
 	      (start-process "kitty" nil "kitty" "-d" default-directory)))(
-	    )						:which-key "Terminal")
+	    )							:which-key "Terminal")
     "|" '((lambda (command) (interactive "sShell command: ")
 	    (if (use-region-p)
 		(shell-command-on-region (region-beginning) (region-end) command nil t)
-	      (shell-command-on-region (point-min) (point-max) command nil t))) :which-key "Process")
-    "f" '(helm-do-grep-ag				:which-key "Find")
-    "s" '(helm-yas-complete				:which-key "Snippet")
-    "r" '(helm-tramp					:which-key "Tramp")
-    "d" '(dired						:which-key "Dired")
-    "w" '(+hydra-window-oneshot/body			:which-key "Window oneshot")
-    "W" '(+hydra-window/body				:which-key "Window")
-    "o" '(+hydra-org-oneshot/body			:which-key "Org oneshot")
-    "O" '(+hydra-org/body				:which-key "Org")
-    "k" '(helm-epa-list-keys				:which-key "Keys")
-    "<backspace>" '(dashboard-open			:which-key "Dashboard")
-    "TAB" '(ace-window					:which-key "Other window")
+	      (shell-command-on-region (point-min) (point-max) command nil t)
+	      ))						:which-key "Process")
+    "f" '(helm-do-grep-ag					:which-key "Find")
+    "s" '(helm-yas-complete					:which-key "Snippet")
+    "r" '(helm-tramp						:which-key "Tramp")
+    "d" '(dired							:which-key "Dired")
+    "w" '(+hydra-window-oneshot/body				:which-key "Window oneshot")
+    "W" '(+hydra-window/body					:which-key "Window")
+    "o" '(+hydra-org-oneshot/body				:which-key "Org oneshot")
+    "O" '(+hydra-org/body					:which-key "Org")
+    "k" '(helm-epa-list-keys					:which-key "Keys")
+    "<backspace>" '(dashboard-open				:which-key "Dashboard")
+    "TAB" '(ace-window						:which-key "Other window")
     "RET" '((lambda () (interactive)
-	      (switch-to-buffer (other-buffer)))	:which-key "Other buffer")
-    "p"  '(:prefix-command project-prefix-map		:which-key "Project")
-    "h"  '(:prefix-command help-prefix-map		:which-key "Help")
-    "b"  '(:prefix-command buffer-prefix-map		:which-key "Buffer")
-    "e"  '(:prefix-command elisp-prefix-map		:which-key "Elisp")
-    "c"  '(:prefix-command code-prefix-map		:which-key "Code")
-    "l"  '(:prefix-command latex-prefix-map		:which-key "LaTeX")
-    "t"  '(:prefix-command toggle-prefix-map		:which-key "Toggle")
-    "f"  '(:prefix-command file-prefix-map		:which-key "File")
+	      (switch-to-buffer (other-buffer)))		:which-key "Other buffer")
+    "p"  '(:prefix-command project-prefix-map			:which-key "Project")
+    "h"  '(:prefix-command help-prefix-map			:which-key "Help")
+    "b"  '(:prefix-command buffer-prefix-map			:which-key "Buffer")
+    "e"  '(:prefix-command elisp-prefix-map			:which-key "Elisp")
+    "c"  '(:prefix-command code-prefix-map			:which-key "Code")
+    "l"  '(:prefix-command latex-prefix-map			:which-key "LaTeX")
+    "t"  '(:prefix-command toggle-prefix-map			:which-key "Toggle")
+    "f"  '(:prefix-command file-prefix-map			:which-key "File")
     )
 ;; ----------------------------------- LaTeX -----------------------------------
   (define-normal-key
@@ -304,16 +325,16 @@ _l_: →   _k_: ↑   _L_: w -= 3   _K_: h -= 3   _s_: ==   _R_: ⟲   _i_: Isol
 	    (TeX-command TeX-command-default
 			 'TeX-master-file
 			 -1))
-	  :which-key "Compile")
+								:which-key "Compile")
     "v" '((lambda ()
 	    (interactive)
 	    (TeX-command "View" 'TeX-master-file -1))
-	  :which-key "View")
+								:which-key "View")
     )
   (define-normal-key
     :prefix "SPC f"
     :prefix-command 'file-prefix-map
-    "e" '(epa-encrypt-file				:which-key "Encrypt")
+    "e" '(epa-encrypt-file					:which-key "Encrypt")
     )
 ;; ----------------------------------- Toggle ----------------------------------
   (define-normal-key
@@ -322,84 +343,83 @@ _l_: →   _k_: ↑   _L_: w -= 3   _K_: h -= 3   _s_: ==   _R_: ⟲   _i_: Isol
     "c" '((lambda () (interactive)
 	    (require 'copilot)
 	    (copilot-mode)
-	    )						:which-key "Copilot")
-    "l" '(display-line-numbers-mode			:which-key "Line numbers")
-    "s" '(tramp-revert-buffer-with-sudo			:which-key "Sudo")
-    "d" '(rainbow-delimiters-mode			:which-key "Rainbow delimiters")
-    "i" '(rainbow-identifiers-mode			:which-key "Rainbow identifiers")
-    "m" '(minimap-mode					:which-key "Minimap")
-    "|" '(display-fill-column-indicator-mode		:which-key "Fill column")
-    "p" '(smartparens-mode				:which-key "Smartparens")
+	    )							:which-key "Copilot")
+    "o" '(olivetti-mode						:which-key "Olivetti")
+    "l" '(display-line-numbers-mode				:which-key "Line numbers")
+    "s" '(tramp-revert-buffer-with-sudo				:which-key "Sudo")
+    "d" '(rainbow-delimiters-mode				:which-key "Rainbow delimiters")
+    "i" '(rainbow-identifiers-mode				:which-key "Rainbow identifiers")
+    "m" '(minimap-mode						:which-key "Minimap")
+    "|" '(display-fill-column-indicator-mode			:which-key "Fill column")
+    "p" '(smartparens-mode					:which-key "Smartparens")
     )
 ;; ------------------------------------ Code -----------------------------------
   (define-normal-key
     :prefix "SPC c"
     :prefix-command 'code-prefix-map
-    "s" '(helm-lsp-workspace-symbol			:which-key "Symbols")
-    "d" '(helm-lsp-diagnostics				:which-key "Diagnostics")
-    "x" '(xref-find-references-at-mouse			:which-key "References at mouse")
-    "X" '(xref-find-references				:which-key "References")
-    "n" '(+insert-section				:which-key "New section")
+    "s" '(helm-lsp-workspace-symbol				:which-key "Symbols")
+    "d" '(helm-lsp-diagnostics					:which-key "Diagnostics")
+    "x" '(xref-find-references-at-mouse				:which-key "References at mouse")
+    "X" '(xref-find-references					:which-key "References")
+    "n" '(+insert-section					:which-key "New section")
     )
 ;; ------------------------------------ Help -----------------------------------
   (define-normal-key
     :prefix "SPC h"
     :prefix-command 'help-prefix-map
-    "t" '(helm-timers					:which-key "Timers")
-    "l" '(helm-man-woman				:which-key "Manpages")
-    "h" '(helm-apropos					:which-key "Apropos")
-    "p" '(helm-packages					:which-key "Packages")
-    "b" '(helm-descbinds				:which-key "Binds")
-    "m" '(describe-mode					:which-key "Mode")
-    "f" '(describe-face					:which-key "Face")
-    "c" '(list-colors-display				:which-key "Colors")
-    "r" '(helm-register					:which-key "Registers")
-    "R" '(restart-emacs					:which-key "Restart")
-    "s" '(+describe-foo-at-point			:which-key "Symbol")
-    "e" '(view-echo-area-messages			:which-key "Messages")
-    "a" '(+theme-set-frame-alpha			:which-key "Alpha")
+    "t" '(helm-timers						:which-key "Timers")
+    "l" '(helm-man-woman					:which-key "Manpages")
+    "h" '(helm-apropos						:which-key "Apropos")
+    "p" '(helm-packages						:which-key "Packages")
+    "b" '(helm-descbinds					:which-key "Binds")
+    "m" '(describe-mode						:which-key "Mode")
+    "f" '(describe-face						:which-key "Face")
+    "c" '(list-colors-display					:which-key "Colors")
+    "r" '(helm-register						:which-key "Registers")
+    "R" '(restart-emacs						:which-key "Restart")
+    "s" '(+describe-foo-at-point				:which-key "Symbol")
+    "e" '(view-echo-area-messages				:which-key "Messages")
+    "a" '(+theme-set-frame-alpha				:which-key "Alpha")
     "N" '((lambda () (interactive)
 	    (dired "/etc/nixos")
-	    )						:which-key "Nixos config")
+	    )							:which-key "Nixos config")
     "E" '((lambda () (interactive)
 	    (dired "/etc/nixos/graphical/william/emacs")
-	    )						:which-key "Emacs config")
+	    )							:which-key "Emacs config")
     )
 ;; ---------------------------------- Project ----------------------------------
   (define-normal-key
     :prefix "SPC p"
     :prefix-command 'project-prefix-map
-    "p" '(projectile-switch-project			:which-key "Switch")
-    "a" '(projectile-add-known-project			:which-key "Add")
+    "p" '(projectile-switch-project				:which-key "Switch")
+    "a" '(projectile-add-known-project				:which-key "Add")
     )
   (define-normal-key
     :prefix "SPC b"
     :prefix-command 'buffer-prefix-map
-    "k" '(kill-current-buffer				:which-key "Kill")
-    "e" '(epa-encrypt-region				:which-key "Encrypt region")
+    "k" '(kill-current-buffer					:which-key "Kill")
+    "e" '(epa-encrypt-region					:which-key "Encrypt region")
     "b" '((lambda () (interactive)
 	    (let ((helm-boring-buffer-regexp-list '()))
-	      (helm-buffers-list))) :which-key "All buffers")
+	      (helm-buffers-list)))				:which-key "All buffers")
     )
 ;; ----------------------------------- ELisp -----------------------------------
   (define-normal-key
     :prefix "SPC e"
     :prefix-command 'elisp-prefix-map
-    "s" '((lambda () (interactive)
-	    (select-window (split-window-below))
-	    (scratch-buffer)
-	    )						:which-key "Scratch")
-    "e" '(+keybindings-eval	:which-key "Eval")
-    "b" '(eval-buffer					:which-key "Eval buffer")
-    "m" '(helm-imenu					:which-key "Eval buffer")
+    "s" '(scratch-buffer					:which-key "Scratch")
+    "e" '(+keybindings-eval					:which-key "Eval")
+    "b" '(eval-buffer						:which-key "Eval buffer")
+    "m" '(helm-imenu						:which-key "Eval buffer")
     "i" '((lambda () (interactive)
 	    (let ((f (function-called-at-point)))
 	      (when f (edebug-instrument-function f)))
-	    )						:which-key "Instrument")
+	    )							:which-key "Instrument")
     "u" '((lambda () (interactive)
 	    (let ((f (function-called-at-point)))
 	      (when f (edebug-remove-instrumentation (list f))))
-	    )						:which-key "Uninstrument")
+	    )							:which-key "Uninstrument")
+    "$" '(eshell						:which-key "EShell")
     )
 
   (defun +keybindings-eval ()
@@ -431,7 +451,7 @@ _l_: →   _k_: ↑   _L_: w -= 3   _K_: h -= 3   _s_: ==   _R_: ⟲   _i_: Isol
 
   (define-visual-key
     :prefix "SPC"
-    "a" '(align-regexp					:which-key "Align")
+    "a" '(align-regexp						:which-key "Align")
     ))
 
 ;; Fix ESC doing stupid stuff all the time
@@ -442,3 +462,10 @@ _l_: →   _k_: ↑   _L_: w -= 3   _K_: h -= 3   _s_: ==   _R_: ⟲   _i_: Isol
   (define-key evil-motion-state-map (kbd "RET") nil))
 
 (provide 'keybindings)
+
+;; Local Variables:
+;; eval: (add-hook 'before-save-hook
+;;                 (lambda ()
+;;                       (align-regexp (point-min) (point-max)
+;;                                     "\\(\\s-*\\)		:which-key" 1 1 t)))
+;; End:

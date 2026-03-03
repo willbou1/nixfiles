@@ -16,7 +16,7 @@
 
 ;; -------------------------------- Transparency -------------------------------
 (+override
- 'create-image
+ ; 'create-image
  (lambda (original)
    (lambda (&rest args)
      "args = (FILE-OR-DATA &optional TYPE DATA-P &rest PROPS)"
@@ -27,17 +27,39 @@
 
 (unless +theme-frame-alpha
   (setq +theme-frame-alpha 80))
+(setq +theme-completion-alpha (floor (min (* 1.3 +theme-frame-alpha) 100)))
 
-(+set-default-frame-parameters 'alpha-background +theme-frame-alpha)
+(defun +theme--set-frame-alpha (&optional frame)
+  "Set alpha for main frames. Child frames like Corfu get different alpha if desired."
+  (let ((frame (or frame (selected-frame))))
+    (when (display-graphic-p frame)
+      (cond
+       ;; Top-level frames
+       ((not (frame-parameter frame 'parent-frame))
+        (set-frame-parameter frame 'alpha-background +theme-frame-alpha))
+       ;; Corfu popups
+       ((string-equal (frame-parameter frame 'name) "EmacsCorfuGUI")
+        (set-frame-parameter frame 'alpha-background +theme-completion-alpha))
+       ;; Other child frames stay fully opaque
+       (t
+        (set-frame-parameter frame 'alpha-background 100))))))
+
+(+theme--set-frame-alpha)
+
+(add-hook 'after-make-frame-functions
+	  (lambda (frame)
+	    (+theme--set-frame-alpha frame)))
 
 (defun +theme-set-frame-alpha ()
   "Set the transparency of the Emacs frame."
   (interactive)
   (let ((alpha (read-number "Alpha [0-100]: " +theme-frame-alpha)))
-	      (when (or (> 0 alpha) (< 100 alpha))
-		(error "Alpha must be between 0 and 100"))
-	      (setq +theme-frame-alpha alpha)
-          (+set-default-frame-parameters 'alpha-background +theme-frame-alpha)))
+    (when (or (> 0 alpha) (< 100 alpha))
+      (error "Alpha must be between 0 and 100"))
+    (setq +theme-frame-alpha alpha
+	  +theme-completion-alpha (floor (min (* 1.3 +theme-frame-alpha) 100)))
+    (dolist (f (frame-list))
+      (+theme--set-frame-alpha f))))
 
 ;; ----------------------------------- Frames ----------------------------------
 
@@ -64,12 +86,6 @@
                                      (setq-local face-remapping-alist
                                                  `((default (:background ,(plist-get base16-stylix-theme-colors
                                                                                      :base01))))))))))
-
-;; ---------------------------------- Minimap ----------------------------------
-(set-face-background 'minimap-active-region-background
-		     (plist-get base16-stylix-theme-colors :base01))
-(set-face-background 'minimap-current-line-face
-		     (plist-get base16-stylix-theme-colors :base0A))
 
 ;; ------------------------------------ Org ------------------------------------
 (with-eval-after-load
@@ -117,7 +133,10 @@
 ;; ------------------------------------ Helm -----------------------------------
 (with-eval-after-load
   'helm-command
-  (set-face-foreground 'helm-M-x-short-doc (plist-get base16-stylix-theme-colors :base0F))
+  (set-face-attribute 'helm-tooltip t
+		      :background 'unspecified
+		      :foreground (plist-get base16-stylix-theme-colors :base04))
+  (set-face-foreground 'helm-M-x-short-doc (plist-get base16-stylix-theme-colors :base04))
   (set-face-foreground 'helm-M-x-key (plist-get base16-stylix-theme-colors :base03)))
 
 ;; --------------------------- Fonts and font locking --------------------------
@@ -128,20 +147,27 @@
    ((t (:family "Liberation Serif" :italic t :height 1.15))))
  '(font-lock-doc-face
    ((t (:family "Liberation Serif" :italic t :height 1.15))))
- '(font-lock-string-face  ((t (:italic t))))
+ '(font-lock-string-face
+   ((t (:italic t))))
+
  '(line-number
    ((t (:inherit default))))
  '(line-number-current-line
-   ((t (:inherit default :weight bold)))))
+   ((t (:inherit default :weight bold))))
+
+ `(Man-overstrike
+   ((t (:inherit 'bold :foreground ,(plist-get base16-stylix-theme-colors :base03)))))
+ `(woman-bold
+   ((t (:inherit 'bold :foreground ,(plist-get base16-stylix-theme-colors :base03)))))
+
+ `(minimap-active-region-background
+    ((t (:background ,(plist-get base16-stylix-theme-colors :base01)))))
+ `(minimap-current-line-face
+    ((t (:background ,(plist-get base16-stylix-theme-colors :base0A))))))
 
 (font-lock-add-keywords
  'emacs-lisp-mode
  '(("#'" . 'font-lock-function-call-face)))
-
-(with-eval-after-load 'man
-  (set-face-attribute 'Man-overstrike nil :inherit 'bold :foreground (plist-get base16-stylix-theme-colors :base03)))
-(with-eval-after-load 'woman
-  (set-face-attribute 'woman-bold nil :inherit 'bold :foreground (plist-get base16-stylix-theme-colors :base03)))
 
 ;; --------------------------------- Ligatures ---------------------------------
 (use-package
@@ -218,11 +244,11 @@
 	   (hue-step (/ 740 rainbow-delimiters-max-face-count))
 	   (hue (mod (* depth hue-step) 360))
 	   (s 0.5)
-	   (l 0.5)
+	   (l 0.55)
 	   (color (apply #'color-rgb-to-hex
 			 (append (color-hsl-to-rgb
 				  (+color-remove-bg-from-hue
-				   (+ 0.5 (/ hue 360.0)) 0.08)
+				   (mod (+ 0.4 (/ hue 360.0)) 1.0) 0.06)
 				  s l)
 				 '(2)))))
       (let ((face (intern
@@ -238,7 +264,11 @@
 
 (use-package
   rainbow-identifiers
-  :hook (prog-mode-hook . rainbow-identifiers-mode))
+  :hook (prog-mode-hook . rainbow-identifiers-mode)
+  :init
+  (setq rainbow-identifiers-choose-face-function 'rainbow-identifiers-cie-l*a*b*-choose-face
+	rainbow-identifiers-cie-l*a*b*-lightness 56
+	rainbow-identifiers-cie-l*a*b*-saturation 20))
 
 (use-package
   highlight-defined
@@ -262,7 +292,7 @@
   (dotimes (i 6)
     (let ((bg (+color-modify-stylix :base01 nil nil
 				    (lambda (l) (- l 0.15 (* i 0.03))))))
-      (set-face-attribute (intern (format "dired-subtree-depth-%d-face" (+ 1 i))) nil
+      (set-face-attribute (intern (format "dired-subtree-depth-%d-face" (+ 1 i))) t
 			  :background bg
 			  :extend t))))
 
@@ -308,7 +338,7 @@
 ;; --------------------------------- Ace Window --------------------------------
 (with-eval-after-load 'ace-window
   (set-face-attribute
-   'aw-leading-char-face nil
+   'aw-leading-char-face t
    :box t
    :foreground (plist-get base16-stylix-theme-colors :base09)))
 
@@ -330,12 +360,16 @@
 
 (defvar +theme-last-selected-window nil
   "The previously active window for theme highlighting.")
+(defvar +theme-last-selected-buffer nil
+  "The previously active buffer for theme highlighting.")
 (defvar +theme-active-window-remaps nil)
 
 (defun +theme-highlight-window ()
   "Highlight the currently selected window differently from the last selected one."
-  (let* ((current (selected-window))
-         (last +theme-last-selected-window)
+  (let* ((current-window (selected-window))
+	 (current-buffer (window-buffer current-window))
+         (last-window +theme-last-selected-window)
+         (last-buffer +theme-last-selected-buffer)
          ;; Colors for active/inactive
          (bg-active +theme-highlight-window-bg)
          (bg-inactive +theme-highlight-window-bg-inactive)
@@ -345,8 +379,8 @@
          (ln-cur-fg-inactive +theme-highlight-window-current-line-number-fg-inactive))
     
     ;; Restore the last window to inactive
-    (when (window-live-p last)
-      (with-current-buffer (window-buffer last)
+    (when (and (window-live-p last-window) (buffer-live-p last-buffer))
+      (with-current-buffer last-buffer
         (when +theme-active-window-remaps
           (mapc #'face-remap-remove-relative +theme-active-window-remaps))
         (setq +theme-active-window-remaps
@@ -368,8 +402,8 @@
                                         :extend t)))))
 
     ;; Highlight the current window as active
-    (when (window-live-p current)
-      (with-current-buffer (window-buffer current)
+    (when (and (window-live-p current-window) (buffer-live-p current-buffer))
+      (with-current-buffer current-buffer
         (when +theme-active-window-remaps
           (mapc #'face-remap-remove-relative +theme-active-window-remaps))
         (setq +theme-active-window-remaps
@@ -391,7 +425,8 @@
                                         :extend t)))))
 
     ;; Update last selected window
-    (setq +theme-last-selected-window current)))
+    (setq +theme-last-selected-window current-window
+	  +theme-last-selected-buffer current-buffer)))
 
 (add-hook 'window-selection-change-functions
           (lambda (&rest _) (+theme-highlight-window)))

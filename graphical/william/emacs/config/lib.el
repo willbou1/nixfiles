@@ -99,15 +99,20 @@ This checks in turn:
   "Modify a stylix color with HSL modifiers"
   (+color-modify-hex (plist-get base16-stylix-theme-colors color) hf sf lf))
 
-(defun +color-remove-bg-from-hue (hue theta)
+(defun +color-remove-from-hue (theta color hue)
   "Transform HUE [0, 1] to exclude the hue of the background symmetrically. The size of the exclusion regino
 is two times THETA."
   (let ((bg-hue (car (apply #'color-rgb-to-hsl
 			    (+color-hex-to-rgb
-			     (plist-get base16-stylix-theme-colors :base00))))))
+			     (plist-get base16-stylix-theme-colors color))))))
     (mod (* (- 1 (* 2 theta))
 	    (+ hue bg-hue theta))
 	 1.0)))
+
+(defun +color-remove-bg-from-hue (hue theta)
+  (->> hue
+      (+color-remove-from-hue theta :base00)
+      (+color-remove-from-hue theta :base01)))
 
 ;; ----------------------------- Buffers & Windows -----------------------------
 (defun +visible-buffer-windows ()

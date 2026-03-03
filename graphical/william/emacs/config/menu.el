@@ -10,7 +10,7 @@
 	helm-autoresize-max-height 45
 	helm-autoresize-min-height 30
 	split-width-threshold 0
-	helm-candidate-number-limit 150
+	helm-candidate-number-limit 125
 	helm-input-idle-delay 0.1
 	helm-display-function
 	(lambda (buf &rest args)
@@ -34,7 +34,8 @@
                 (setq-local mode-line-format nil))))
 
   (helm-mode 1)
-  (helm-autoresize-mode t))
+  (helm-autoresize-mode t)
+  (helm-popup-tip-mode 1))
 
 (use-package
   helm-autoloads
@@ -66,7 +67,7 @@
 					   "")
 					 (if val
 					     (propertize
-					      val 'face 'helm-ff-symlink)
+					      val 'face 'helm-M-x-key)
 					   "")
 					 (if val
 					     (helm-make-separator val val-max-length-with-padding)
@@ -80,6 +81,7 @@
 
   (dolist (r (list (rx "\*Async-native-compile-log\*")
 		   (rx "\*Warnings\*")
+		   (rx "\*WoMan-Log\*")
 		   (rx "\*Messages\*")
 		   (rx "\*Help\*")
 		   (rx "\*dashboard\*")

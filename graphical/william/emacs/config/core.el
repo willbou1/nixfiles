@@ -148,14 +148,18 @@
 	dabbrev-check-all-buffers nil)
   (defun set-up-completions ()
     "Add CAPE sources on top of existing completion-at-point-functions."
+    (require 'cape)
+    (defvar-local orig-capfs nil)
+    (unless orig-capfs
+      (setq-local orig-capfs completion-at-point-functions))
     (setq-local completion-at-point-functions
-		(append
-		 (list (cape-capf-super
-			#'cape-dabbrev
-			#'cape-file
-			#'cape-elisp-block
-			#'cape-dict))
-		 completion-at-point-functions)))
+		(mapcar
+		 (lambda (f)
+		   (cond
+                    ((functionp f) (cape-capf-super f :with #'cape-dabbrev #'cape-file))
+                    ((eq f t)     (cape-capf-super #'cape-dabbrev #'cape-file))
+                    (t f)))  ; keep nil or other entries as-is
+		 orig-capfs)))
   (add-hook 'prog-mode-hook #'set-up-completions)
   (add-hook 'org-mode-hook #'set-up-completions)
   (add-hook 'emacs-lisp-mode-hook #'set-up-completions)
@@ -338,7 +342,7 @@
 ;;(helm-lsp-workspace-symbol t)
 
 (require 'feebleline)
-(setq feebleline-timer-interval 0.5)
+(setq feebleline-timer-interval 0.1)
 (feebleline-mode 1)
 
 ;; ----------------------------------- GPTel -----------------------------------
@@ -353,5 +357,13 @@
         :stream t
         :key ""
         :models '(gpt-4o gpt-5))))
+
+(use-package
+  ai-images
+  :init
+  (setq ai-images-default-width  800
+        ai-images-default-height 800
+        ai-images-average-width  200
+        ai-images-together-api-key sops--ai-images-api-key))
 
 (provide 'core)
