@@ -87,7 +87,9 @@ with lib; {
     lolcat
     progress
     fd
+    jq
     bash-language-server
+    nixd
 
     weechat
     aspell

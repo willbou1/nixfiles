@@ -22,7 +22,7 @@ stdenv.mkDerivation {
   src = fetchgit {
     url = "https://github.com/Dominara1/wava";
     rev = "43710cbbd60b219325015196e36ace1b749ffd1f";
-    hash = "sha256-JCZLkspqffwzmdkyRXHleciUrvKSe+880EDVUtTgCJw=";
+    hash = "sha256-vidOwaXompaQgW3b8tUq01xH0qYY9J2WnX4DlvPDwTE=";
     leaveDotGit = true;
   };
 

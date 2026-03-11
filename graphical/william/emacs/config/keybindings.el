@@ -2,11 +2,12 @@
 
 (require 'use-package)
 
-;; ------------------------------------ Evil -----------------------------------
+;; Evil
 (use-package
   undo-tree
   :init
   (make-directory "~/.config/emacs/undotree/" t)
+  (add-to-list 'display-buffer-alist '("*undo-tree*" (display-buffer-in-side-window) (side . right)  (window-width . 25)))
   :config
   (setq undo-tree-history-directory-alist '(("." . "~/.config/emacs/undotree")))
   (global-undo-tree-mode 1))
@@ -53,7 +54,8 @@
         which-key-idle-secondary-delay 0.05)
   (which-key-mode))
 
-;; ---------------------------------- General ----------------------------------
+
+;; General
 (use-package
   general
   :after evil
@@ -90,7 +92,8 @@
 		 (dired-find-alternate-file)
 	       (dired-find-file)))))
 
-;; ------------------------------------ Misc -----------------------------------
+
+;; Misc
   (define-everywhere
     "C-S-c" '(clipboard-kill-ring-save				:which-key "Copy")
     "C-S-v" '(clipboard-yank					:which-key "Paste")
@@ -132,7 +135,25 @@
       `(defhydra ,name (:hint nil ,@opts ,@additional-opts)
 	 ,@doc-and-heads)))
 
-;; ------------------------------------ Org ------------------------------------
+  (defhydra +hydra-helm (:hint nil)
+    ("q" keyboard-escape-quit "exit")
+    ("m" helm-toggle-visible-mark "mark")
+    ("a" helm-toggle-all-marks "(un)mark all")
+    ("v" helm-execute-persistent-action)
+    ("g" helm-beginning-of-buffer "top")
+    ("h" helm-previous-source)
+    ("l" helm-next-source)
+    ("G" helm-end-of-buffer "bottom")
+    ("j" helm-next-line "down")
+    ("k" helm-previous-line "up")
+    ("i" nil "cancel"))
+
+  (general-define-key
+   :keymaps 'helm-map
+   "S-<return>" #'+hydra-helm/body)
+
+
+;; Org
   (defconst +hydra-org-table--desc
     '((:foreign-keys run)
       ""
@@ -221,7 +242,8 @@
   (+hydra-custom +hydra-org +hydra-org--desc)
   (+hydra-custom +hydra-org-oneshot +hydra-org--desc :exit t)
 
-;; ---------------------------------- Windows ----------------------------------
+
+;; Windows
   (defun +hydra-window--desc-base (select-new-window)
     (let ((speed 3)
 	  (split (lambda (direction)
@@ -230,8 +252,8 @@
 		       (when select-new-window
 			 (select-window new-window)))))))
         `("
-_h_: ←   _j_: ↓   _H_: w += 3   _J_: h += 3   _v_: ||   _r_: ⟳   _e_: Exchange   _m_: Maximize   _d_: Delete   _q_: Quit
-_l_: →   _k_: ↑   _L_: w -= 3   _K_: h -= 3   _s_: ==   _R_: ⟲   _i_: Isolate    _b_: Balance    _w_: Ace
+_h_: ←   _j_: ↓   _H_: w += 3   _J_: h += 3   _v_: ||   _r_: ⟳   _e_: Exchange   _m_: Maximize   _d_: Delete   _t_: topdown     _u_: Undo   _q_: Quit
+_l_: →   _k_: ↑   _L_: w -= 3   _K_: h -= 3   _s_: ==   _R_: ⟲   _i_: Isolate    _b_: Balance    _w_: Ace      _f_: leftright   _U_: Redo
 "
           ("<left>" (evil-window-left 1))
           ("<right>" (evil-window-right 1))
@@ -257,9 +279,20 @@ _l_: →   _k_: ↑   _L_: w -= 3   _K_: h -= 3   _s_: ==   _R_: ⟲   _i_: Isol
           ("m" maximize-window)
           ("b" balance-windows)
           ("d" evil-window-delete)
+	  ("t" window-layout-flip-topdown)
+	  ("f" window-layout-flip-leftright)
           ("r" window-layout-rotate-clockwise)
           ("R" window-layout-rotate-anticlockwise)
+	  ("=" (global-text-scale-adjust 1))
+	  ("+" (global-text-scale-adjust 1))
+	  ("-" (global-text-scale-adjust -1))
+	  ("p" (kill-buffer-and-window))
+	  ("u" winner-undo)
+	  ("U" winner-redo)
+          ("W" (let ((aw-scope 'frame))
+		 (ace-window)))
           ("w" ace-window)
+	  ("<tab>" aw-flip-window)
 	  ("<escape>" nil)
           ("q" nil))))
   (defconst +hydra-window--desc (+hydra-window--desc-base nil))
@@ -267,7 +300,8 @@ _l_: →   _k_: ↑   _L_: w -= 3   _K_: h -= 3   _s_: ==   _R_: ⟲   _i_: Isol
   (+hydra-custom +hydra-window +hydra-window--desc)
   (+hydra-custom +hydra-window-oneshot +hydra-window--desc-oneshot :exit t)
 
-  ;; ------------------------------------ Root -----------------------------------
+
+  ;; Root
   (define-normal-key
     "<backspace>" #'evil-jump-backward
     "S-<backspace>" #'evil-jump-forward
@@ -292,17 +326,33 @@ _l_: →   _k_: ↑   _L_: w -= 3   _K_: h -= 3   _s_: ==   _R_: ⟲   _i_: Isol
 		(shell-command-on-region (region-beginning) (region-end) command nil t)
 	      (shell-command-on-region (point-min) (point-max) command nil t)
 	      ))						:which-key "Process")
+    "n" '((lambda () (interactive)
+	    (forward-page)
+	    (forward-char)) :which-key "Next page")
+    "N" '((lambda () (interactive)
+	    (backward-page)
+	    (forward-char)) :which-key "Prev page")
     "f" '(helm-do-grep-ag					:which-key "Find")
+    "u" '(undo-tree-visualize :which-key "Undo tree")
     "s" '(helm-yas-complete					:which-key "Snippet")
     "r" '(helm-tramp						:which-key "Tramp")
     "d" '(dired							:which-key "Dired")
     "w" '(+hydra-window-oneshot/body				:which-key "Window oneshot")
+    "i" '(ement-room-list :which-key "Matrix")
     "W" '(+hydra-window/body					:which-key "Window")
     "o" '(+hydra-org-oneshot/body				:which-key "Org oneshot")
     "O" '(+hydra-org/body					:which-key "Org")
     "k" '(helm-epa-list-keys					:which-key "Keys")
+    "a" '(gptel :which-key "AI")
+    "=" '((lambda () (interactive)
+	    (global-text-scale-adjust 1)) :which-key "Zoom in")
+    "+" '((lambda () (interactive)
+	    (global-text-scale-adjust 1)) :which-key "Zoom in")
+    "-" '((lambda () (interactive)
+	    (global-text-scale-adjust -1)) :which-key "Zoom out")
     "<backspace>" '(dashboard-open				:which-key "Dashboard")
-    "TAB" '(ace-window						:which-key "Other window")
+    "TAB" '(aw-flip-window						:which-key "Other window")
+    "m" '(helm-all-mark-rings :which-key "Mark ring")
     "RET" '((lambda () (interactive)
 	      (switch-to-buffer (other-buffer)))		:which-key "Other buffer")
     "p"  '(:prefix-command project-prefix-map			:which-key "Project")
@@ -314,7 +364,8 @@ _l_: →   _k_: ↑   _L_: w -= 3   _K_: h -= 3   _s_: ==   _R_: ⟲   _i_: Isol
     "t"  '(:prefix-command toggle-prefix-map			:which-key "Toggle")
     "f"  '(:prefix-command file-prefix-map			:which-key "File")
     )
-;; ----------------------------------- LaTeX -----------------------------------
+
+;; LaTeX
   (define-normal-key
     :prefix "SPC l"
     :prefix-command 'latex-prefix-map
@@ -334,9 +385,12 @@ _l_: →   _k_: ↑   _L_: w -= 3   _K_: h -= 3   _s_: ==   _R_: ⟲   _i_: Isol
   (define-normal-key
     :prefix "SPC f"
     :prefix-command 'file-prefix-map
-    "e" '(epa-encrypt-file					:which-key "Encrypt")
+    "e" '(epa-encrypt-file					:which-key "Encrypt with PGP")
+    "s" '(sops-edit-file :which-key "Edit with sops")
+    "S" '(sops-save-file :which-key "Save with sops")
     )
-;; ----------------------------------- Toggle ----------------------------------
+
+;; Toggle
   (define-normal-key
     :prefix "SPC t"
     :prefix-command 'toggle-prefix-map
@@ -345,6 +399,8 @@ _l_: →   _k_: ↑   _L_: w -= 3   _K_: h -= 3   _s_: ==   _R_: ⟲   _i_: Isol
 	    (copilot-mode)
 	    )							:which-key "Copilot")
     "o" '(olivetti-mode						:which-key "Olivetti")
+    "t" '(toggle-truncate-lines :which-key "Truncate lines")
+    "w" '(toggle-word-wrap :which-key "Word wrap")
     "l" '(display-line-numbers-mode				:which-key "Line numbers")
     "s" '(tramp-revert-buffer-with-sudo				:which-key "Sudo")
     "d" '(rainbow-delimiters-mode				:which-key "Rainbow delimiters")
@@ -352,18 +408,25 @@ _l_: →   _k_: ↑   _L_: w -= 3   _K_: h -= 3   _s_: ==   _R_: ⟲   _i_: Isol
     "m" '(minimap-mode						:which-key "Minimap")
     "|" '(display-fill-column-indicator-mode			:which-key "Fill column")
     "p" '(smartparens-mode					:which-key "Smartparens")
+    "c" '(hl-line-mode :which-key "Hl line")
+    "h" '(lsp-toggle-symbol-highlight :which-key "Hl symbols")
     )
-;; ------------------------------------ Code -----------------------------------
+
+;; Code
   (define-normal-key
     :prefix "SPC c"
     :prefix-command 'code-prefix-map
     "s" '(helm-lsp-workspace-symbol				:which-key "Symbols")
-    "d" '(helm-lsp-diagnostics					:which-key "Diagnostics")
+    "c" '(helm-lsp-diagnostics					:which-key "Diagnostics")
     "x" '(xref-find-references-at-mouse				:which-key "References at mouse")
     "X" '(xref-find-references					:which-key "References")
     "n" '(+insert-section					:which-key "New section")
+    "i" '(lsp-ui-imenu :which-key "IMenu")
+    "d" '(lsp-ui-doc-glance :which-key "Doc")
+    "D" '(lsp-ui-doc-toggle :which-key "Doc")
     )
-;; ------------------------------------ Help -----------------------------------
+
+  ;;Help
   (define-normal-key
     :prefix "SPC h"
     :prefix-command 'help-prefix-map
@@ -377,9 +440,10 @@ _l_: →   _k_: ↑   _L_: w -= 3   _K_: h -= 3   _s_: ==   _R_: ⟲   _i_: Isol
     "c" '(list-colors-display					:which-key "Colors")
     "r" '(helm-register						:which-key "Registers")
     "R" '(restart-emacs						:which-key "Restart")
-    "s" '(+describe-foo-at-point				:which-key "Symbol")
     "e" '(view-echo-area-messages				:which-key "Messages")
     "a" '(+theme-set-frame-alpha				:which-key "Alpha")
+    "s" '(helpful-at-point		:which-key "Symbol")
+    "w" '(dictionary-search :which-key "Word")
     "N" '((lambda () (interactive)
 	    (dired "/etc/nixos")
 	    )							:which-key "Nixos config")
@@ -387,7 +451,8 @@ _l_: →   _k_: ↑   _L_: w -= 3   _K_: h -= 3   _s_: ==   _R_: ⟲   _i_: Isol
 	    (dired "/etc/nixos/graphical/william/emacs")
 	    )							:which-key "Emacs config")
     )
-;; ---------------------------------- Project ----------------------------------
+
+;; Project
   (define-normal-key
     :prefix "SPC p"
     :prefix-command 'project-prefix-map
@@ -403,7 +468,8 @@ _l_: →   _k_: ↑   _L_: w -= 3   _K_: h -= 3   _s_: ==   _R_: ⟲   _i_: Isol
 	    (let ((helm-boring-buffer-regexp-list '()))
 	      (helm-buffers-list)))				:which-key "All buffers")
     )
-;; ----------------------------------- ELisp -----------------------------------
+
+;; ELisp
   (define-normal-key
     :prefix "SPC e"
     :prefix-command 'elisp-prefix-map
@@ -411,6 +477,7 @@ _l_: →   _k_: ↑   _L_: w -= 3   _K_: h -= 3   _s_: ==   _R_: ⟲   _i_: Isol
     "e" '(+keybindings-eval					:which-key "Eval")
     "b" '(eval-buffer						:which-key "Eval buffer")
     "m" '(helm-imenu						:which-key "Eval buffer")
+    "d" '(eval-defun					:which-key "Eval defun")
     "i" '((lambda () (interactive)
 	    (let ((f (function-called-at-point)))
 	      (when f (edebug-instrument-function f)))
@@ -422,26 +489,32 @@ _l_: →   _k_: ↑   _L_: w -= 3   _K_: h -= 3   _s_: ==   _R_: ⟲   _i_: Isol
     "$" '(eshell						:which-key "EShell")
     )
 
+  ;; $$ \cos(\theta) $$
   (defun +keybindings-eval ()
+    "This is like eval-defun, but I execute the closest sexp even if inside a defun or defmacro."
     (interactive)
     (if (use-region-p)
 	(+eval-region (region-beginning) (region-end))
-      (progn
+      (save-excursion
 	(when (looking-at-p "(")
 	  (evil-next-close-paren))
-	(let ((paragraph-bounds (bounds-of-thing-at-point 'paragraph)))
-	  (when (not paragraph-bounds)
-	    (let ((should-eval-buffer (read-string "Execute the buffer as ELisp? (yes/no): ")))
-	      (when (eq "yes" should-eval-buffer)
-		(eval-buffer))))
-	  (let* ((state (syntax-ppss))
-		(start-paren (nth 1 state))
-		(end-paren (scan-sexps start-paren 1))
-		(paren-extent (- end-paren start-paren))
-		(paragraph-extent (- (cdr paragraph-bounds) (car paragraph-bounds))))
-	   (if (and start-paren (>= paragraph-extent paren-extent))
-	       (+eval-region start-paren end-paren)
-	     (+eval-region (car paragraph-bounds) (cdr paragraph-bounds))))))))
+	(if-let* ((paragraph-bounds (bounds-of-thing-at-point 'paragraph)))
+	    (if-let* ((state (syntax-ppss))
+		      (start-paren (nth 1 state))
+		      (look-ahead (max (point-min) (1- start-paren)))
+		      (look-ahead-char (char-after look-ahead)))
+		(progn
+		  (when (or (eq ?' look-ahead-char) (eq ?` look-ahead-char))
+		    (setq start-paren (1- start-paren)))
+		  (let* ((end-paren (scan-sexps start-paren 1))
+			 (paren-extent (- end-paren start-paren))
+			 (paragraph-extent (- (cdr paragraph-bounds) (car paragraph-bounds))))
+		    (if (and start-paren (>= paragraph-extent paren-extent))
+			(+eval-region start-paren end-paren)
+		      (+eval-region (car paragraph-bounds) (cdr paragraph-bounds)))))
+	      (+eval-region (car paragraph-bounds) (cdr paragraph-bounds)))
+	  (when (y-or-n-p "Eval buffer as ELisp? ")
+	    (eval-buffer))))))
 
   (defun +eval-region (start end)
     (interactive "r")

@@ -150,6 +150,7 @@
     unstable = patchNixpkgs "nixpkgs-unstable-patched" (nixpkgsPRsToPatches settings.unstableNixpkgsPRs) inputs.unstable;
     commonNixosModules = [
       {
+        nixpkgs.config.permittedInsecurePackages = settings.permittedInsecurePackages;
         nixpkgs.overlays = [
           (import ./pkgs).overlay
           (import ./pkgs).nurOverlay
@@ -158,6 +159,9 @@
           inputs.emacs-overlay.overlays.default
           inputs.nix-alien.overlays.default
           (final: prev: {
+            pantalaimon = prev.pantalaimon.overrideAttrs {
+              dontUsePytestCheck = "please dont";
+            };
             zen-browser = inputs.zen-browser.packages.${final.stdenv.hostPlatform.system}.default;
             unstable = import unstable {
               inherit (final) system config;

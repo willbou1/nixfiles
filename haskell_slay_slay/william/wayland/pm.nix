@@ -17,6 +17,7 @@
   lock = pkgs.writeShellScript "lock" ''
     if ! ${pkgs.procps}/bin/pgrep -x hyprlock; then
         ${pkgs.hyprlock}/bin/hyprlock "$@" &
+        disown
     fi
   '';
 in {

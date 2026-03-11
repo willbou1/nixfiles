@@ -1,4 +1,8 @@
 {
+  permittedInsecurePackages = [
+    "olm-3.2.16"
+  ];
+
   # Make some packages inside nixpkgs point to the nixpkgs-unstable version.
   # TODO Keep an eye on these packages closely in case something breaks.
   bleedingEdgePackages = [

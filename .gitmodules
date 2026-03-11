@@ -10,3 +10,6 @@
 [submodule "devel/dwmblocks"]
 	path = devel/dwmblocks
 	url = git@github.com:willbou1/dwmblocks.git
+[submodule "devel/fastfetch"]
+	path = devel/fastfetch
+	url = git@github.com:willbou1/fastfetch.git

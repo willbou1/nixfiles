@@ -33,6 +33,8 @@ with lib; let
           hash = "sha256-gW0j0asfH4My+mBSt8pj3d51PigGWzFUhETydUI9xEg=";
         };
       })
+
+      ement
       
       # Languages
       cmake-mode
@@ -43,6 +45,7 @@ with lib; let
       jupyter
       auctex
       nix-mode
+      sops
       fish-mode
 
       # Editing
@@ -149,6 +152,7 @@ with lib; let
 in rec {
   sops.secrets = {
     "emacs/ai-images-api-key" = {};
+    "emacs/github-models" = {};
   };
 
   # TODO DEBUG find weird systemd environment bug
@@ -165,13 +169,34 @@ in rec {
   #  };
   #};
 
-  services.emacs = {
-    enable = true;
-    package = emacsWithPackages;
-    extraOptions = mkIf debug [
-      "--debug-init"
-    ];
-    client.enable = true;
+  services = {
+    # This is needed to hndle transparent decryption of matrix messages
+    pantalaimon = {
+      enable = true;
+      settings = {
+        Default = {
+          LogLevel = "Debug";
+          SSL = true;
+        };
+        local-matrix = {
+          Homeserver = "https://ourmiraculous.com";
+          SSL = false;
+          ListenAdress = "127.0.0.1";
+          ListenPort = 8008;
+          UseKeyring = false;
+          IgnoreVerification = true;
+        };
+      };
+    };
+
+    emacs = {
+      enable = true;
+      package = emacsWithPackages;
+      extraOptions = mkIf debug [
+        "--debug-init"
+      ];
+      client.enable = true;
+    };
   };
   systemd.user.services.emacs = {
     Service = {
@@ -184,6 +209,7 @@ in rec {
     persistence."/persist" = {
       directories = [
         ".config/emacs"
+        ".local/share/pantalaimon"
       ];
       # Tangled literate config
       files = map (n: ".config/doom/${n}.el") [

@@ -9,7 +9,7 @@
 	helm-M-x-show-short-doc t
 	helm-autoresize-max-height 45
 	helm-autoresize-min-height 30
-	split-width-threshold 0
+	helm-locate-command "locate -e -r %s"
 	helm-candidate-number-limit 125
 	helm-input-idle-delay 0.1
 	helm-display-function
@@ -57,13 +57,14 @@
 		   for canonical = (intern-soft cand)
 		   for doc = (helm-get-first-line-documentation canonical)
 		   for variablep = (equal "Variables" (alist-get 'name source))
+		   for shrunk-cand = (truncate-string-to-width cand cand-max-length 0 nil t)
 		   for val = (if variablep
 				 (truncate-string-to-width (+obj-to-string (symbol-value canonical))
 							   val-max-length 0 nil t))
 		   collect (cons (format "%s%s%s%s%s"
-					 (truncate-string-to-width cand cand-max-length 0 nil t)
+					 shrunk-cand
 					 (if (or val doc)
-					     (helm-make-separator cand cand-max-length-with-padding)
+					     (helm-make-separator shrunk-cand cand-max-length-with-padding)
 					   "")
 					 (if val
 					     (propertize
@@ -79,6 +80,7 @@
 				 cand)))
       candidates))
 
+
   (dolist (r (list (rx "\*Async-native-compile-log\*")
 		   (rx "\*Warnings\*")
 		   (rx "\*WoMan-Log\*")
@@ -87,6 +89,9 @@
 		   (rx "\*dashboard\*")
 		   (rx "\*scratch\*")
 		   (rx "\*direnv\*")
+		   (rx "\*lsp-log\*")
+		   (rx "\*lsp-ui-imenu\*")
+		   (rx "\*nixd-lsp\*")
 		   (rx "\*Backtrace\*")
            (rx "\*Org Preview LaTeX Output\*")))
     (add-to-list 'helm-boring-buffer-regexp-list r)))

@@ -49,27 +49,27 @@ in {
         ",XF86MonBrightnessDown,exec, ${pkgs.brillo}/bin/brillo -u 150000 -U 5"
         ",XF86MonBrightnessUp,exec, ${pkgs.brillo}/bin/brillo -u 150000 -A 5"
       ];
+      device = [
+        {
+          name = "elan2097:00-04f3:2a15";
+          transform = 0;
+          output = "eDP-1";
+        }
+        {
+          name = "sof-soundwire-headset-jack";
+          enabled = false;
+        }
+        {
+          name = "acdc-co.,-ltd.-acdc-touch-input-device-3";
+          output = "DP-3";
+        }
+        {
+          name = "acdc-co.,-ltd.-acdc-touch-input-device-2";
+          output = "DP-4";
+        }
+      ];
 
       plugin.touch_gestures.long_press_delay = 1000;
     };
-    extraConfig = ''
-      device {
-          name = elan2097:00-04f3:2a15
-          transform = 0
-          output = eDP-1
-      }
-      device {
-          name = sof-soundwire-headset-jack
-          enabled = false
-      }
-      device {
-          name = acdc-co.,-ltd.-acdc-touch-input-device-3
-          output = DP-3
-      }
-      device {
-          name = acdc-co.,-ltd.-acdc-touch-input-device-2
-          output = DP-4
-      }
-    '';
   };
 }

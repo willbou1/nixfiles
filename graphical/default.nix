@@ -17,7 +17,6 @@ with lib; {
   environment = {
     systemPackages = with pkgs; [
       exfat
-      zsa-udev-rules
     ];
     shellAliases = {
       "b" = "bluetoothctl";
@@ -46,9 +45,12 @@ with lib; {
     };
   };
 
-  hardware.sane = {
-    enable = true;
-    extraBackends = [pkgs.sane-airscan];
+  hardware = {
+    sane = {
+      enable = true;
+      extraBackends = [pkgs.sane-airscan];
+    };
+    keyboard.zsa.enable = true;
   };
 
   services = {

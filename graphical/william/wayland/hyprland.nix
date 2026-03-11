@@ -126,6 +126,7 @@ in {
         special_scale_factor = 0.95;
       };
       misc = {
+        focus_on_activate = true;
         enable_swallow = true;
         swallow_regex = "^kitty$";
         disable_hyprland_logo = true;
@@ -186,6 +187,7 @@ in {
           "$mod,E,exec,emacsclient -c"
           "$mod,D,exec,wofi --show drun"
           "$mod,W,exec,looking-glass-client -f /dev/kvmfr0"
+          "$mod,P,exec,${pkgs.hyprpicker}/bin/hyprpicker -f"
           "$mod,C,exec,${hyprcap}/bin/hyprcap"
           "$mod,M,exec,cd /data/datasheets; fd . | wofi -d -i | xargs -I'{}' zathura '/data/datasheets/{}'"
 

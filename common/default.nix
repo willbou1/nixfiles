@@ -71,7 +71,6 @@ with lib; {
         lsof
         lftp
         tmux
-        mlocate
         miniupnpc
         acpi
         wget
@@ -94,6 +93,7 @@ with lib; {
         ];
         files = [
           "/etc/machine-id"
+          "/var/cache/locatedb"
         ];
       };
       shellAliases = {
@@ -120,6 +120,13 @@ with lib; {
         "shred" = "shred --remove";
         "cn" = "cd /etc/nixos";
         "npu" = "nix-prefetch-url";
+      };
+    };
+
+    services = {
+      locate = {
+        enable = true;
+        package = pkgs.mlocate;
       };
     };
 

@@ -229,6 +229,7 @@ in {
     };
     keyBindings = {
       normal = {
+        "e" = "cmd-set-text --space :tab-select";
         ",ad" = "open https://duck.ai";
         ",Ad" = "open -t https://duck.ai";
         ",ac" = "open https://chat.openai.com";

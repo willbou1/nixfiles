@@ -1,22 +1,36 @@
-;; -*- lexical-binding: t; -*-
+;s -*- lexical-binding: t; -*-
 
 (require 'use-package)
 (require 'lib)
 (require 'base16-theme)
 (require 'savehist)
 
-;; -------------------------------- Base16 theme -------------------------------
-(add-to-list 'custom-theme-load-path "~/.config/emacs/themes/")
-(load-theme 'base16-stylix t)
-
-; ------------------------ Disabling the stock Emacs UI ------------------------
 (scroll-bar-mode -1)
 (menu-bar-mode -1)
 (tool-bar-mode -1)
 
-;; -------------------------------- Transparency -------------------------------
+(add-to-list 'custom-theme-load-path "~/.config/emacs/themes/")
+(load-theme 'base16-stylix t)
+
+(let ((l-modifier (lambda (l) (- l 0.1)))
+      (s-modifier (lambda (l) (- l 0.2))))
+  (defvar +theme-highlight-window-bg
+    (+color-modify-stylix :base01 nil nil nil))
+  (defvar +theme-highlight-window-bg-inactive
+    (+color-modify-stylix :base01 nil s-modifier l-modifier))
+  (defvar +theme-highlight-window-line-number-fg
+    (+color-modify-stylix :base0D nil nil nil))
+  (defvar +theme-highlight-window-line-number-fg-inactive
+    (+color-modify-stylix :base0D nil s-modifier l-modifier))
+  (defvar +theme-highlight-window-current-line-number-fg
+    (+color-modify-stylix :base03 nil nil nil))
+  (defvar +theme-highlight-window-current-line-number-fg-inactive
+    (+color-modify-stylix :base03 nil s-modifier l-modifier)))
+
+
+;;; Transparency
 (+override
- ; 'create-image
+ 'create-image
  (lambda (original)
    (lambda (&rest args)
      "args = (FILE-OR-DATA &optional TYPE DATA-P &rest PROPS)"
@@ -40,6 +54,9 @@
        ;; Corfu popups
        ((string-equal (frame-parameter frame 'name) "EmacsCorfuGUI")
         (set-frame-parameter frame 'alpha-background +theme-completion-alpha))
+       ;; LSP UI
+       ((string-equal (frame-parameter frame 'name) "F1")
+        (set-frame-parameter frame 'alpha-background +theme-completion-alpha))
        ;; Other child frames stay fully opaque
        (t
         (set-frame-parameter frame 'alpha-background 100))))))
@@ -61,17 +78,19 @@
     (dolist (f (frame-list))
       (+theme--set-frame-alpha f))))
 
-;; ----------------------------------- Frames ----------------------------------
-
+
+;;; Frames
 (dolist (face '(window-divider
                  window-divider-first-pixel
                  window-divider-last-pixel))
   (face-spec-reset-face face)
   (set-face-foreground face (plist-get base16-stylix-theme-colors :base02)))
 (set-face-background 'fringe (plist-get base16-stylix-theme-colors :base01))
+(set-face-foreground 'fringe (plist-get base16-stylix-theme-colors :base0F))
 
 (defcustom +theme-gap 2
-           "Size of the gaps")
+
+  "Size of the gaps")
 (defcustom +theme-internal-gap 0
            "Size of the internal gaps")
 (add-hook 'post-command-hook
@@ -87,7 +106,8 @@
                                                  `((default (:background ,(plist-get base16-stylix-theme-colors
                                                                                      :base01))))))))))
 
-;; ------------------------------------ Org ------------------------------------
+
+;;; Org
 (with-eval-after-load
   'org
   (set-face-background
@@ -112,48 +132,60 @@
       :base01
       (lambda (h) (- h 0.01))
       nil
-      (lambda (v) (- v 0.1))))
+      (lambda (v) (- v 0.1)))))
 
-  (set-face-attribute 'org-level-1 nil :height 1.3 :weight 'bold)
-  (set-face-attribute 'org-level-2 nil :height 1.2 :weight 'bold)
-  (set-face-attribute 'org-level-3 nil :height 1.0)
-  (set-face-attribute 'org-level-4 nil :height 0.9)
-  (set-face-attribute 'org-level-5 nil :height 0.8))
-
-;; --------------------------------- Feebleline --------------------------------
-(with-eval-after-load
-  'feebleline
-  (set-face-foreground 'feebleline-file-owner-face (plist-get base16-stylix-theme-colors :base0C))
-  (set-face-foreground 'feebleline-file-mode-face (plist-get base16-stylix-theme-colors :base0D))
-  (set-face-foreground 'feebleline-git-face (plist-get base16-stylix-theme-colors :base0D)))
-
+
+;;; Feebleline
 (with-current-buffer (messages-buffer)
                      (setq-local mode-line-format nil))
 
-;; ------------------------------------ Helm -----------------------------------
-(with-eval-after-load
-  'helm-command
-  (set-face-attribute 'helm-tooltip t
-		      :background 'unspecified
-		      :foreground (plist-get base16-stylix-theme-colors :base04))
-  (set-face-foreground 'helm-M-x-short-doc (plist-get base16-stylix-theme-colors :base04))
-  (set-face-foreground 'helm-M-x-key (plist-get base16-stylix-theme-colors :base03)))
-
-;; --------------------------- Fonts and font locking --------------------------
-(set-face-attribute 'default nil :height 185)
-
+
+;;; Fonts and font locking
 (custom-set-faces
+ '(default ((nil :height 160)))
+
+ `(header-line
+   ((t (:box (:color ,(plist-get base16-stylix-theme-colors :base0B))))))
+
+ `(aw-leading-char-face
+   ((t (:box t :foreground ,(plist-get base16-stylix-theme-colors :base09)))))
+ `(aw-background-face
+   ((t (:foreground ,(+color-modify-stylix :base03 nil nil (lambda (l) (* l 0.75)))))))
+
+ `(font-latex-math-face
+   ((t (:foreground ,(plist-get base16-stylix-theme-colors :base04)))))
+
+ '(org-level-1 ((t (:height 1.3 :weight bold :inherit outline-1))))
+ '(org-level-2 ((t (:height 1.2 :weight bold :inherit outline-2))))
+ '(org-level-3 ((t (:height 1.0 :inherit outline-3))))
+ '(org-level-4 ((t (:height 0.9 :inherit outline-4))))
+ '(org-level-5 ((t (:height 0.8 :inherit outline-5))))
+
+ `(feebleline-file-owner-face
+   ((t (:foreground ,(plist-get base16-stylix-theme-colors :base0C)))))
+ `(feebleline-file-mode-face
+   ((t (:foreground ,(plist-get base16-stylix-theme-colors :base0D)))))
+ `(feebleline-git-face
+   ((t (:foreground ,(plist-get base16-stylix-theme-colors :base0D)))))
+
+ `(helm-tooltip
+   ((t (:background unspecified :foreground ,(plist-get base16-stylix-theme-colors :base04)))))
+ `(helm-M-x-short-doc
+   ((t (:box t :foreground ,(plist-get base16-stylix-theme-colors :base04)))))
+ `(helm-M-x-key
+   ((t (:foreground ,(plist-get base16-stylix-theme-colors :base03)))))
+ 
  '(font-lock-comment-face
    ((t (:family "Liberation Serif" :italic t :height 1.15))))
  '(font-lock-doc-face
    ((t (:family "Liberation Serif" :italic t :height 1.15))))
  '(font-lock-string-face
    ((t (:italic t))))
+ `(page-break-lines
+   ((t (:inherit default :foreground ,(+color-modify-stylix :base03 nil nil (lambda (l) (* l 0.45)))))))
 
- '(line-number
-   ((t (:inherit default))))
- '(line-number-current-line
-   ((t (:inherit default :weight bold))))
+ '(line-number              ((t (:inherit default))))
+ '(line-number-current-line ((t (:inherit default :weight bold))))
 
  `(Man-overstrike
    ((t (:inherit 'bold :foreground ,(plist-get base16-stylix-theme-colors :base03)))))
@@ -161,15 +193,22 @@
    ((t (:inherit 'bold :foreground ,(plist-get base16-stylix-theme-colors :base03)))))
 
  `(minimap-active-region-background
-    ((t (:background ,(plist-get base16-stylix-theme-colors :base01)))))
+   ((t (:background ,(plist-get base16-stylix-theme-colors :base01)))))
  `(minimap-current-line-face
-    ((t (:background ,(plist-get base16-stylix-theme-colors :base0A))))))
+   ((t (:background ,(plist-get base16-stylix-theme-colors :base0A)))))
+
+ `(ement-room-list-favourite
+   ((t (:family ,(face-attribute 'default :family) :foreground ,(plist-get base16-stylix-theme-colors :base04)))))
+ `(ement-tabulated-room-list-favourite
+   ((t (:underline t :family ,(face-attribute 'default :family) :foreground ,(plist-get base16-stylix-theme-colors :base04)))))
+ )
 
 (font-lock-add-keywords
  'emacs-lisp-mode
  '(("#'" . 'font-lock-function-call-face)))
 
-;; --------------------------------- Ligatures ---------------------------------
+
+;;; Ligatures
 (use-package
   ligature
   :config
@@ -233,7 +272,8 @@
                             "{|"  "[|"  "]#"  "(*"  "}#"  "$>"  "^="))
   (global-ligature-mode t))
 
-;; ---------------------------- Syntax highlighting ----------------------------
+
+;;; Syntax highlighting
 (use-package
   rainbow-delimiters
   :hook (prog-mode-hook . rainbow-delimiters-mode)
@@ -267,7 +307,7 @@
   :hook (prog-mode-hook . rainbow-identifiers-mode)
   :init
   (setq rainbow-identifiers-choose-face-function 'rainbow-identifiers-cie-l*a*b*-choose-face
-	rainbow-identifiers-cie-l*a*b*-lightness 56
+	rainbow-identifiers-cie-l*a*b*-lightness 62
 	rainbow-identifiers-cie-l*a*b*-saturation 20))
 
 (use-package
@@ -278,11 +318,8 @@
   highlight-numbers
   :hook (prog-mode-hook . highlight-numbers-mode))
 
-(with-eval-after-load
-  'font-latex
-  (set-face-foreground 'font-latex-math-face (plist-get base16-stylix-theme-colors :base04)))
-
-;; ----------------------------------- Dired -----------------------------------
+
+;;; Dired
 (use-package
   diredfl
   :hook (dired-mode . diredfl-mode))
@@ -296,20 +333,23 @@
 			  :background bg
 			  :extend t))))
 
-;; --------------------------------- Ultrawide ---------------------------------
+
+;;; Ultrawide
 (use-package
   olivetti
   :config
   (setq-default olivetti-body-width 130))
 
-;; ------------------------------ Smooth scrolling -----------------------------
+
+;;; Smooth scrolling
 (use-package
   smooth-scroll
   :config
   (setq smooth-scroll/vscroll-step-size 2)
   (add-hook 'server-after-make-frame-hook #'smooth-scroll-mode))
 
-;; ----------------------------------- EShell ----------------------------------
+
+;;; EShell
 (with-eval-after-load 'eshell
   (require 'ansi-color)
   (defun eshell-handle-ansi-color ()
@@ -335,29 +375,8 @@
            (propertize (if (= (user-uid) 0) " # " " $ ")
 		       'face `(:foreground ,(plist-get base16-stylix-theme-colors :base09)))))))
 
-;; --------------------------------- Ace Window --------------------------------
-(with-eval-after-load 'ace-window
-  (set-face-attribute
-   'aw-leading-char-face t
-   :box t
-   :foreground (plist-get base16-stylix-theme-colors :base09)))
-
-;; --------------------------- Dynamic window shading --------------------------
-(let ((l-modifier (lambda (l) (- l 0.1)))
-      (s-modifier (lambda (l) (- l 0.2))))
-  (defvar +theme-highlight-window-bg
-    (+color-modify-stylix :base01 nil nil nil))
-  (defvar +theme-highlight-window-bg-inactive
-    (+color-modify-stylix :base01 nil s-modifier l-modifier))
-  (defvar +theme-highlight-window-line-number-fg
-    (+color-modify-stylix :base0D nil nil nil))
-  (defvar +theme-highlight-window-line-number-fg-inactive
-    (+color-modify-stylix :base0D nil s-modifier l-modifier))
-  (defvar +theme-highlight-window-current-line-number-fg
-    (+color-modify-stylix :base03 nil nil nil))
-  (defvar +theme-highlight-window-current-line-number-fg-inactive
-    (+color-modify-stylix :base03 nil s-modifier l-modifier)))
-
+
+;;; Dynamic window shading
 (defvar +theme-last-selected-window nil
   "The previously active window for theme highlighting.")
 (defvar +theme-last-selected-buffer nil
@@ -389,6 +408,9 @@
                (face-remap-add-relative 'window-divider-first-pixel :foreground bg-inactive)
                (face-remap-add-relative 'window-divider-last-pixel :background bg-inactive)
                (face-remap-add-relative 'fringe :background bg-inactive)
+
+	       (face-remap-add-relative 'header-line :background bg-inactive)
+
                (face-remap-add-relative 'line-number
                                         :background bg-inactive
                                         :foreground ln-fg-inactive
@@ -412,6 +434,9 @@
                (face-remap-add-relative 'window-divider-first-pixel :foreground bg-active)
                (face-remap-add-relative 'window-divider-last-pixel :background bg-active)
                (face-remap-add-relative 'fringe :background bg-active)
+
+	       (face-remap-add-relative 'header-line :background bg-active)
+	       
                (face-remap-add-relative 'line-number
                                         :background bg-active
                                         :foreground ln-fg-active

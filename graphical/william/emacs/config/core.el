@@ -7,13 +7,17 @@
 (require 'menu)
 
 (setq help-window-select nil
-      aw-ignored-buffers '(" *MINIMAP*")
       minimap-minimum-width 18
+      split-width-threshold 130
       scroll-margin 3
       scroll-conservatively 10
+      require-final-newline t
       user-full-name "William Boulanger")
 
-;; -------------------------------- Line numbers -------------------------------
+(winner-mode 1)
+
+
+;; Line numbers
 (setq display-line-numbers-type 'relative)
 (add-hook 'prog-mode-hook 'display-line-numbers-mode)
 (add-hook 'LaTeX-mode-hook 'display-line-numbers-mode)
@@ -28,7 +32,9 @@
   :config
   (sp-with-modes '(emacs-lisp-mode minibuffer-mode)
     (sp-local-pair "'" nil :actions nil)
-    (sp-local-pair "`" nil :actions nil)))
+    (sp-local-pair "`" nil :actions nil))
+  (add-hook 'eval-expression-minibuffer-setup-hook #'smartparens-mode)
+  (smartparens-global-mode))
 
 (use-package
   evil-mc
@@ -41,7 +47,8 @@
   :commands direnv-mode
   :hook (find-file . direnv-mode))
 
-;; ----------------------------------- Dired -----------------------------------
+
+;; Dired
 (with-eval-after-load 'dired
   (put 'dired-find-alternate-file 'disabled nil))
 
@@ -49,17 +56,24 @@
   dired-subtree
   :after dired)
 
-;; -------------------------------- Fill column --------------------------------
+
+;; Fill column, truncate and word wrap
 (setq fill-column 80)
 (add-hook 'text-mode-hook #'auto-fill-mode)
 
-(setq global-hl-line-sticky-flag t)
-(global-hl-line-mode 1)
+(global-visual-line-mode 1)
+(setq-default truncate-lines nil
+	      truncate-partial-width-windows nil
+	      word-wrap t)
 
 ;; (setq display-fill-column-indicator-column 80)
 ;; (add-hook 'prog-mode-hook 'display-fill-column-indicator-mode)
 
-;; --------------------------- Backups and autosaves ---------------------------
+(setq global-hl-line-sticky-flag t)
+(global-hl-line-mode 1)
+
+
+;; Backups and autosaves
 (make-directory "~/.config/emacs/backups/" t)
 (setq auto-save-no-message t
       make-backup-files t
@@ -73,7 +87,30 @@
       tramp-allow-unsafe-temporary-files t
       tramp-default-method "ssh")
 
-;; --------------------------------- Dashboard ---------------------------------
+
+;; Ace window
+(defun +kill-buffer-and-window (window)
+  "Kill WINDOW and its associated buffer."
+  (with-selected-window window
+    (kill-buffer-and-window)))
+(use-package
+  ace-window
+  :config
+  (setq aw-ignore-current nil
+	aw-minibuffer-flag t
+	aw-dispatch-always t
+	aw-ignored-buffers '(" *MINIMAP*")
+	aw-keys '(?a ?r ?t ?n ?i ?o ?g ?h)
+	aw-dispatch-alist '((?d aw-delete-window "Delete window")
+			    (?m maximize-window "Maximize window")
+			    (?e aw-swap-window "Swap windows")
+			    (?c aw-copy-window "Copy window")
+			    (?p +kill-buffer-and-window "Pulverize")
+			    (?s aw-split-window-vert "Split window")
+			    (?v aw-split-window-horz "VSplit window"))))
+
+
+;; Dashboard
 (use-package
   page-break-lines
   :config
@@ -93,7 +130,7 @@
 				   (agenda    . "a"))
 	dashboard-banner-logo-title "Let there be math!"
 	dashboard-startup-banner "~/.config/fastfetch/images/image1.png"
-	dashboard-image-banner-max-height 300
+	dashboard-image-banner-max-height 280
 	dashboard-page-separator "\n\f\n"
 	dashboard-center-content nil
 	dashboard-vertically-center-content t
@@ -102,6 +139,7 @@
 	dashboard-icon-type 'nerd-icons
 	dashboard-set-heading-icons t
 	dashboard-set-file-icons t
+	dashboard-projects-switch-function 'helm-projectile-switch-project
 	initial-buffer-choice 'dashboard-open)
   (set-face-underline 'dashboard-items-face nil)
   (set-face-underline 'dashboard-no-items-face nil)
@@ -130,11 +168,13 @@
     (setq helm-describe-function-function #'helpful-function
 	  helm-describe-variable-function #'helpful-variable)))
 
-;; --------------------------------- Clipboard ---------------------------------
+
+;; Clipboard
 (setq select-enable-clipboard nil)
 (setq select-enable-primary nil)
 
-;; --------------------------------- Completion --------------------------------
+
+;; Completion
 (use-package
   corfu
   :config
@@ -176,7 +216,8 @@
 	orderless-component-separator " +\\|[/]")
   (add-to-list 'orderless-matching-styles 'char-fold-to-regexp))
 
-;; ---------------------------------- Projects ---------------------------------
+
+;; Projects
 (use-package
   projectile
   :config
@@ -191,7 +232,8 @@
 (setq prettify-symbols-unprettify-at-point t)
 (add-hook 'prog-mode-hook #'prettify-symbols-mode)
 
-;; ---------------------------------- Treesit ----------------------------------
+
+;; Treesit
 (let ((languages '(css
 		   html
 		   (javascript :mode js)
@@ -233,13 +275,15 @@
 		   (treesit-install-language-grammar l)))
 	  (mapcar #'car treesit-language-source-alist))))
 
-;; ---------------------------------- Snippets ---------------------------------
+
+;; Snippets
 (use-package
   yasnippet
   :config
   (yas-global-mode 1))
 
-;; ------------------------------------ Org ------------------------------------
+
+;; Org
 (use-package
   org
   :config
@@ -279,7 +323,8 @@
 	org-ellipsis "…")
   (global-org-modern-mode))
 
-;; ----------------------------------- LaTeX -----------------------------------
+
+;; LaTeX
 (with-eval-after-load 'tex
   (setq TeX-PDF-mode t
 	TeX-auto-save t
@@ -303,7 +348,8 @@
                                (require 'evil-tex)
                                (evil-tex-mode))))
 
-;; ---------------------------------- Jupyter ----------------------------------
+
+;; Jupyter
 (use-package
   jupyter
   :after (org direnv)
@@ -317,20 +363,43 @@
      (jupyter . t)))
   (add-hook 'org-babel-after-execute-hook #'org-redisplay-inline-images))
 
-;; ------------------------------------ LSP ------------------------------------
+
+;; LSP
 (use-package
   lsp-mode
   :hook ((c-mode . lsp-deferred)
+	 (nix-mode . lsp-deferred)
 	 (c++-mode . lsp-deferred)
 	 (haskell-mode . lsp-deferred)
 	 (rust-mode . lsp-deferred)))
 
+(defvar +lsp-ui-imenu--remaps nil)
 (use-package
   lsp-ui
   :after lsp-mode
-  :hook (lsp-mode . lsp-ui-mode))
+  :hook (lsp-mode . lsp-ui-mode)
+  :init
+  (setq lsp-ui-imenu-window-fix-width t
+	lsp-ui-imenu-auto-refresh t
+	lsp-ui-imenu-window-width 25
 
-;; ------------------------------------ DAP ------------------------------------
+	lsp-ui-doc-show-with-cursor nil
+	lsp-ui-doc-alignment 'window
+	lsp-ui-doc-border (plist-get base16-stylix-theme-colors :base09)
+	lsp-ui-doc-delay 1.0
+	lsp-ui-doc-use-webkit t
+	lsp-ui-doc-include-signature t)
+  :config
+  (add-hook 'lsp-ui-imenu-mode-hook
+	    (lambda ()
+	      (with-current-buffer "*lsp-ui-imenu*"
+		(when +lsp-ui-imenu--remaps
+		  (face-remap-remove-relative +lsp-ui-imenu--remaps))
+		(setq +lsp-ui-imenu--remaps
+		      (face-remap-add-relative 'default :height 0.55))))))
+
+
+;; DAP
 (use-package
   dap-lldb
   :hook (c++-mode . (lambda () (require 'dap-lldb)))
@@ -345,18 +414,21 @@
 (setq feebleline-timer-interval 0.1)
 (feebleline-mode 1)
 
-;; ----------------------------------- GPTel -----------------------------------
+
+;; GPTel
 (use-package
   gptel
   :config
   (setq gptel-model  'gpt-4o
-      gptel-backend
-      (gptel-make-openai "Github Models" ;Any name you want
-        :host "models.inference.ai.azure.com"
-        :endpoint "/chat/completions?api-version=2024-05-01-preview"
-        :stream t
-        :key ""
-        :models '(gpt-4o gpt-5))))
+	gptel-default-mode 'org-mode
+	gptel-prompt-prefix-alist '((org-mode . "*** \n"))
+	gptel-backend
+	(gptel-make-openai "Github Models"
+	  :host "models.inference.ai.azure.com"
+	  :endpoint "/chat/completions?api-version=2024-05-01-preview"
+	  :stream t
+	  :key sops--github-models
+	  :models '(gpt-4o gpt-5))))
 
 (use-package
   ai-images
@@ -365,5 +437,15 @@
         ai-images-default-height 800
         ai-images-average-width  200
         ai-images-together-api-key sops--ai-images-api-key))
+
+(use-package
+  sops
+  :hook (yaml-ts-mode . sops-mode))
+
+(use-package
+  ement
+  :init
+  (setq ement-sessions-file "~/.config/emacs/ement.el"
+	ement-save-sessions t))
 
 (provide 'core)

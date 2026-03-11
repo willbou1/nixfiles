@@ -37,7 +37,7 @@
           label = [
             {
               monitor = "";
-              text = "cmd[update:1000] echo -e \"$(date +\"%I:%M:%S %p\")\"";
+              text = "cmd[update:1000] echo -e \"$(${pkgs.coreutils}/bin/date +\"%I:%M:%S %p\")\"";
               color = rgb "base05";
               font_size = size * 2;
               font_family = fonts.sansSerif.name;
@@ -47,7 +47,7 @@
             }
             {
               monitor = "";
-              text = "cmd[update:43200000] echo \"$(date +\"%A, %d %B %Y\")\"";
+              text = "cmd[update:43200000] echo \"$(${pkgs.coreutils}/bin/date +\"%A, %d %B %Y\")\"";
               color = rgb "base05";
               font_size = size;
               font_family = fonts.sansSerif.name;
@@ -87,21 +87,4 @@
           };
         };
       };
-
-  programs.swaylock = {
-    enable = true;
-    package = pkgs.swaylock-effects;
-    settings = {
-      daemonize = false;
-      screenshots = true;
-      clock = true;
-      indicator = true;
-      grace = 5;
-      fade-in = 1;
-      effect-blur = "7x5";
-      effect-vignette = "0.45:0";
-      indicator-thickness = 7;
-      indicator-radius = 130;
-    };
-  };
 }
