@@ -16,6 +16,11 @@
 
 (winner-mode 1)
 
+;; Fix for bad mm on UPERFECT displays
+(when (-contains? tramp-local-host-names "haskellslayslay")
+  (setq display-mm-dimensions-alist
+	'((t . (399 . 224)))))
+
 
 ;; Line numbers
 (setq display-line-numbers-type 'relative)
@@ -34,6 +39,7 @@
     (sp-local-pair "'" nil :actions nil)
     (sp-local-pair "`" nil :actions nil))
   (add-hook 'eval-expression-minibuffer-setup-hook #'smartparens-mode)
+  (add-to-list 'sp-ignore-modes-list 'org-mode)
   (smartparens-global-mode))
 
 (use-package
@@ -114,7 +120,7 @@
 (use-package
   page-break-lines
   :config
-  (global-page-break-lines-mode))
+  (global-page-break-lines-mode 1))
 
 (use-package
   dashboard
@@ -129,8 +135,9 @@
 				   (bookmarks . "b")
 				   (agenda    . "a"))
 	dashboard-banner-logo-title "Let there be math!"
-	dashboard-startup-banner "~/.config/fastfetch/images/image1.png"
-	dashboard-image-banner-max-height 280
+	dashboard-startup-banner "~/.config/emacs/splash/gamma.png"
+	dashboard-projects-backend 'projectile
+	dashboard-image-banner-max-height 260
 	dashboard-page-separator "\n\f\n"
 	dashboard-center-content nil
 	dashboard-vertically-center-content t
@@ -158,7 +165,6 @@
       (message "No projects available.")))
 
   (add-hook 'dashboard-mode-hook '+dashboard-jump-to-recents)
-  (add-hook 'dashboard-mode-hook 'page-break-lines-mode)
   (dashboard-setup-startup-hook))
 
 (use-package helpful
@@ -222,10 +228,11 @@
   projectile
   :config
   (setq projectile-project-search-path '("~/priv/code"
-					 "~/priv/documents")
+					 "~/priv/documents"
+					 "~/priv/nextcloud")
         projectile-completion-system 'helm
         projectile-enable-caching t
-        projectile-indexing-method 'hybrid)
+        projectile-indexing-method 'native)
   (projectile-mode 1))
 
 ;; Symbols
@@ -286,42 +293,52 @@
 ;; Org
 (use-package
   org
-  :config
-  (setq org-directory "~/priv/documents/org/"
-	org-confirm-babel-evaluate nil
-	org-return-follows-link t))
-
-(use-package
-  org-appear
-  :hook (org-mode . org-appear-mode))
-
-(use-package
-  toc-org
-  :hook (org-mode . toc-org-mode))
-
-(use-package
-  org-fragtog
   :init
-  :hook (org-mode . org-fragtog-mode)
-  :config
-  (plist-put org-format-latex-options :scale 2.0)
-  (plist-put org-format-latex-options :background "Transparent"))
+  (setq org-directory "~/priv/documents/org/"
+	org-preview-latex-default-process 'dvisvgm
+	org-preview-latex-image-directory "~/.config/emacs/ltximg/"
+	org-use-sub-superscripts '{}
+	org-latex-packages-alist '(("" "amsmath" t)
+				   ("" "amssymb" t)
+				   ("" "tikz" t)
+				   ("" "tikz-cd" t)
+				   ("" "circuitikz" t)
+				   ("" "pgfplots" t))
+	org-confirm-babel-evaluate nil
+	org-return-follows-link t)
 
-(use-package
-  org-modern
-  :after org
   :config
-  (setq rg-auto-align-tags nil
-	org-tags-column 0
-	org-catch-invisible-edits 'show-and-error
-	org-special-ctrl-a/e t
-	org-insert-heading-respect-content t
+  (plist-put org-format-latex-options :scale 1.5)
+  (plist-put org-format-latex-options :background "Transparent")
 
-	org-hide-emphasis-markers t
-	org-pretty-entities t
-	org-agenda-tags-column 0
-	org-ellipsis "…")
-  (global-org-modern-mode))
+  (use-package
+    org-appear
+    :hook (org-mode . org-appear-mode))
+
+  (use-package
+    toc-org
+    :hook (org-mode . toc-org-mode))
+
+  (use-package
+    org-fragtog
+    :hook (org-mode . org-fragtog-mode))
+
+  (use-package
+    org-modern
+    :after org
+    :init
+    (setq rg-auto-align-tags nil
+	  org-tags-column 0
+	  org-catch-invisible-edits 'show-and-error
+	  org-special-ctrl-a/e t
+	  org-insert-heading-respect-content t
+
+	  org-hide-emphasis-markers t
+	  org-pretty-entities t
+	  org-agenda-tags-column 0
+	  org-ellipsis "…")
+    :config
+    (global-org-modern-mode)))
 
 
 ;; LaTeX
@@ -329,17 +346,9 @@
   (setq TeX-PDF-mode t
 	TeX-auto-save t
         TeX-source-correlate-mode t
-        TeX-source-correlate-start-server nil
-	org-preview-latex-default-process 'dvisvgm
-	org-latex-packages-alist
-	'(("" "tikz" t)
-	  ("" "tikz-cd" t)
-	  ("" "circuitikz" t)
-	  ("" "pgfplots" t))
-	)
+        TeX-source-correlate-start-server nil)
   (setcar (cdr (assoc 'output-pdf TeX-view-program-selection))
 	  "Zathura")
-  (plist-put org-format-latex-options :scale 1.7)
   (add-hook 'LaTeX-mode-hook (lambda ()
                                (require 'tex-fold)
                                (TeX-fold-mode 1)
@@ -407,8 +416,6 @@
   (setq dap-auto-configure-features '(sessions locals controls tooltip))
   :config
   (setq dap-lldb-debug-program '("lldb-dap")))
-
-;;(helm-lsp-workspace-symbol t)
 
 (require 'feebleline)
 (setq feebleline-timer-interval 0.1)

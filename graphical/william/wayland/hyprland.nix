@@ -173,6 +173,8 @@ in {
         "float,class:SVPManager"
         "workspace 9 silent,class:SVPManager"
 
+        "workspace 9 silent,class:com.nextcloud.desktopclient.nextcloud"
+
         "opacity ${fakeOpacity},class:udiskie"
 
         "bordercolor 0x${hexOpacity + base0E},title:private"
@@ -197,7 +199,8 @@ in {
           "$mod SHIFT,F, fullscreenstate, 0 3"
           "$mod,T,togglesplit"
           "$mod,G,togglegroup"
-          "$mod,TAB,changegroupactive,f"
+          "$mod,BACKSPACE,changegroupactive,f"
+          "$mod,TAB,workspace,back_and_forth"
 
           "$mod,H,movefocus,l"
           "$mod,L,movefocus,r"

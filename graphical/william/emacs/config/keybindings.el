@@ -87,6 +87,7 @@
      :states 'normal
      :keymaps 'dired-mode-map
      "a" #'dired-find-file
+     "f" #'dired-create-empty-file
      "RET" (lambda () (interactive)
 	     (if (f-directory? (dired-get-file-for-visit))
 		 (dired-find-alternate-file)
@@ -136,7 +137,6 @@
 	 ,@doc-and-heads)))
 
   (defhydra +hydra-helm (:hint nil)
-    ("q" keyboard-escape-quit "exit")
     ("m" helm-toggle-visible-mark "mark")
     ("a" helm-toggle-all-marks "(un)mark all")
     ("v" helm-execute-persistent-action)
@@ -146,6 +146,8 @@
     ("G" helm-end-of-buffer "bottom")
     ("j" helm-next-line "down")
     ("k" helm-previous-line "up")
+    ("q" keyboard-escape-quit "exit")
+    ("<escape>" keyboard-escape-quit "exit")
     ("i" nil "cancel"))
 
   (general-define-key
@@ -283,9 +285,9 @@ _l_: →   _k_: ↑   _L_: w -= 3   _K_: h -= 3   _s_: ==   _R_: ⟲   _i_: Isol
 	  ("f" window-layout-flip-leftright)
           ("r" window-layout-rotate-clockwise)
           ("R" window-layout-rotate-anticlockwise)
-	  ("=" (global-text-scale-adjust 1))
-	  ("+" (global-text-scale-adjust 1))
-	  ("-" (global-text-scale-adjust -1))
+	  ("=" (text-scale-adjust 1))
+	  ("+" (text-scale-adjust 1))
+	  ("-" (text-scale-adjust -1))
 	  ("p" (kill-buffer-and-window))
 	  ("u" winner-undo)
 	  ("U" winner-redo)
@@ -458,6 +460,7 @@ _l_: →   _k_: ↑   _L_: w -= 3   _K_: h -= 3   _s_: ==   _R_: ⟲   _i_: Isol
     :prefix-command 'project-prefix-map
     "p" '(projectile-switch-project				:which-key "Switch")
     "a" '(projectile-add-known-project				:which-key "Add")
+    "f" '(helm-projectile-rg :which-key "Find in")
     )
   (define-normal-key
     :prefix "SPC b"

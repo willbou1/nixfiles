@@ -28,7 +28,7 @@ in {
     "hugepages=24"
     "kvm-intel.enable_apicv=y"
     "vfio-pci.ids=10de:27a0,10de:22bc"
-    "kvmfr.static_size_mb=64"
+    "kvmfr.static_size_mb=128"
 
     # TODO Something seems to have broken with MSRs in the new KVM version so
     # let's siable them temporarily

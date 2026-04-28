@@ -87,6 +87,7 @@
 		   (rx "\*Messages\*")
 		   (rx "\*Help\*")
 		   (rx "\*dashboard\*")
+		   (rx "magit-process:")
 		   (rx "\*scratch\*")
 		   (rx "\*direnv\*")
 		   (rx "\*lsp-log\*")

@@ -15,17 +15,17 @@
 (let ((l-modifier (lambda (l) (- l 0.1)))
       (s-modifier (lambda (l) (- l 0.2))))
   (defvar +theme-highlight-window-bg
-    (+color-modify-stylix :base01 nil nil nil))
+    (+color-stylix :base01))
   (defvar +theme-highlight-window-bg-inactive
-    (+color-modify-stylix :base01 nil s-modifier l-modifier))
+    (+color-stylix :base01 nil s-modifier l-modifier))
   (defvar +theme-highlight-window-line-number-fg
-    (+color-modify-stylix :base0D nil nil nil))
+    (+color-stylix :base0D))
   (defvar +theme-highlight-window-line-number-fg-inactive
-    (+color-modify-stylix :base0D nil s-modifier l-modifier))
+    (+color-stylix :base0D nil s-modifier l-modifier))
   (defvar +theme-highlight-window-current-line-number-fg
-    (+color-modify-stylix :base03 nil nil nil))
+    (+color-stylix :base03))
   (defvar +theme-highlight-window-current-line-number-fg-inactive
-    (+color-modify-stylix :base03 nil s-modifier l-modifier)))
+    (+color-stylix :base03 nil s-modifier l-modifier)))
 
 
 ;;; Transparency
@@ -84,9 +84,9 @@
                  window-divider-first-pixel
                  window-divider-last-pixel))
   (face-spec-reset-face face)
-  (set-face-foreground face (plist-get base16-stylix-theme-colors :base02)))
-(set-face-background 'fringe (plist-get base16-stylix-theme-colors :base01))
-(set-face-foreground 'fringe (plist-get base16-stylix-theme-colors :base0F))
+  (set-face-foreground face (+color-stylix :base02)))
+(set-face-background 'fringe (+color-stylix :base01))
+(set-face-foreground 'fringe (+color-stylix :base0F))
 
 (defcustom +theme-gap 2
 
@@ -103,8 +103,7 @@
               (when (get-buffer buf)
                 (with-current-buffer buf
                                      (setq-local face-remapping-alist
-                                                 `((default (:background ,(plist-get base16-stylix-theme-colors
-                                                                                     :base01))))))))))
+                                                 `((default (:background ,(+color-stylix :base01))))))))))
 
 
 ;;; Org
@@ -112,7 +111,7 @@
   'org
   (set-face-background
     'org-block
-    (+color-modify-stylix
+    (+color-stylix
       :base01
       (lambda (h) (- h 0.01))
       nil
@@ -120,7 +119,7 @@
 
   (set-face-background
     'org-block-begin-line
-    (+color-modify-stylix
+    (+color-stylix
       :base01
       (lambda (h) (- h 0.01))
       nil
@@ -128,7 +127,7 @@
 
   (set-face-background
     'org-block-end-line
-    (+color-modify-stylix
+    (+color-stylix
       :base01
       (lambda (h) (- h 0.01))
       nil
@@ -145,15 +144,15 @@
  '(default ((nil :height 160)))
 
  `(header-line
-   ((t (:box (:color ,(plist-get base16-stylix-theme-colors :base0B))))))
+   ((t (:box (:color ,(+color-stylix :base0B))))))
 
  `(aw-leading-char-face
-   ((t (:box t :foreground ,(plist-get base16-stylix-theme-colors :base09)))))
+   ((t (:box t :foreground ,(+color-stylix :base09)))))
  `(aw-background-face
-   ((t (:foreground ,(+color-modify-stylix :base03 nil nil (lambda (l) (* l 0.75)))))))
+   ((t (:foreground ,(+color-stylix :base03 nil nil (lambda (l) (* l 0.75)))))))
 
  `(font-latex-math-face
-   ((t (:foreground ,(plist-get base16-stylix-theme-colors :base04)))))
+   ((t (:foreground ,(+color-stylix :base04)))))
 
  '(org-level-1 ((t (:height 1.3 :weight bold :inherit outline-1))))
  '(org-level-2 ((t (:height 1.2 :weight bold :inherit outline-2))))
@@ -162,18 +161,18 @@
  '(org-level-5 ((t (:height 0.8 :inherit outline-5))))
 
  `(feebleline-file-owner-face
-   ((t (:foreground ,(plist-get base16-stylix-theme-colors :base0C)))))
+   ((t (:foreground ,(+color-stylix :base0C)))))
  `(feebleline-file-mode-face
-   ((t (:foreground ,(plist-get base16-stylix-theme-colors :base0D)))))
+   ((t (:foreground ,(+color-stylix :base0D)))))
  `(feebleline-git-face
-   ((t (:foreground ,(plist-get base16-stylix-theme-colors :base0D)))))
+   ((t (:foreground ,(+color-stylix :base0D)))))
 
  `(helm-tooltip
-   ((t (:background unspecified :foreground ,(plist-get base16-stylix-theme-colors :base04)))))
+   ((t (:background unspecified :foreground ,(+color-stylix :base04)))))
  `(helm-M-x-short-doc
-   ((t (:box t :foreground ,(plist-get base16-stylix-theme-colors :base04)))))
+   ((t (:box t :foreground ,(+color-stylix :base04)))))
  `(helm-M-x-key
-   ((t (:foreground ,(plist-get base16-stylix-theme-colors :base03)))))
+   ((t (:foreground ,(+color-stylix :base03)))))
  
  '(font-lock-comment-face
    ((t (:family "Liberation Serif" :italic t :height 1.15))))
@@ -182,25 +181,25 @@
  '(font-lock-string-face
    ((t (:italic t))))
  `(page-break-lines
-   ((t (:inherit default :foreground ,(+color-modify-stylix :base03 nil nil (lambda (l) (* l 0.45)))))))
+   ((t (:inherit default :foreground ,(+color-stylix :base03 nil nil (lambda (l) (* l 0.45)))))))
 
  '(line-number              ((t (:inherit default))))
  '(line-number-current-line ((t (:inherit default :weight bold))))
 
  `(Man-overstrike
-   ((t (:inherit 'bold :foreground ,(plist-get base16-stylix-theme-colors :base03)))))
+   ((t (:inherit 'bold :foreground ,(+color-stylix :base03)))))
  `(woman-bold
-   ((t (:inherit 'bold :foreground ,(plist-get base16-stylix-theme-colors :base03)))))
+   ((t (:inherit 'bold :foreground ,(+color-stylix :base03)))))
 
  `(minimap-active-region-background
-   ((t (:background ,(plist-get base16-stylix-theme-colors :base01)))))
+   ((t (:background ,(+color-stylix :base01)))))
  `(minimap-current-line-face
-   ((t (:background ,(plist-get base16-stylix-theme-colors :base0A)))))
+   ((t (:background ,(+color-stylix :base0A)))))
 
  `(ement-room-list-favourite
-   ((t (:family ,(face-attribute 'default :family) :foreground ,(plist-get base16-stylix-theme-colors :base04)))))
+   ((t (:family ,(face-attribute 'default :family) :foreground ,(+color-stylix :base04)))))
  `(ement-tabulated-room-list-favourite
-   ((t (:underline t :family ,(face-attribute 'default :family) :foreground ,(plist-get base16-stylix-theme-colors :base04)))))
+   ((t (:underline t :family ,(face-attribute 'default :family) :foreground ,(+color-stylix :base04)))))
  )
 
 (font-lock-add-keywords
@@ -327,7 +326,7 @@
 (with-eval-after-load 'dired-subtree
   (setq dired-subtree-line-prefix "")
   (dotimes (i 6)
-    (let ((bg (+color-modify-stylix :base01 nil nil
+    (let ((bg (+color-stylix :base01 nil nil
 				    (lambda (l) (- l 0.15 (* i 0.03))))))
       (set-face-attribute (intern (format "dired-subtree-depth-%d-face" (+ 1 i))) t
 			  :background bg
@@ -361,7 +360,7 @@
 	(lambda ()
           (concat
            (propertize (user-login-name)
-                       'face `(:foreground ,(plist-get base16-stylix-theme-colors :base0A)))
+                       'face `(:foreground ,(+color-stylix :base0A)))
            (if (eq (system-name) "linux-amd")
                "@"
 	     "")
@@ -371,9 +370,9 @@
 	     "")
            ":"
            (propertize (abbreviate-file-name (eshell/pwd))
-                       'face `(:foreground ,(plist-get base16-stylix-theme-colors :base0E)))
+                       'face `(:foreground ,(+color-stylix :base0E)))
            (propertize (if (= (user-uid) 0) " # " " $ ")
-		       'face `(:foreground ,(plist-get base16-stylix-theme-colors :base09)))))))
+		       'face `(:foreground ,(+color-stylix :base09)))))))
 
 
 ;;; Dynamic window shading

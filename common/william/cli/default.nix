@@ -35,6 +35,16 @@ with lib; {
           port = 2223;
           user = "william";
         };
+        "linux-amd" = {
+          hostname = "10.0.0.160";
+          port = 22;
+          user = "william";
+        };
+        "haskell_slay_slay" = {
+          hostname = "10.0.0.161";
+          port = 22;
+          user = "william";
+        };
       };
     };
     git = {

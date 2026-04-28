@@ -51,7 +51,7 @@
 		(substring hex-color 3 5)
 		(substring hex-color 5 7))))
 
-(defun +color-modify-hex (color hf sf lf)
+(defun +color-modify-hex (color &optional hf sf lf)
   "Modify a hex color with HSL modifiers"
   (defun clamp (x)
     (max 0.0 (min 1.0 x)))
@@ -68,7 +68,7 @@
 	    (clamp (funcall lf (nth 2 color-hsl)))))
     (apply #'color-rgb-to-hex (append (apply #'color-hsl-to-rgb color-hsl) '(2)))))
 
-(defun +color-modify-stylix (color hf sf lf)
+(defun +color-stylix (color &optional hf sf lf)
   "Modify a stylix color with HSL modifiers"
   (+color-modify-hex (plist-get base16-stylix-theme-colors color) hf sf lf))
 
