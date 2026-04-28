@@ -5,25 +5,6 @@
   };
   mpv = pkgs.mpv-unwrapped.wrapper {
     mpv = mpv-unwrapped;
-    extraMakeWrapperArgs = [
-      "--prefix"
-      "LD_LIBRARY_PATH"
-      ":"
-      "/run/opengl-driver/lib:${pkgs.vapoursynth-mvtools}/lib/vapoursynth"
-      # make mpv work with nvidia-offload automagically
-      "--set"
-      "__NV_PRIME_RENDER_OFFLOAD"
-      "1"
-      "--set"
-      "__NV_PRIME_RENDER_OFFLOAD_PROVIDER"
-      "NVIDIA-G0"
-      "--set"
-      "__GLX_VENDOR_LIBRARY_NAME"
-      "nvidia"
-      "--set"
-      "__VK_LAYER_NV_optimus"
-      "NVIDIA_only"
-    ];
     scripts = [
       pkgs.mpvScripts.uosc
       pkgs.mpvScripts.mpris
@@ -32,27 +13,10 @@
       pkgs.mpvScripts.webtorrent-mpv-hook
     ];
   };
-  svpWrapper = pkgs.writeShellScriptBin "svp" ''
-    regex='(https?|ftp|file)://[-[:alnum:]\+&@#/%?=~_|!:,.;]*[-[:alnum:]\+&@#/%=~_|]'
-    mpvfile='/tmp/mpvfile.webm'
-    if [[ $1 =~ $regex ]]
-    then
-        rm -f $mpvfile
-        mkfifo $mpvfile
-        ${pkgs.yt-dlp}/bin/yt-dlp -o - $1 > $mpvfile &
-        SVPManager $mpvfile
-    else
-        SVPManager $1
-    fi
-  '';
 in {
   home = {
     packages = with pkgs; [
-      # TODO check if SVP is fixed
-      (pkgs.svp.override {
-        customMpv = svpWrapper;
-      })
-      svpWrapper
+      svp
     ];
     persistence."/persist".directories = [
       ".local/state/mpv"

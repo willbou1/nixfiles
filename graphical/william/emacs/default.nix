@@ -34,6 +34,8 @@ with lib; let
         };
       })
 
+      vterm
+
       ement
       
       # Languages

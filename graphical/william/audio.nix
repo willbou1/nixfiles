@@ -1,11 +1,17 @@
 with builtins; {
-  # default to aptx_ll for my bluetooth headphones
-  home.file.".local/state/wireplumber/default-profile" = {
-    force = true;
-    text = ''
+  home = {
+    packages = with pkgs; [
+      helvum
+    ];
+
+    # default to aptx_ll for my bluetooth headphones
+    file.".local/state/wireplumber/default-profile" = {
+      force = true;
+      text = ''
       [default-profile]
       bluez_card.00_1B_66_C0_52_BD=a2dp-sink-aptx_ll
     '';
+    };
   };
 
   services = {

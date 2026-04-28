@@ -41,16 +41,6 @@ in {
         win11 = pkgs.writeShellScript "win11.sh" (readFile ./win11.sh);
       };
     };
-    #        kvmfr = {
-    #            enable = true;
-    #            shm = {
-    #                enable = true;
-    #                size = 128;
-    #                user = "william";
-    #                group = "libvirtd";
-    #                mode = "0600";
-    #            };
-    #        };
   };
 
   environment = {

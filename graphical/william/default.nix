@@ -52,10 +52,8 @@ with lib; {
       wally-cli
 
       libreoffice-fresh
-      #gimp
-      helvum
+      gimp
       steam
-      bitwig-studio
       qalculate-gtk
 
       zen-browser
