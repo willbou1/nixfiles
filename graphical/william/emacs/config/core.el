@@ -1,5 +1,14 @@
 ;; -*- lexical-binding: t; -*-
 
+(defun +dashboard-open ()
+  (interactive)
+  (dashboard-open)
+  (run-with-idle-timer 0.1 nil
+		       (lambda ()
+			 (+dashboard-jump-to-recents)
+			 (page-break-lines-mode +1)
+			 (hl-line-mode +1))))
+
 (require 'use-package)
 (require 'lib)
 (require 'theme)
@@ -7,8 +16,14 @@
 (require 'menu)
 
 (setq help-window-select nil
-      minimap-minimum-width 18
       split-width-threshold 130
+      aw-ignored-buffers '(" *MINIMAP*")
+
+      minimap-minimum-width 18
+      minimap-window-location 'right
+      minimap-hide-fringes t
+      minimap-major-modes '(prog-mode org-mode)
+
       scroll-margin 3
       scroll-conservatively 10
       require-final-newline t
@@ -35,6 +50,7 @@
   :init
   (setq sp-hybrid-kill-excessive-whitespace t)
   :config
+  (add-to-list 'sp-ignore-modes-list 'org-mode)
   (sp-with-modes '(emacs-lisp-mode minibuffer-mode)
     (sp-local-pair "'" nil :actions nil)
     (sp-local-pair "`" nil :actions nil))
@@ -51,7 +67,10 @@
 (use-package
   direnv
   :commands direnv-mode
-  :hook (find-file . direnv-mode))
+  :hook ((after-init . direnv-mode))
+	 ;;(lsp-before-initialize-hook . direnv-update-environment))
+  :init
+  (setq direnv-always-show-summary nil))
 
 
 ;; Dired
@@ -81,16 +100,23 @@
 
 ;; Backups and autosaves
 (make-directory "~/.config/emacs/backups/" t)
+(make-directory "~/.config/emacs/auto-save/" t)
 (setq auto-save-no-message t
-      make-backup-files t
-      backup-by-copying t
-      backup-by-copying-when-linked t
+      auto-save-file-name-transforms
+	`((".*" "~/.config/emacs/auto-save/" t))
+
       version-control t
       delete-old-versions t
       kept-new-versions 6
       kept-old-versions 2
+      make-backup-files t
       backup-directory-alist '(("." . "~/.config/emacs/backups/"))
-      tramp-allow-unsafe-temporary-files t
+      backup-by-copying t
+      backup-by-copying-when-linked t)
+
+
+;; Backups and autosaves
+(setq tramp-allow-unsafe-temporary-files t
       tramp-default-method "ssh")
 
 
@@ -120,6 +146,7 @@
 (use-package
   page-break-lines
   :config
+  (add-to-list 'page-break-lines-modes 'LaTeX-mode)
   (global-page-break-lines-mode 1))
 
 (use-package
@@ -146,11 +173,11 @@
 	dashboard-icon-type 'nerd-icons
 	dashboard-set-heading-icons t
 	dashboard-set-file-icons t
-	dashboard-projects-switch-function 'helm-projectile-switch-project
+	dashboard-projects-switch-function 'projectile-switch-project-by-name
+	dashboard-filter-agenda-entry #'dashboard-filter-agenda-by-todo
 	initial-buffer-choice 'dashboard-open)
   (set-face-underline 'dashboard-items-face nil)
   (set-face-underline 'dashboard-no-items-face nil)
-  (add-hook 'server-after-make-frame-hook 'dashboard-open)
 
   (defun +dashboard-jump-to-recents ()
     (interactive)
@@ -164,7 +191,8 @@
       (dashboard-jump-to-projects)
       (message "No projects available.")))
 
-  (add-hook 'dashboard-mode-hook '+dashboard-jump-to-recents)
+  (add-hook 'server-after-make-frame-hook #'+dashboard-open)
+  (add-hook 'dashboard-after-initialize-hook #'+dashboard-open)
   (dashboard-setup-startup-hook))
 
 (use-package helpful
@@ -180,6 +208,13 @@
 (setq select-enable-primary nil)
 
 
+;; Magit
+(use-package
+  magit
+  :init
+  (setq magit-bury-buffer-function #'magit-restore-window-configuration))
+
+
 ;; Completion
 (use-package
   corfu
@@ -187,7 +222,7 @@
   (setq tab-always-indent 'complete
         corfu-auto t
 	corfu-preview-current nil
-        corfu-auto-delay 0.2
+        corfu-auto-delay 0.3
         corfu-auto-trigger "."
 	corfu-popupinfo-delay 0.7
         corfu-quit-no-match 'separator
@@ -232,7 +267,7 @@
 					 "~/priv/nextcloud")
         projectile-completion-system 'helm
         projectile-enable-caching t
-        projectile-indexing-method 'native)
+        projectile-indexing-method 'hybrid)
   (projectile-mode 1))
 
 ;; Symbols
@@ -293,69 +328,110 @@
 ;; Org
 (use-package
   org
+  :hook (org-mode . follow-mode)
   :init
-  (setq org-directory "~/priv/documents/org/"
+  (setq org-directory "~/priv/nextcloud/org/"
+	org-agenda-files '("~/priv/nextcloud/org/agenda.org")
+	browse-url-browser-function 'browse-url-qutebrowser
+	browse-url-qutebrowser-arguments '("--target" "tab")
+	org-return-follows-link t
+	org-make-toc-link-type-fn 'org-make-toc--link-entry-org
+
+	org-src-preserve-indentation t
+	org-confirm-babel-evaluate nil
+
 	org-preview-latex-default-process 'dvisvgm
 	org-preview-latex-image-directory "~/.config/emacs/ltximg/"
-	org-use-sub-superscripts '{}
 	org-latex-packages-alist '(("" "amsmath" t)
 				   ("" "amssymb" t)
 				   ("" "tikz" t)
 				   ("" "tikz-cd" t)
 				   ("" "circuitikz" t)
 				   ("" "pgfplots" t))
-	org-confirm-babel-evaluate nil
-	org-return-follows-link t)
+	org-use-sub-superscripts '{}
+	org-startup-with-latex-preview t)
 
   :config
   (plist-put org-format-latex-options :scale 1.5)
-  (plist-put org-format-latex-options :background "Transparent")
+  (plist-put org-format-latex-options :background "Transparent"))
 
-  (use-package
-    org-appear
-    :hook (org-mode . org-appear-mode))
+(defun +org-journal-file ()
+  (let ((dir (expand-file-name "journal/" org-directory)))
+    (unless (file-directory-p dir)
+      (make-directory dir t))
+    (expand-file-name
+     (format-time-string "%Y-%m-%d.org")
+     dir)))
 
-  (use-package
-    toc-org
-    :hook (org-mode . toc-org-mode))
+(use-package
+  org-capture
+  :after org
+  :hook (org-capture-mode . (lambda ()
+			      (setq header-line-format nil)))
+  :init
+  (setq org-capture-templates
+	'(("j" "Journal"
+	   entry
+	   (file (lambda ()
+		   (+org-journal-file)))
+	   "* %<%H:%M>\n%?"))))
 
-  (use-package
-    org-fragtog
-    :hook (org-mode . org-fragtog-mode))
+(use-package
+  org-appear
+  :hook (org-mode . org-appear-mode))
 
-  (use-package
-    org-modern
-    :after org
-    :init
-    (setq rg-auto-align-tags nil
-	  org-tags-column 0
-	  org-catch-invisible-edits 'show-and-error
-	  org-special-ctrl-a/e t
-	  org-insert-heading-respect-content t
+(use-package
+  toc-org
+  :hook (org-mode . toc-org-mode))
 
-	  org-hide-emphasis-markers t
-	  org-pretty-entities t
-	  org-agenda-tags-column 0
-	  org-ellipsis "…")
-    :config
-    (global-org-modern-mode)))
+(use-package
+  org-fragtog
+  :hook (org-mode . org-fragtog-mode))
+
+(use-package
+  org-modern
+  :init
+  (setq org-auto-align-tags nil
+	org-tags-column 0
+	org-catch-invisible-edits 'show-and-error
+	org-special-ctrl-a/e t
+	org-insert-heading-respect-content t
+
+	org-hide-emphasis-markers t
+	org-pretty-entities t
+	org-agenda-tags-column 0
+	org-ellipsis "…")
+  :config
+  (global-org-modern-mode))
 
 
 ;; LaTeX
-(with-eval-after-load 'tex
+(use-package tex-site
+  :ensure auctex
+  :mode ("\\.tex\\'" . LaTeX-mode)
+  :init
   (setq TeX-PDF-mode t
-	TeX-auto-save t
-        TeX-source-correlate-mode t
-        TeX-source-correlate-start-server nil)
-  (setcar (cdr (assoc 'output-pdf TeX-view-program-selection))
-	  "Zathura")
-  (add-hook 'LaTeX-mode-hook (lambda ()
-                               (require 'tex-fold)
-                               (TeX-fold-mode 1)
-			       (TeX-fold-buffer)
+        TeX-auto-save t
+        TeX-parse-self t
+        TeX-source-correlate-start-server t
+	TeX-source-correlate-method 'synctex
+	TeX-view-program-selection
+	'((output-pdf "Zathura")))
+  :config
+  (add-hook 'LaTeX-mode-hook #'TeX-source-correlate-mode))
 
-                               (require 'evil-tex)
-                               (evil-tex-mode))))
+(use-package
+  evil-tex
+  :hook (LaTeX-mode . evil-tex-mode))
+
+(use-package
+  tex-fold
+  :init
+  (setq TeX-fold-auto t)
+  :hook
+  (LaTeX-mode . tex-fold-mode)
+  (LaTeX-mode . (lambda ()
+                  (run-with-idle-timer 0.1 nil #'TeX-fold-buffer))))
 
 
 ;; Jupyter
@@ -374,18 +450,29 @@
 
 
 ;; LSP
+(add-to-list 'auto-mode-alist '("\\.yuck\\'" . lisp-data-mode))
+
 (use-package
   lsp-mode
-  :hook ((c-mode . lsp-deferred)
+  :hook ((c-ts-mode . lsp-deferred)
+	 (c++-ts-mode . lsp-deferred)
+	 (typescript-ts-mode . lsp-deferred)
 	 (nix-mode . lsp-deferred)
-	 (c++-mode . lsp-deferred)
 	 (haskell-mode . lsp-deferred)
-	 (rust-mode . lsp-deferred)))
+	 (rust-ts-mode . lsp-deferred)
+	 (LaTeX-mode . lsp-deferred)))
+
+(use-package
+  lsp-pyright
+  :after lsp-mode
+  :custom (lsp-pyright-langserver-command "pyright")
+  :hook (python-ts-mode . (lambda ()
+                         (require 'lsp-pyright)
+                         (lsp-deferred))))
 
 (defvar +lsp-ui-imenu--remaps nil)
 (use-package
   lsp-ui
-  :after lsp-mode
   :hook (lsp-mode . lsp-ui-mode)
   :init
   (setq lsp-ui-imenu-window-fix-width t
@@ -409,26 +496,51 @@
 
 
 ;; DAP
+(use-package dap-mode
+  :init
+  (setq dap-auto-configure-features '(sessions locals controls tooltip)))
+
 (use-package
   dap-lldb
-  :hook (c++-mode . (lambda () (require 'dap-lldb)))
-  :init
-  (setq dap-auto-configure-features '(sessions locals controls tooltip))
+  :after dap-mode
+  :hook (c++-ts-mode . (lambda () (require 'dap-lldb)))
   :config
   (setq dap-lldb-debug-program '("lldb-dap")))
+
+(use-package
+  dap-python
+  :after dap-mode
+  :hook (python-ts-mode . (lambda () (require 'dap-python))))
 
 (require 'feebleline)
 (setq feebleline-timer-interval 0.1)
 (feebleline-mode 1)
 
 
+;; mu4e
+(use-package
+  mu4e
+  :init
+  (setq mail-user-agent 'mu4e
+	mu4e-get-mail-command "mbsync -a"
+	mu4e-update-interval 300
+	user-mail-address  "willbou2@gmail.com"
+	user-full-name     "William Boulanger"
+	mu4e-inbox-folder  "/gmail/Inbox"
+	mu4e-sent-folder   "/gmail/[Gmail]/Sent Mail"
+	mu4e-drafts-folder "/gmail/[Gmail]/Drafts"
+	mu4e-trash-folder  "/gmail/[Gmail]/Trash"))
+
+
 ;; GPTel
 (use-package
   gptel
+  :hook (gptel-mode . gptel-highlight-mode)
   :config
   (setq gptel-model  'gpt-4o
 	gptel-default-mode 'org-mode
-	gptel-prompt-prefix-alist '((org-mode . "*** \n"))
+	gptel-prompt-prefix-alist '((org-mode . "\f\n*Prompt:* "))
+	gptel-highlight-methods '(margin fringe)
 	gptel-backend
 	(gptel-make-openai "Github Models"
 	  :host "models.inference.ai.azure.com"

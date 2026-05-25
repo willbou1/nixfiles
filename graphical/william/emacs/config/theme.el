@@ -92,46 +92,19 @@
 
   "Size of the gaps")
 (defcustom +theme-internal-gap 0
-           "Size of the internal gaps")
-(add-hook 'post-command-hook
-          (lambda ()
-            (+set-default-frame-parameters
-              'right-divider-width +theme-gap
-              'bottom-divider-width +theme-gap
-              'internal-border-width +theme-internal-gap)
-            (dolist (buf (list " *Minibuf-0*" " *Minibuf-1*" " *Echo Area 0*" " *Echo Area 1*"))
-              (when (get-buffer buf)
-                (with-current-buffer buf
-                                     (setq-local face-remapping-alist
-                                                 `((default (:background ,(+color-stylix :base01))))))))))
-
-
-;;; Org
-(with-eval-after-load
-  'org
-  (set-face-background
-    'org-block
-    (+color-stylix
-      :base01
-      (lambda (h) (- h 0.01))
-      nil
-      (lambda (v) (- v 0.15))))
-
-  (set-face-background
-    'org-block-begin-line
-    (+color-stylix
-      :base01
-      (lambda (h) (- h 0.01))
-      nil
-      (lambda (v) (- v 0.1))))
-
-  (set-face-background
-    'org-block-end-line
-    (+color-stylix
-      :base01
-      (lambda (h) (- h 0.01))
-      nil
-      (lambda (v) (- v 0.1)))))
+  "Size of the internal gaps")
+(let ((bg (+color-stylix :base01)))
+  (add-hook 'post-command-hook
+	    (lambda ()
+	      (+set-default-frame-parameters
+	       'right-divider-width +theme-gap
+	       'bottom-divider-width +theme-gap
+	       'internal-border-width +theme-internal-gap)
+	      (dolist (buf (list " *Minibuf-0*" " *Minibuf-1*" " *Echo Area 0*" " *Echo Area 1*"))
+		(when (get-buffer buf)
+		  (with-current-buffer buf
+		    (setq-local face-remapping-alist
+				`((default (:background ,bg))))))))))
 
 
 ;;; Feebleline
@@ -159,6 +132,25 @@
  '(org-level-3 ((t (:height 1.0 :inherit outline-3))))
  '(org-level-4 ((t (:height 0.9 :inherit outline-4))))
  '(org-level-5 ((t (:height 0.8 :inherit outline-5))))
+ `(org-indent
+   ((t (:foreground ,(+color-stylix :base01 nil nil (lambda (l) (* l 0.9)))))))
+ `(org-hide
+   ((t (:foreground ,(+color-stylix :base01 nil nil (lambda (l) (* l 0.9)))))))
+ `(org-block
+   ((t (:background ,(+color-stylix :base01
+				    (lambda (h) (- h 0.01))
+				    nil
+				    (lambda (v) (- v 0.15)))))))
+ `(org-block-begin-line
+   ((t (:extend t :background ,(+color-stylix :base01
+				    (lambda (h) (- h 0.01))
+				    nil
+				    (lambda (v) (- v 0.1)))))))
+ `(org-block-end-line
+   ((t (:extend t :background ,(+color-stylix :base01
+				    (lambda (h) (- h 0.01))
+				    nil
+				    (lambda (v) (- v 0.1)))))))
 
  `(feebleline-file-owner-face
    ((t (:foreground ,(+color-stylix :base0C)))))
@@ -200,6 +192,7 @@
    ((t (:family ,(face-attribute 'default :family) :foreground ,(+color-stylix :base04)))))
  `(ement-tabulated-room-list-favourite
    ((t (:underline t :family ,(face-attribute 'default :family) :foreground ,(+color-stylix :base04)))))
+
  )
 
 (font-lock-add-keywords

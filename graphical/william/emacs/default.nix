@@ -18,8 +18,9 @@ with lib; let
       pkgs.emacs-git-pgtk.override {
         withNativeCompilation = true;
       }
-    else pkgs.emacs;
-  emacsWithPackages = (pkgs.emacsPackagesFor emacs).emacsWithPackages (epkgs:
+    else pkgs.unstable.emacs;
+  # We use a newer build of Emacs so let's take the packages from nixpkgs unstable
+  emacsWithPackages = (pkgs.unstable.emacsPackagesFor emacs).emacsWithPackages (epkgs:
     with epkgs; [
       # Custom sources
       (trivialBuild {
@@ -35,8 +36,8 @@ with lib; let
       })
 
       vterm
-
       ement
+      mu4e
       
       # Languages
       cmake-mode
@@ -67,6 +68,7 @@ with lib; let
       lsp-mode
       lsp-ui
       lsp-haskell
+      lsp-pyright
       dap-mode
       flycheck
 
@@ -90,6 +92,7 @@ with lib; let
 
       # Org
       toc-org
+      org-make-toc
       org-appear
       org-modern
       org-fragtog

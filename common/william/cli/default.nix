@@ -45,6 +45,13 @@ with lib; {
           port = 22;
           user = "william";
         };
+        "github-school" = {
+          hostname = "github.com";
+          user = "git";
+          identityFile = "~/.ssh/id_ed25519_school";
+          identitiesOnly = true;
+          controlMaster = "no"; # or it reuses the existing connection with the wrong key
+        };
       };
     };
     git = {

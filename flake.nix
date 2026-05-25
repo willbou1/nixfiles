@@ -61,8 +61,6 @@
       };
     };
 
-    #notnft.url = github:chayleaf/notnft;
-
     neovim-nightly-overlay = {
       # url = ./devel/neovim-nightly-overlay;
       url = "github:nix-community/neovim-nightly-overlay";

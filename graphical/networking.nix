@@ -127,7 +127,7 @@ in {
           ip46tables -X OUTPUT 2> /dev/null || true
 
           # Allow UPNP traffic
-          ipset create upnp hash:ip,port family inet hashsize 1024 maxelem 65536 timeout 3 bucketsize 12 initval 0x49fc21d8 || true
+          ipset create upnp hash:ip,port family inet hashsize 1024 maxelem 65536 bucketsize 12 initval 0x49fc21d8 || true
           iptables -I OUTPUT -d 239.255.255.250/32 -p udp -m udp --dport 1900 -j SET --add-set upnp src,src --exist
           iptables -I nixos-fw -p udp -m set --match-set upnp dst,dst -j ACCEPT
 

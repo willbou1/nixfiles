@@ -7,7 +7,6 @@ with lib; {
   imports = mine.autoInclude ./. [
     ./specialisations
     ./william
-    ./networking-alt.nix
   ];
 
   home-manager.users.william = import ./william;

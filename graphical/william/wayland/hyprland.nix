@@ -188,6 +188,7 @@ in {
           "$mod,N,exec,${config.home.terminal} ncpamixer"
           "$mod,E,exec,emacsclient -c"
           "$mod,D,exec,wofi --show drun"
+          "$mod SHIFT,D,exec,deluge-gtk"
           "$mod,W,exec,looking-glass-client -f /dev/kvmfr0"
           "$mod,P,exec,${pkgs.hyprpicker}/bin/hyprpicker -f"
           "$mod,C,exec,${hyprcap}/bin/hyprcap"
@@ -200,7 +201,7 @@ in {
           "$mod,T,togglesplit"
           "$mod,G,togglegroup"
           "$mod,BACKSPACE,changegroupactive,f"
-          "$mod,TAB,workspace,back_and_forth"
+          "$mod,TAB,workspace,previous"
 
           "$mod,H,movefocus,l"
           "$mod,L,movefocus,r"

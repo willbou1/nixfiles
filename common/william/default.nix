@@ -17,6 +17,7 @@ with lib; {
     directories = [
       ".gnupg"
       ".ssh"
+      ".config/sops"
     ];
   };
 

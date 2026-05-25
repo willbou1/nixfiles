@@ -49,7 +49,7 @@ with lib; {
       hyprpaper
       swww
 
-      wally-cli
+      keymapp
 
       libreoffice-fresh
       gimp

@@ -8,14 +8,14 @@
       ".config/JetBrains"
     ];
     packages = with pkgs; [
-      jetbrains.idea
-      jetbrains.clion
-      jetbrains.dataspell
-      jetbrains.pycharm
-      jetbrains-toolbox
-      jetbrains.rider
+      # jetbrains.idea
+      # jetbrains.clion
+      # jetbrains.dataspell
+      # jetbrains.pycharm
+      # jetbrains-toolbox
+      # jetbrains.rider
 
-      unityhub
+      # unityhub
     ];
   };
 

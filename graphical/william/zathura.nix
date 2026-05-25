@@ -29,8 +29,10 @@ with lib; {
       recolor-reverse-video = true;
       zoom = true;
 
+      synctex = true;
+      synctex-editor-command = "emacsclient +%{line} %{input}";
+
       highlight-fg = rgb "base09";
-      index-fg = rgb "base07";
 
       default-bg = rgba "base00" opacity.terminal;
       default-fg = rgb "base01";
@@ -50,6 +52,10 @@ with lib; {
       completion-fg = rgb "base0D";
       completion-highlight-fg = rgb "base07";
       completion-highlight-bg = rgba "base0D" overTransparency;
+      index-bg = rgba "base00" overTransparency;
+      index-fg = rgb "base0D";
+      index-active-bg = rgba "base0D" opacity.terminal;
+      index-active-fg = rgb "base07";
       recolor-lightcolor = rgba "base00" 0.55;
       recolor-darkcolor = rgb "base06";
     };

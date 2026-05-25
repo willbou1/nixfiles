@@ -10,7 +10,7 @@ with lib; {
     yt-dlp
     qpdf
     nvtopPackages.full
-    ani-cli
+    unstable.ani-cli
     mkvtoolnix
     posting
   ];

@@ -1,5 +1,5 @@
-(deflisten launch_workspaces_mon1 "scripts/workspaces.sh 1")
-(deflisten launch_workspaces_mon2 "scripts/workspaces.sh 2")
+(deflisten launch_workspaces_mon1 "scripts/workspaces.sh 2")
+(deflisten launch_workspaces_mon2 "scripts/workspaces.sh 1")
 
 (defvar wm_reveal false)
 
