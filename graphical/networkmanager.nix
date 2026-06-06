@@ -19,7 +19,7 @@ in {
 
       [wifi]
       mode=infrastructure
-      ssid=Pacha
+      ssid=Pacha 2.4
 
       [wifi-security]
       auth-alg=open

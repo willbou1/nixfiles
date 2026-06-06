@@ -11,19 +11,23 @@ with config.lib.stylix.colors.withHashtag; let
         "colors": {
             "accent-color": "${base05}",
             "accent": "${base05}",
+
             "primary-color": "${base04}",
             "warning-color": "${base0A}",
             "alert": "${base09}",
             "sidebar-color": "${base01}",
+
             "roomlist-background-color": "${base00}",
             "roomlist-text-color": "${base05}",
             "roomlist-text-secondary-color": "${base04}",
-            "roomlist-highlights-color": "${base03}",
-            "roomlist-separator-color": "${base00}",
+            "roomlist-highlights-color": "${base01}",
+            "roomlist-separator-color": "${base02}",
+
             "timeline-background-color": "${base00}",
             "timeline-text-color": "${base05}",
             "timeline-text-secondary-color": "${base04}",
             "timeline-highlights-color": "${base01}",
+
             "username-colors": [ "${base01}", "${base02}", "${base03}", "${base04}", "${base05}", "${base06}", "${base07}"],
             "avatar-background-colors": [ "${base08}", "${base09}", "${base0A}", "${base0B}", "${base0C}", "${base0D}", "${base0E}", "${base0F}"],
             "reaction-row-button-selected-bg-color": "${base04}",

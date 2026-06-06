@@ -119,6 +119,11 @@
  `(header-line
    ((t (:box (:color ,(+color-stylix :base0B))))))
 
+ `(mode-line-active
+   ((t (:box (:color ,(+color-stylix :base0B)) :background ,(+color-stylix :base00)))))
+ `(mode-line-inactive
+   ((t (:box (:color ,(+color-stylix :base0B)) :background ,(+color-stylix :base00)))))
+
  `(aw-leading-char-face
    ((t (:box t :foreground ,(+color-stylix :base09)))))
  `(aw-background-face
@@ -132,9 +137,9 @@
  '(org-level-3 ((t (:height 1.0 :inherit outline-3))))
  '(org-level-4 ((t (:height 0.9 :inherit outline-4))))
  '(org-level-5 ((t (:height 0.8 :inherit outline-5))))
- `(org-indent
-   ((t (:foreground ,(+color-stylix :base01 nil nil (lambda (l) (* l 0.9)))))))
  `(org-hide
+   ((t (:foreground ,(+color-stylix :base01 nil nil (lambda (l) (* l 0.9)))))))
+ `(org-indent
    ((t (:foreground ,(+color-stylix :base01 nil nil (lambda (l) (* l 0.9)))))))
  `(org-block
    ((t (:background ,(+color-stylix :base01
@@ -159,6 +164,8 @@
  `(feebleline-git-face
    ((t (:foreground ,(+color-stylix :base0D)))))
 
+ `(helm-locate-finish
+   ((t (:foreground ,(+color-stylix :base05)))))
  `(helm-tooltip
    ((t (:background unspecified :foreground ,(+color-stylix :base04)))))
  `(helm-M-x-short-doc
@@ -288,8 +295,8 @@
 		       (format "+rainbow-delimiters-depth-%d-face" depth)
 		     "+rainbow-delimiters-unmatched-face"))))
 	(unless (facep face)
-	  (make-face face))
-	(set-face-foreground face (if match color "red"))
+	  (make-face face)
+	  (set-face-foreground face (if match color "red")))
 	face)))
   (setq rainbow-delimiters-pick-face-function #'+rainbow-delimiters-pick-face
 	rainbow-delimiters-max-face-count 15))

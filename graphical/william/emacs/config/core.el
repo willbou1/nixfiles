@@ -14,6 +14,7 @@
 (require 'theme)
 (require 'keybindings)
 (require 'menu)
+(require 'lang)
 
 (setq help-window-select nil
       split-width-threshold 130
@@ -39,10 +40,8 @@
 
 ;; Line numbers
 (setq display-line-numbers-type 'relative)
-(add-hook 'prog-mode-hook 'display-line-numbers-mode)
-(add-hook 'LaTeX-mode-hook 'display-line-numbers-mode)
-(add-hook 'dired-mode-hook 'display-line-numbers-mode)
-(add-hook 'org-mode-hook 'display-line-numbers-mode)
+(dolist (hook '(prog-mode-hook LaTeX-mode-hook dired-mode-hook org-mode-hook))
+  (add-hook hook #'display-line-numbers-mode))
 
 (use-package smartparens
   :hook ((prog-mode . smartparens-mode)
@@ -212,7 +211,8 @@
 (use-package
   magit
   :init
-  (setq magit-bury-buffer-function #'magit-restore-window-configuration))
+  (setq magit-display-buffer-function #'magit-display-buffer-same-window-except-diff-v1)
+  )
 
 
 ;; Completion
@@ -389,6 +389,13 @@
   :hook (org-mode . org-fragtog-mode))
 
 (use-package
+  org-download
+  :hook (org-mode . org-download-enable)
+  :config ;; We need org stuff to be set up for sure
+  (setq org-download-image-dir
+	(expand-file-name "images/" org-directory)))
+
+(use-package
   org-modern
   :init
   (setq org-auto-align-tags nil
@@ -403,35 +410,6 @@
 	org-ellipsis "…")
   :config
   (global-org-modern-mode))
-
-
-;; LaTeX
-(use-package tex-site
-  :ensure auctex
-  :mode ("\\.tex\\'" . LaTeX-mode)
-  :init
-  (setq TeX-PDF-mode t
-        TeX-auto-save t
-        TeX-parse-self t
-        TeX-source-correlate-start-server t
-	TeX-source-correlate-method 'synctex
-	TeX-view-program-selection
-	'((output-pdf "Zathura")))
-  :config
-  (add-hook 'LaTeX-mode-hook #'TeX-source-correlate-mode))
-
-(use-package
-  evil-tex
-  :hook (LaTeX-mode . evil-tex-mode))
-
-(use-package
-  tex-fold
-  :init
-  (setq TeX-fold-auto t)
-  :hook
-  (LaTeX-mode . tex-fold-mode)
-  (LaTeX-mode . (lambda ()
-                  (run-with-idle-timer 0.1 nil #'TeX-fold-buffer))))
 
 
 ;; Jupyter
@@ -449,74 +427,6 @@
   (add-hook 'org-babel-after-execute-hook #'org-redisplay-inline-images))
 
 
-;; LSP
-(add-to-list 'auto-mode-alist '("\\.yuck\\'" . lisp-data-mode))
-
-(use-package
-  lsp-mode
-  :hook ((c-ts-mode . lsp-deferred)
-	 (c++-ts-mode . lsp-deferred)
-	 (typescript-ts-mode . lsp-deferred)
-	 (nix-mode . lsp-deferred)
-	 (haskell-mode . lsp-deferred)
-	 (rust-ts-mode . lsp-deferred)
-	 (LaTeX-mode . lsp-deferred)))
-
-(use-package
-  lsp-pyright
-  :after lsp-mode
-  :custom (lsp-pyright-langserver-command "pyright")
-  :hook (python-ts-mode . (lambda ()
-                         (require 'lsp-pyright)
-                         (lsp-deferred))))
-
-(defvar +lsp-ui-imenu--remaps nil)
-(use-package
-  lsp-ui
-  :hook (lsp-mode . lsp-ui-mode)
-  :init
-  (setq lsp-ui-imenu-window-fix-width t
-	lsp-ui-imenu-auto-refresh t
-	lsp-ui-imenu-window-width 25
-
-	lsp-ui-doc-show-with-cursor nil
-	lsp-ui-doc-alignment 'window
-	lsp-ui-doc-border (plist-get base16-stylix-theme-colors :base09)
-	lsp-ui-doc-delay 1.0
-	lsp-ui-doc-use-webkit t
-	lsp-ui-doc-include-signature t)
-  :config
-  (add-hook 'lsp-ui-imenu-mode-hook
-	    (lambda ()
-	      (with-current-buffer "*lsp-ui-imenu*"
-		(when +lsp-ui-imenu--remaps
-		  (face-remap-remove-relative +lsp-ui-imenu--remaps))
-		(setq +lsp-ui-imenu--remaps
-		      (face-remap-add-relative 'default :height 0.55))))))
-
-
-;; DAP
-(use-package dap-mode
-  :init
-  (setq dap-auto-configure-features '(sessions locals controls tooltip)))
-
-(use-package
-  dap-lldb
-  :after dap-mode
-  :hook (c++-ts-mode . (lambda () (require 'dap-lldb)))
-  :config
-  (setq dap-lldb-debug-program '("lldb-dap")))
-
-(use-package
-  dap-python
-  :after dap-mode
-  :hook (python-ts-mode . (lambda () (require 'dap-python))))
-
-(require 'feebleline)
-(setq feebleline-timer-interval 0.1)
-(feebleline-mode 1)
-
-
 ;; mu4e
 (use-package
   mu4e
@@ -529,7 +439,10 @@
 	mu4e-inbox-folder  "/gmail/Inbox"
 	mu4e-sent-folder   "/gmail/[Gmail]/Sent Mail"
 	mu4e-drafts-folder "/gmail/[Gmail]/Drafts"
-	mu4e-trash-folder  "/gmail/[Gmail]/Trash"))
+	mu4e-trash-folder  "/gmail/[Gmail]/Trash"
+
+	message-send-mail-function 'message-send-mail-with-sendmail
+	sendmail-program "msmtp"))
 
 
 ;; GPTel

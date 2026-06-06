@@ -2,7 +2,9 @@
   inputs,
   pkgs,
   ...
-}: let
+}:
+with builtins;
+let
   spicePkgs = inputs.spicetify-nix.legacyPackages.${pkgs.stdenv.hostPlatform.system};
 in {
   home.persistence."/persist".directories = [

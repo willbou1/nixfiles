@@ -148,7 +148,7 @@ in {
         "wava"
         "SVPManager"
         "element-desktop-nightly"
-        "spotify"
+        "ytmdesktop"
         "qutebrowser"
         "${pkgs.swww}/bin/swww init"
         # Make sure to clean up after xorg session
@@ -169,6 +169,7 @@ in {
 
         "opacity ${fakeOpacity} override 0.85 override 0.85 override,workspace:6"
         "workspace 6 silent,title:(.*)(Spotify)(.*)"
+        "workspace 6 silent,title:(.*)(YouTube Music)(.*)"
 
         "float,class:SVPManager"
         "workspace 9 silent,class:SVPManager"
@@ -208,7 +209,7 @@ in {
           "$mod,K,movefocus,u"
           "$mod,J,movefocus,d"
 
-          "$mod,N,swapactiveworkspaces,eDP-1 DP-4"
+          "$mod,Z,swapactiveworkspaces,0 1"
           "$mod SHIFT,H,movewindow,l"
           "$mod SHIFT,L,movewindow,r"
           "$mod SHIFT,K,movewindow,u"

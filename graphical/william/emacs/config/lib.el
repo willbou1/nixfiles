@@ -44,6 +44,7 @@
       (set-frame-parameter nil k v))))
 
 ;; ----------------------------------- Colors ----------------------------------
+;; TODO seems that this is already implemented... FUCK... let's use color-name-to-rgb
 (defun +color-hex-to-rgb (hex-color)
   "Converts a value like #RRGGBB to rgb"
   (mapcar (lambda (component) (/ (float (string-to-number component 16)) 255))

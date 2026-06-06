@@ -4,6 +4,14 @@
 (use-package
   helm
   :config
+  (defun +helm-display-at-bottom (buf &rest _args)
+    "Cleanly display Helm split exactly across the bottom half of the active frame."
+    (let* ((window (split-window (frame-root-window) 
+                                 (- (/ (frame-height) 2)) 
+                                 'below)))
+      (set-window-buffer window buf)
+      (set-window-dedicated-p window t) ;; Pin it so it doesn't leak into other window layouts
+      window))
 
   (setq helm-apropos-show-short-doc t
 	helm-M-x-show-short-doc t
@@ -12,19 +20,13 @@
 	helm-locate-command "locate -e -r %s"
 	helm-candidate-number-limit 125
 	helm-input-idle-delay 0.1
-	helm-display-function
-	(lambda (buf &rest args)
-	  "Always show Helm in the bottom half of the frame."
-	  (let* ((frame (selected-frame))
-		 (root-win (frame-root-window frame))
-		 (bottom-height (/ (frame-height frame) 2))
-		 (bottom-win (split-window root-win (- bottom-height) 'below)))
-	    (set-window-buffer bottom-win buf)
-	    bottom-win)))
-  (defadvice helm-persistent-help-string (around avoid-help-message activate)
-    "Avoid help message")
-  (defadvice helm-display-mode-line (after undisplay-header activate)
-    (setq header-line-format nil))
+	helm-display-function #'+helm-display-at-bottom)
+  (advice-add 'helm-persistent-help-string :around #'ignore)
+  (add-hook 'helm-after-initialize-hook
+            (lambda ()
+              (with-helm-buffer
+                (setq-local header-line-format nil
+                            mode-line-format nil))))
 
   (fset 'helm-display-mode-line #'ignore)
   (add-hook 'helm-after-initialize-hook

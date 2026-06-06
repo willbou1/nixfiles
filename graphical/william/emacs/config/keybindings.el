@@ -173,7 +173,7 @@ _a_: Align    _J_: ↓ Move row   _L_: → Move column   _l_: → Field   _C_: -
       ("h" org-table-previous-field)
       ("L" org-table-move-column-right)
       ("H" org-table-move-column-left)
-      ("r" org-table-insert-row)
+      ("r" (org-table-insert-row 'below))
       ("d" org-table-kill-row)
       ("c" org-table-insert-column)
       ("C" org-table-delete-column)
@@ -193,8 +193,9 @@ _a_: Align    _J_: ↓ Move row   _L_: → Move column   _l_: → Field   _C_: -
     '(( :foreign-keys run)
       "
 _d_: Drawer   _b_: Source      _h_: Heading   _s_: Subheading  _t_: Todo heading      _:_: Time stamp
-_l_: Link     _B_: Structure   _H_: Heading   _i_: Item        _T_: Todo subheading   
+_l_: Link     _B_: Structure   _H_: Heading   _i_: Item        _T_: Todo subheading   _c_: Clipboard
 "
+      ("c" org-download-clipboard)
       ("d" org-insert-drawer)
       ("b" (org-insert-structure-template "src"))
       ("B" org-insert-structure-template)
@@ -228,11 +229,13 @@ _c_: Capture   _a_: Abort   _r_: Refile   _f_: Finalize
   (defconst +hydra-org--desc
     '(( :foreign-keys run)
       "
-  _h_: ↑ heading   _l_: ↑ item  _b_: ↑ block   _<_: Demote    _m_: Mark       _i_: Insert   _x_: Execute   _u_: Undo     _n_: Narrow
-  _H_: ↓ heading   _L_: ↓ item  _B_: ↓ block   _>_: Promote   _M_: Mark sub   _d_: Delete   _e_: Edit      _r_: Refile   _w_: Widen
+  _h_: ↑ heading   _l_: ↑ item  _b_: ↑ block   _<_: Demote    _m_: Mark       _i_: Insert   _x_: Execute   _u_: Undo     _n_: Narrow   _d_: Deadline
+  _H_: ↓ heading   _L_: ↓ item  _B_: ↓ block   _>_: Promote   _M_: Mark sub   _d_: Delete   _e_: Edit      _r_: Refile   _w_: Widen    _s_: Schedule
   "
       ("h" org-next-visible-heading)
       ("H" org-previous-visible-heading)
+      ("s" org-schedule)
+      ("S" org-deadline)
       ("l" org-next-item)
       ("L" org-previous-item)
       ("l" org-next-link)
@@ -321,7 +324,7 @@ _l_: →   _k_: ↑   _L_: w -= 3   _K_: h -= 3   _s_: ==   _R_: ⟲   _i_: Isol
           ("W" (let ((aw-scope 'frame))
 		 (ace-window)))
           ("w" ace-window)
-	  ("<tab>" aw-flip-window)
+	  ("<tab>" other-window)
 	  ("<escape>" nil)
           ("q" nil))))
   (defconst +hydra-window--desc (+hydra-window--desc-base nil))
@@ -344,6 +347,7 @@ _l_: →   _k_: ↑   _L_: w -= 3   _K_: h -= 3   _s_: ==   _R_: ⟲   _i_: Isol
     "ç" '(vterm                 :which-key "VTerm")
     "." '(helm-projectile	:which-key "Projectile")
     ":" '(async-shell-command	:which-key "Async $")
+    "#" '(count-words           :which-key "wc")
     "é" '(helm-for-files	:which-key "Find file")
     "g" '(magit	:which-key "Magit")
     "$" '((lambda ()
@@ -382,7 +386,7 @@ _l_: →   _k_: ↑   _L_: w -= 3   _K_: h -= 3   _s_: ==   _R_: ⟲   _i_: Isol
     "-" '((lambda () (interactive)
 	    (global-text-scale-adjust -1)) :which-key "Zoom out")
     "<backspace>" '(+dashboard-open				:which-key "Dashboard")
-    "TAB" '(aw-flip-window						:which-key "Other window")
+    "TAB" '(other-window						:which-key "Other window")
     "m" '(helm-all-mark-rings :which-key "Mark ring")
     "RET" '((lambda () (interactive)
 	      (switch-to-buffer (other-buffer)))	:which-key "Other buffer")
@@ -427,6 +431,7 @@ _l_: →   _k_: ↑   _L_: w -= 3   _K_: h -= 3   _s_: ==   _R_: ⟲   _i_: Isol
 	:which-key "Compile")
     "v" '(TeX-view :which-key "View")
     "f" '(TeX-fold-buffer :which-key "Fold")
+    "p" '(org-latex-preview :which-key "Fold")
     )
 
 ;; File
@@ -461,6 +466,7 @@ _l_: →   _k_: ↑   _L_: w -= 3   _K_: h -= 3   _s_: ==   _R_: ⟲   _i_: Isol
     "c" '(hl-line-mode				:which-key "Hl line")
     "h" '(lsp-toggle-symbol-highlight		:which-key "Hl symbols")
     "f" '(follow-mode				:which-key "Follow")
+    "g" '(indent-bars-mode          :which-key "Indent bars")
     )
 
 ;; Code
@@ -478,7 +484,8 @@ _l_: →   _k_: ↑   _L_: w -= 3   _K_: h -= 3   _s_: ==   _R_: ⟲   _i_: Isol
     "i" '(lsp-ui-imenu			:which-key "IMenu")
     "d" '(lsp-ui-doc-glance		:which-key "Glance doc")
     "D" '(lsp-ui-doc-toggle		:which-key "Toggle doc")
-    "l" '(lsp-describe-session          :which-key "Describe LSP")
+    "l" '(lsp          :which-key "Connect LSP")
+    "L" '(lsp-describe-session          :which-key "Describe LSP")
     )
 
   ;;Help
@@ -522,7 +529,13 @@ _l_: →   _k_: ↑   _L_: w -= 3   _K_: h -= 3   _s_: ==   _R_: ⟲   _i_: Isol
     :prefix-command 'buffer-prefix-map
     "S" '(save-some-buffers		:which-key "Save all")
     "s" '(save-buffer			:which-key "Save")
-    "k" '(kill-current-buffer		:which-key "Kill")
+    "k" '((lambda () (interactive)
+            (let ((buf (current-buffer)))
+              (if (and (buffer-modified-p buf)
+                       (buffer-file-name buf))
+		  (kill-buffer-ask buf)
+		(kill-buffer buf))))
+	  :which-key "Kill")
     "e" '(epa-encrypt-region		:which-key "Encrypt region")
     "b" '((lambda () (interactive)
 	    (let ((helm-boring-buffer-regexp-list '()))

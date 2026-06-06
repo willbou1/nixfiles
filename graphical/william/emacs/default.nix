@@ -96,6 +96,7 @@ with lib; let
       org-appear
       org-modern
       org-fragtog
+      org-download
 
       (treesit-grammars.with-grammars (p: with p; [
         tree-sitter-css
@@ -132,6 +133,7 @@ with lib; let
       base16-theme
       highlight-defined
       highlight-numbers
+      indent-bars
       rainbow-identifiers
       diredfl
       smooth-scroll
@@ -206,7 +208,7 @@ in rec {
   systemd.user.services.emacs = {
     Service = {
       WorkingDirectory = (toPath config.home.homeDirectory) + "/priv";
-      Nice = -10;
+      Nice = -15;
     };
   };
 
@@ -227,6 +229,7 @@ in rec {
       emacsWithPackages
       direnv
       nix-direnv
+      tesseract # OCR stuff in org mode
     ];
   };
   xdg.configFile = {
