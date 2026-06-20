@@ -27,7 +27,6 @@
 
 (defwindow bar_net
   :stacking "fg"
-  :windowtype "normal"
   :wm-ignore true
   :monitor 0
   :geometry (geometry

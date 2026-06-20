@@ -21,7 +21,7 @@ with config.lib.stylix.colors.withHashtag; let
             "roomlist-text-color": "${base05}",
             "roomlist-text-secondary-color": "${base04}",
             "roomlist-highlights-color": "${base01}",
-            "roomlist-separator-color": "${base02}",
+            "roomlist-separator-color": "${base00}",
 
             "timeline-background-color": "${base00}",
             "timeline-text-color": "${base05}",
@@ -49,8 +49,8 @@ in {
   ];
   home.packages = with pkgs; [
     element-desktop
-    nur.repos.willbou1.element-desktop-nightly
-    #element-desktop-nightly
+    #nur.repos.willbou1.element-desktop-nightly
+    element-desktop-nightly
   ];
   xdg.configFile = {
     "Element/config.json".text = ''

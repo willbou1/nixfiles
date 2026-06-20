@@ -45,7 +45,18 @@ with lib; let
       haskell-mode
       csharp-mode
       lua-mode
-      jupyter
+      processing-mode
+
+      # TODO remove once it is fixed in upstream
+      (jupyter.overrideAttrs (old: {
+        patches = (old.patches or []) ++ [
+          (pkgs.fetchpatch {
+            url = "https://github.com/emacs-jupyter/jupyter/pull/618.patch";
+            hash = "sha256-tTSVjI6Od9+4fuTp5VL+00raO5ibfNH/AbM65w7AsSs=";
+          })
+        ];
+      }))
+
       auctex
       nix-mode
       sops
@@ -92,6 +103,7 @@ with lib; let
 
       # Org
       toc-org
+      org-roam
       org-make-toc
       org-appear
       org-modern
@@ -155,6 +167,9 @@ with lib; let
       # AI
       copilot
       gptel
+
+      # GC
+      gcmh
     ]);
 in rec {
   sops.secrets = {
@@ -162,7 +177,7 @@ in rec {
     "emacs/github-models" = {};
   };
 
-  # TODO DEBUG find weird systemd environment bug
+  # DEBUG find weird systemd environment bug
   #systemd.user.services.dummy-env-log = {
   #  Unit = {
   #    Description = "dummy";
@@ -217,6 +232,7 @@ in rec {
       directories = [
         ".config/emacs"
         ".local/share/pantalaimon"
+        ".local/share/direnv"
       ];
       # Tangled literate config
       files = map (n: ".config/doom/${n}.el") [

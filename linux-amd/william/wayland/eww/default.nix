@@ -11,8 +11,9 @@ with config.lib.stylix.colors; let
     "@border@" = toString borderSize;
     "@out_gap@" = toString (gapSize * 1.5);
     "@in_gap@" = toString gapSize;
+    # TODO freakin hyprland devs changed addreserved behaviors cuz why just leave something that works there right?
     "@bar_y_secondary@" =
-      if verticalDisplays
+      if false # verticalDisplays
       then toString (gapSize / 2)
       else toString (1440 - gapSize / 2 - ewwHeight);
     "@bar_y_main@" = toString (1440 - gapSize / 2 - ewwHeight);

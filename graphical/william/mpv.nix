@@ -1,10 +1,5 @@
 {pkgs, ...}: let
-  mpv-unwrapped = pkgs.mpv-unwrapped.override {
-    vapoursynthSupport = true;
-    ffmpeg = pkgs.ffmpeg_6-full;
-  };
-  mpv = pkgs.mpv-unwrapped.wrapper {
-    mpv = mpv-unwrapped;
+  mpv = pkgs.mpv.override {
     scripts = [
       pkgs.mpvScripts.uosc
       pkgs.mpvScripts.mpris

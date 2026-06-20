@@ -1,13 +1,8 @@
 ;; ------------------------------------- GC ------------------------------------
-(setq gc-cons-threshold most-positive-fixnum
-      gc-cons-percentage 0.6)
-(add-hook 'emacs-startup-hook
-          (lambda ()
-            (setq gc-cons-threshold (* 64 1024 1024)
-                  gc-cons-percentage 0.1)))
-
-(add-hook 'minibuffer-setup-hook (lambda () (setq gc-cons-threshold most-positive-fixnum)))
-(add-hook 'minibuffer-exit-hook  (lambda () (setq gc-cons-threshold (* 64 1024 1024))))
+(use-package
+  gcmh
+  :config
+  (gcmh-mode 1))
 
 ;; --------------------------------- Load paths --------------------------------
 (add-to-list 'load-path (expand-file-name "config" user-emacs-directory))

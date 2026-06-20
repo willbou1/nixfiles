@@ -45,22 +45,13 @@ with builtins; let
       volumeUp = "K";
       volumeDown = "J";
     };
-    state = {
-      lastUrl = "https://music.youtube.com/playlist?list=OLAK5uy_lCOBCY9eZaLLYfS0sYNH0f-YRIPvGxOGI";
-      lastPlaylistId = "OLAK5uy_lCOBCY9eZaLLYfS0sYNH0f-YRIPvGxOGI";
-      lastVideoId = "X2x0w5kM2DY";
-      windowBounds = null;
-      windowMaximized = false;
-    };
-    lastfm = {
-      api_key = "2a69bcf769a7a28a8bf2f6a5100accad";
-      secret = "46eea23770a459a49eb4d26cbf46b41c";
-      token = null;
-      sessionKey = null;
-      scrobblePercent = 50;
+    "__internal__" = {
+      migrations = {
+        version = "2.0.11";
+      };
     };
     developer = {
-      enableDevTools = false;
+      enableDevTools = true;
     };
   };
 
@@ -73,7 +64,7 @@ in {
     ];
 
     packages = with pkgs; [
-      unstable.ytmdesktop
+      ytmdesktop
     ];
 
     activation.ytmdesktop-writable-config = lib.hm.dag.entryAfter ["writeBoundary"] ''

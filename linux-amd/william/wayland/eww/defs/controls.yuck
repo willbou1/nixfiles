@@ -36,7 +36,6 @@
 
 (defwindow bar_controls
 :stacking "fg"
-  :windowtype "normal"
   :wm-ignore true
   :monitor 0
   :geometry (geometry

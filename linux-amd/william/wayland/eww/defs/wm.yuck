@@ -31,7 +31,6 @@
 
 (defwindow bar_wm_mon1
   :stacking "fg"
-  :windowtype "normal"
   :wm-ignore true
   :monitor 0
   :geometry (geometry
@@ -51,7 +50,6 @@
 
 (defwindow bar_wm_mon2
   :stacking "fg"
-  :windowtype "normal"
   :wm-ignore true
   :monitor 1
   :geometry (geometry

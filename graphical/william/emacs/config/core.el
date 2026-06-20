@@ -155,11 +155,13 @@
   (setq dashboard-items '((recents   . 5)
 			  (projects  . 5)
 			  (bookmarks . 5)
-			  (agenda    . 10))
+			  (agenda    . 10)
+			  (journal   . 5))
 	dashboard-item-shortcuts '((recents   . "r")
 				   (projects  . "p")
 				   (bookmarks . "b")
-				   (agenda    . "a"))
+				   (agenda    . "a")
+				   (journal   . "j"))
 	dashboard-banner-logo-title "Let there be math!"
 	dashboard-startup-banner "~/.config/emacs/splash/gamma.png"
 	dashboard-projects-backend 'projectile
@@ -177,6 +179,50 @@
 	initial-buffer-choice 'dashboard-open)
   (set-face-underline 'dashboard-items-face nil)
   (set-face-underline 'dashboard-no-items-face nil)
+
+  
+  (defun dashboard-insert-journal (list-size)
+    (defun journal-file-date (file)
+      (when (string-match "\\([0-9]\\{4\\}-[0-9]\\{2\\}-[0-9]\\{2\\}\\)" file)
+	(date-to-time (match-string 1 file))))
+
+    (defun journal-older-than-week-p (file)
+      (let ((d (journal-file-date file)))
+	(and d
+             (> (float-time (time-subtract (current-time) d))
+		(* 2 7 24 60 60)))))
+
+    (dashboard-insert-heading "   Journal pages:" t)
+    (let* ((nb-entries (cdr (assoc 'journal dashboard-items)))
+	   (all-files (directory-files-recursively
+		       (expand-file-name "journal/" org-directory)
+		       ".*"))
+	   (files (cl-remove-if-not #'journal-older-than-week-p all-files))
+	   (files (seq-into files 'vector))
+	   (lim (length files))
+	   (nb (min nb-entries lim)))
+      (cl-loop with seen = (make-hash-table :test 'equal)
+	       while (< (hash-table-count seen) nb)
+	       for x = (random lim)
+	       for file = (aref files x)
+	       unless (gethash file seen)
+	       do (progn
+		    (puthash file t seen)
+		    (insert
+		     (concat
+		      "\n    "
+		      (nerd-icons-mdicon "nf-md-notebook")))
+		    (insert-text-button
+		     (concat
+		      " "
+		      (file-name-nondirectory file))
+		     'action (lambda (_)
+			       (find-file file))
+		     'help-echo file
+		     'face nil
+		     'mouse-face 'highlight
+		     'follow-link t)))))
+  (add-to-list 'dashboard-item-generators  '(journal . dashboard-insert-journal))
 
   (defun +dashboard-jump-to-recents ()
     (interactive)
@@ -332,6 +378,7 @@
   :init
   (setq org-directory "~/priv/nextcloud/org/"
 	org-agenda-files '("~/priv/nextcloud/org/agenda.org")
+	org-agenda-include-diary t
 	browse-url-browser-function 'browse-url-qutebrowser
 	browse-url-qutebrowser-arguments '("--target" "tab")
 	org-return-follows-link t
@@ -385,8 +432,7 @@
   :hook (org-mode . toc-org-mode))
 
 (use-package
-  org-fragtog
-  :hook (org-mode . org-fragtog-mode))
+  org-fragtog)
 
 (use-package
   org-download
@@ -423,6 +469,7 @@
    'org-babel-load-languages
    '((emacs-lisp . t)
      (python . t)
+     (processing . t)
      (jupyter . t)))
   (add-hook 'org-babel-after-execute-hook #'org-redisplay-inline-images))
 

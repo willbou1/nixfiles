@@ -11,6 +11,7 @@ with builtins; {
   xdg.configFile."clangd/config.yaml".source = ./clangd.yaml;
   programs.nixvim = {
     enable = true;
+    nixpkgs.pkgs = pkgs;
     package = pkgs.neovim-unwrapped;
     plugins = {
       better-escape.enable = true;
@@ -64,7 +65,7 @@ with builtins; {
         settings = {
           sources =
             map (n: {name = n;})
-            ["nvim_lsp" "path" "buffer" "cmdline" "vsnip" "calc" "spell"];
+            ["nvim_lsp" "path" "buffer" "cmdline" "vsnip" "calc"];
           mappingPresets = ["insert"];
           mapping = {
             "<C-Space>" = "cmp.mapping.complete()";

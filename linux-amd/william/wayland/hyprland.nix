@@ -4,7 +4,8 @@ in {
   wayland.windowManager.hyprland.settings = {
     monitor = [
       (
-        if config.home.verticalDisplays
+        # TODO damn hyprland devs
+        if false #  config.home.verticalDisplays
         then "HDMI-A-1,addreserved,${reserved},0,0,0"
         else "HDMI-A-1,addreserved,0,${reserved},0,0"
       )

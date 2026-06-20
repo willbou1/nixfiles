@@ -15,8 +15,8 @@
     #"mpv-unwrapped"
 
     # cli
-    "kitty"
     "fastfetch"
+    "ani-cli"
 
     # apps
     "element-desktop"
@@ -26,6 +26,7 @@
     "modrinth-app"
     "firefox"
     "kicad"
+    "ytmdesktop"
 
     # misc
     "OVMF"

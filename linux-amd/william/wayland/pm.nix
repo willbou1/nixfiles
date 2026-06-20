@@ -22,11 +22,8 @@ in {
         resumeCommand = "${pkgs.hyprland}/bin/hyprctl dispatch dpms on";
       }
     ];
-    events = [
-      {
-        event = "before-sleep";
-        command = "${lock}";
-      }
-    ];
+    events = {
+      "after-resume" = "${lock}";
+    };
   };
 }

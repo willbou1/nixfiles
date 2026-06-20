@@ -77,6 +77,7 @@
           value = "4000";
         }
         {
+          # TODO this can cause big node projects to chock or even electron
           domain = "william";
           type = "soft";
           item = "nofile";
@@ -86,7 +87,7 @@
           domain = "william";
           type = "hard";
           item = "nofile";
-          value = "10000";
+          value = "32768";
         }
       ];
     };

@@ -2,9 +2,9 @@
   lib,
   stdenv,
   fetchFromGitHub,
-  libX11,
-  libXinerama,
-  libXft,
+  libx11,
+  libxinerama,
+  libxft,
   zlib,
   patches ? null,
   # update script dependencies
@@ -22,10 +22,10 @@ stdenv.mkDerivation rec {
   };
 
   buildInputs = [
-    libX11
-    libXinerama
+    libx11
+    libxinerama
     zlib
-    libXft
+    libxft
   ];
 
   inherit patches;

@@ -25,12 +25,9 @@ in {
     "$mod,Q,exec,${lock}"
   ];
   services.swayidle = {
-    events = [
-      {
-        event = "after-resume";
-        command = "${lock}";
-      }
-    ];
+    events = {
+      "after-resume" = "${lock}";
+    };
     timeouts = [
       {
         timeout = 300;

@@ -1,5 +1,5 @@
 {
-  wineWowPackages,
+  wineWow64Packages,
   icoutils,
   imagemagick,
   unzip,
@@ -17,7 +17,7 @@
     export WINEARCH=win64
     export WINEDLLOVERRIDES="winemenubuilder.exe=d;mscoree=d;mshtml=d"
 
-    WINE="${wineWowPackages.stable}/bin/wine"
+    WINE="${wineWow64Packages.stable}/bin/wine"
 
     TINA_EXE="\$WINEPREFIX/drive_c/Program Files (x86)/DesignSoft/Tina 9 - TI/TINA.EXE"
     INSTALLER="$out/share/tina-ti/Tina90-TIen.exe"

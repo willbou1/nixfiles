@@ -4,7 +4,7 @@
   inputs = {
     # Common dependencies
     # nixpkgs.url = ./devel/nixpkgs;
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.11";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-26.05";
     # nixpkgs-unstable.url = ./devel/nixpkgs-unstable;
     unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
     flake-compat.url = "github:edolstra/flake-compat";
@@ -32,13 +32,13 @@
 
     home-manager = {
       # url = ./devel/home-manager;
-      url = "github:nix-community/home-manager/release-25.11";
+      url = "github:nix-community/home-manager/release-26.05";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
     nixvim = {
       # url = ./devel/nixvim;
-      url = "github:nix-community/nixvim/nixos-25.11";
+      url = "github:nix-community/nixvim/nixos-26.05";
       inputs = {
         nixpkgs.follows = "nixpkgs";
         flake-parts.follows = "flake-parts";
@@ -86,7 +86,7 @@
 
     stylix = {
       # url = ./devel/stylix;
-      url = "github:nix-community/stylix/release-25.11";
+      url = "github:nix-community/stylix/release-26.05";
       inputs = {
         nixpkgs.follows = "nixpkgs";
         flake-parts.follows = "flake-parts";
@@ -163,10 +163,6 @@
             zen-browser = inputs.zen-browser.packages.${final.stdenv.hostPlatform.system}.default;
             unstable = import unstable {
               inherit (final) system config;
-              overlays = [
-                (import ./pkgs).overlay
-                (import ./pkgs).nurOverlay
-              ];
             };
           })
           bleedingEdgeOverlay

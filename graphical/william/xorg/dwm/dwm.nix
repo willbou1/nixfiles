@@ -12,11 +12,10 @@ with builtins; let
       buildInputs =
         (prev.buildInputs or [])
         ++ (with pkgs; [
-          xorg.xorgproto
-          xorg.libXext
+          xorgproto
+          libxext
           libxcb-wm
         ]);
-      # TODO Maybe update my fork, butttt don't want to
       NIX_CFLAGS_COMPILE = [
         "-Wno-error=int-conversion"
       ];

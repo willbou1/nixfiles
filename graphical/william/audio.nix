@@ -3,7 +3,7 @@
 with builtins; {
   home = {
     packages = with pkgs; [
-      helvum
+      crosspipe
     ];
 
     # default to aptx_ll for my bluetooth headphones

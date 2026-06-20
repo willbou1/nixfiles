@@ -47,7 +47,6 @@ with lib; {
       dconf
       playerctl
       hyprpaper
-      swww
 
       keymapp
 

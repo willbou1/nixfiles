@@ -27,7 +27,6 @@
 
 (defwindow bar_mem
   :stacking "fg"
-  :windowtype "normal"
   :wm-ignore true
   :monitor 1
   :geometry (geometry

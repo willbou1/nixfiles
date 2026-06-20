@@ -14,7 +14,6 @@
 
 (defwindow bar_music
   :stacking "fg"
-  :windowtype "normal"
   :wm-ignore true
   :monitor 0
   :geometry (geometry

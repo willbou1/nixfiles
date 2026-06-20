@@ -46,6 +46,7 @@ in {
   '';
   wayland.windowManager.hyprland = {
     enable = true;
+    configType = "hyprlang"; # TODO migrate to LUA config WHYYYYYY
     xwayland.enable = true;
     #enableNvidiaPatches = true;
     settings = {
@@ -105,7 +106,6 @@ in {
           range = 30;
           offset = "5 5";
           render_power = 8;
-          ignore_window = 0;
         };
         dim_special = 0.4;
       };
@@ -120,7 +120,6 @@ in {
         ];
       };
       dwindle = {
-        pseudotile = true;
         preserve_split = true;
         force_split = 2;
         special_scale_factor = 0.95;
@@ -132,11 +131,9 @@ in {
         disable_hyprland_logo = true;
         allow_session_lock_restore = true;
         background_color = mkForce "0x${base00}";
-        vfr = false;
         mouse_move_enables_dpms = true;
         key_press_enables_dpms = true;
         font_family = stylix.fonts.monospace.name;
-        new_window_takes_over_fullscreen = 2;
       };
       binds.scroll_event_delay = 100;
       "$mod" = "SUPER";
@@ -150,35 +147,34 @@ in {
         "element-desktop-nightly"
         "ytmdesktop"
         "qutebrowser"
-        "${pkgs.swww}/bin/swww init"
         # Make sure to clean up after xorg session
         "${pkgs.dbus}/bin/dbus-update-activation-environment --systemd XAUTHORITY XDG_SESSION_ID"
       ];
       windowrule = let fakeOpacity = toString (config.stylix.opacity.applications * 1.1); in [
-        "idleinhibit fullscreen,class:.*"
+        "idle_inhibit fullscreen,match:class .*"
 
-        "opacity ${fakeOpacity} ${fakeOpacity} 1.0,class:org.qutebrowser.qutebrowser"
-        "opacity ${fakeOpacity} ${fakeOpacity} 1.0,class:zen"
+        "opacity ${fakeOpacity} ${fakeOpacity} 1.0,match:class org.qutebrowser.qutebrowser"
+        "opacity ${fakeOpacity} ${fakeOpacity} 1.0,match:class zen"
 
-        "workspace 4,class:mpv"
+        "workspace 4,match:class mpv"
 
-        "opacity ${fakeOpacity},class:Element(-Nightly)*"
-        "workspace 5 silent,class:Element(-Nightly)*"
+        "opacity ${fakeOpacity},match:class element(-nightly)*"
+        "workspace 5 silent,match:class element(-nightly)*"
 
-        "opacity ${fakeOpacity},class:deluge"
+        "opacity ${fakeOpacity},match:class deluge"
 
-        "opacity ${fakeOpacity} override 0.85 override 0.85 override,workspace:6"
-        "workspace 6 silent,title:(.*)(Spotify)(.*)"
-        "workspace 6 silent,title:(.*)(YouTube Music)(.*)"
+        "opacity ${fakeOpacity} override 0.85 override 0.85 override,match:workspace 6"
+        "workspace 6 silent,match:title (.*)(Spotify)(.*)"
+        "workspace 6 silent,match:title (.*)(YouTube Music)(.*)"
 
-        "float,class:SVPManager"
-        "workspace 9 silent,class:SVPManager"
+        "float on,match:class SVPManager"
+        "workspace 9 silent,match:class SVPManager"
 
-        "workspace 9 silent,class:com.nextcloud.desktopclient.nextcloud"
+        "workspace 9 silent,match:class com.nextcloud.desktopclient.nextcloud"
 
-        "opacity ${fakeOpacity},class:udiskie"
+        "opacity ${fakeOpacity},match:class udiskie"
 
-        "bordercolor 0x${hexOpacity + base0E},title:private"
+        "border_color 0x${hexOpacity + base0E},match:title private"
       ];
       bind =
         [
@@ -199,7 +195,7 @@ in {
           "$mod,S,togglefloating,"
           "$mod,F,fullscreen,"
           "$mod SHIFT,F, fullscreenstate, 0 3"
-          "$mod,T,togglesplit"
+          "$mod,T,layoutmsg,togglesplit"
           "$mod,G,togglegroup"
           "$mod,BACKSPACE,changegroupactive,f"
           "$mod,TAB,workspace,previous"

@@ -1,5 +1,5 @@
 {
-  wineWowPackages,
+  wineWow64Packages,
   msitools,
   icoutils,
   imagemagick,
@@ -17,7 +17,7 @@
     export WINEARCH=win64
     export WINEDLLOVERRIDES="winemenubuilder.exe=d;mscoree=d;mshtml=d"
 
-    WINE="${wineWowPackages.stable}/bin/wine"
+    WINE="${wineWow64Packages.stable}/bin/wine"
 
     LTSPICE_EXE="\$WINEPREFIX/drive_c/Program Files/ADI/LTspice/LTspice.exe"
     INSTALLER="$src"

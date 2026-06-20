@@ -151,7 +151,6 @@ with lib; {
     };
 
     nix = {
-      # TODO keep an eye on this
       package = pkgs.nixVersions.git;
       #allowed-users = [ "@wheel" ];
       gc = {
@@ -171,7 +170,7 @@ with lib; {
       };
     };
 
-    system.stateVersion = "25.11";
+    system.stateVersion = "26.05";
 
     nixpkgs = {
       hostPlatform = lib.mkDefault "x86_64-linux";

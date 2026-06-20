@@ -1,13 +1,10 @@
 {config, pkgs, ...}: {
   services.swayidle = {
     enable = true;
-    systemdTarget = "hyprland-session.target";
-    events = [
-      {
-        event = "before-sleep";
-        command = "${pkgs.playerctl}/bin/playerctl pause";
-      }
-    ];
+    systemdTargets = [ "hyprland-session.target" ];
+    events = {
+      "before-sleep" =  "${pkgs.playerctl}/bin/playerctl pause";
+    };
   };
 
   stylix.targets.hyprlock.enable = false;

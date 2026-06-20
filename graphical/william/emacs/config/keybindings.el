@@ -262,7 +262,8 @@ _c_: Capture   _a_: Abort   _r_: Refile   _f_: Finalize
       ("t" +hydra-org-table-oneshot/body)
       ("T" +hydra-org-table/body)
       ("r" org-refile)
-      ("p" org-set-property)
+      ("P" org-set-property)
+      ("p" org-toggle-pretty-entities)
       ("x" (if (use-region-p)
               (org-babel-execute-region)
               (org-babel-execute-src-block-maybe)))
@@ -349,7 +350,6 @@ _l_: →   _k_: ↑   _L_: w -= 3   _K_: h -= 3   _s_: ==   _R_: ⟲   _i_: Isol
     ":" '(async-shell-command	:which-key "Async $")
     "#" '(count-words           :which-key "wc")
     "é" '(helm-for-files	:which-key "Find file")
-    "g" '(magit	:which-key "Magit")
     "$" '((lambda ()
 	    (interactive)
 	    (let ((process-environment initial-environment))
@@ -399,7 +399,15 @@ _l_: →   _k_: ↑   _L_: w -= 3   _K_: h -= 3   _s_: ==   _R_: ⟲   _i_: Isol
     "t"  '(:prefix-command toggle-prefix-map	:which-key "Toggle")
     "f"  '(:prefix-command file-prefix-map	:which-key "File")
     "a"  '(:prefix-command ai-prefix-map        :which-key "AI")
+    "g"  '(:prefix-command git-prefix-map        :which-key "Git")
     )
+
+;; Git
+  (define-normal-key
+    :prefix "SPC g"
+    :prefix-command 'git-prefix-map
+    "g" '(magit				:which-key "Magit")
+    "b" '(magit-blame				:which-key "Magit"))
 
 ;; AI
   (define-normal-key
@@ -439,6 +447,7 @@ _l_: →   _k_: ↑   _L_: w -= 3   _K_: h -= 3   _s_: ==   _R_: ⟲   _i_: Isol
     :prefix "SPC f"
     :prefix-command 'file-prefix-map
     "e" '(epa-encrypt-file	:which-key "Encrypt with PGP")
+    "r" '(rename-visited-file	:which-key "Rename")
     "s" '((lambda () (interactive)
 	    (if (sops--is-sops-file)
 		(sops-edit-file)
@@ -476,6 +485,7 @@ _l_: →   _k_: ↑   _L_: w -= 3   _K_: h -= 3   _s_: ==   _R_: ⟲   _i_: Isol
     "s" '(helm-lsp-workspace-symbol	:which-key "Symbols")
     "c" '(helm-lsp-diagnostics		:which-key "Diagnostics")
     "x" '(lsp-find-references		:which-key "References")
+    "w" '(xref-find-definitions-other-window		:which-key "References")
     "n" '(+insert-section		:which-key "New section")
     "r" '(lsp-rename			:which-key "Rename")
     "a" '(lsp-execute-code-action	:which-key "Actions")
@@ -529,12 +539,7 @@ _l_: →   _k_: ↑   _L_: w -= 3   _K_: h -= 3   _s_: ==   _R_: ⟲   _i_: Isol
     :prefix-command 'buffer-prefix-map
     "S" '(save-some-buffers		:which-key "Save all")
     "s" '(save-buffer			:which-key "Save")
-    "k" '((lambda () (interactive)
-            (let ((buf (current-buffer)))
-              (if (and (buffer-modified-p buf)
-                       (buffer-file-name buf))
-		  (kill-buffer-ask buf)
-		(kill-buffer buf))))
+    "k" '(kill-current-buffer
 	  :which-key "Kill")
     "e" '(epa-encrypt-region		:which-key "Encrypt region")
     "b" '((lambda () (interactive)

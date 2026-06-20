@@ -152,10 +152,7 @@
 				    nil
 				    (lambda (v) (- v 0.1)))))))
  `(org-block-end-line
-   ((t (:extend t :background ,(+color-stylix :base01
-				    (lambda (h) (- h 0.01))
-				    nil
-				    (lambda (v) (- v 0.1)))))))
+   ((t (:inherit org-block-begin-line))))
 
  `(feebleline-file-owner-face
    ((t (:foreground ,(+color-stylix :base0C)))))
@@ -454,6 +451,7 @@
 
 (add-hook 'window-selection-change-functions
           (lambda (&rest _) (+theme-highlight-window)))
-(add-hook 'buffer-list-update-hook #'+theme-highlight-window)
+(add-hook 'window-buffer-change-functions
+          (lambda (&rest _) (+theme-highlight-window)))
 
 (provide 'theme)
