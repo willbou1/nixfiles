@@ -34,7 +34,7 @@ in {
     hyprrotate
   ];
   wayland.windowManager.hyprland = {
-    plugins = [pkgs.hyprlandPlugins.hyprgrass];
+    #plugins = [pkgs.hyprlandPlugins.hyprgrass];
 
     settings = {
       env = [

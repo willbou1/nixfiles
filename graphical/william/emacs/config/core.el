@@ -399,7 +399,9 @@
 	org-startup-with-latex-preview t)
 
   :config
-  (plist-put org-format-latex-options :scale 1.5)
+  (plist-put org-format-latex-options :scale
+	     (if (-contains? tramp-local-host-names "haskellslayslay")
+		 1.1 1.5))
   (plist-put org-format-latex-options :background "Transparent"))
 
 (defun +org-journal-file ()

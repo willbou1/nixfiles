@@ -51,7 +51,7 @@ with lib; {
       keymapp
 
       libreoffice-fresh
-      gimp
+      #gimp
       steam
       qalculate-gtk
 

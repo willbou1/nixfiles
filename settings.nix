@@ -19,6 +19,8 @@
     "ani-cli"
 
     # apps
+    "qutebrowser"
+    "gimp"
     "element-desktop"
     "libreoffice-fresh"
     "steam"

@@ -20,6 +20,7 @@ in {
           "eDP-1"
           "DP-3"
           "DP-4"
+          "DP-1"
         ];
         modules-left = ["custom/nix" "hyprland/workspaces" "hyprland/window"];
         modules-center = ["clock"];
