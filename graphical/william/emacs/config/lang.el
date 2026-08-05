@@ -34,9 +34,12 @@
 
 (use-package
   lsp-mode
+  :init
+  (setq read-process-output-max (* 1024 1024))
   :hook ((c-ts-mode . lsp-deferred)
 	 (c++-ts-mode . lsp-deferred)
 	 (typescript-ts-mode . lsp-deferred)
+	 (tsx-ts-mode . lsp-deferred)
 	 (nix-mode . lsp-deferred)
 	 (haskell-mode . lsp-deferred)
 	 (rust-ts-mode . lsp-deferred)
@@ -97,8 +100,7 @@
 (feebleline-mode 1)
 
 
-;; Tools to deal with horrible people who designed a language in which the blocks are based
-;; on indentation for fuck's sake lmao
+;; Indentation
 (use-package indent-bars
   :hook ((python-ts-mode yaml-ts-mode) . indent-bars-mode)
   :init
@@ -107,5 +109,13 @@
 	indent-bars-treesit-ignore-blank-lines-types '("module")
 	indent-bars-treesit-scope '((python function_definition class_definition for_statement
 					    if_statement with_statement while_statement))))
+
+;; Most Web projects use two spaces for tabs
+(defun +web-indent-settings ()
+    (setq-local indent-tabs-mode nil))
+(dolist (hook '(typescript-ts-mode-hook
+                tsx-ts-mode-hook
+		js-ts-mode-hook))
+  (add-hook hook #'+web-indent-settings))
 
 (provide 'lang)

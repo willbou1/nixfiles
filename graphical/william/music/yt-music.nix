@@ -45,11 +45,11 @@ with builtins; let
       volumeUp = "K";
       volumeDown = "J";
     };
-    "__internal__" = {
-      migrations = {
-        version = "2.0.11";
-      };
-    };
+    # "__internal__" = {
+    #   migrations = {
+    #     version = "2.0.11";
+    #   };
+    # };
     developer = {
       enableDevTools = true;
     };

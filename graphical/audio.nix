@@ -2,6 +2,7 @@
   environment.systemPackages = with pkgs; [
     pulseaudio # for pactl command
     alsa-tools
+    qpwgraph
   ];
 
   hardware.bluetooth.enable = true;

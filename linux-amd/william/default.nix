@@ -52,7 +52,7 @@ with lib; {
     };
 
     # little adjustments
-    programs.qutebrowser.settings.zoom.default = mkForce "175%";
+    programs.qutebrowser.settings.zoom.default = mkForce "165%";
     services.dunst.settings.global = {
       monitor = mkForce 1;
       origin = mkForce "top-right";

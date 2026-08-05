@@ -10,10 +10,6 @@
     #"linuxPackages_zen"
     #"linuxPackages_latest"
 
-    # video
-    #"mpv"
-    #"mpv-unwrapped"
-
     # cli
     "fastfetch"
     "ani-cli"

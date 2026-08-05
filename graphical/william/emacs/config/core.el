@@ -53,6 +53,8 @@
   (sp-with-modes '(emacs-lisp-mode minibuffer-mode)
     (sp-local-pair "'" nil :actions nil)
     (sp-local-pair "`" nil :actions nil))
+  (sp-with-modes '(tsx-ts-mode c-ts-mode c++-ts-mode rust-ts-mode)
+    (sp-local-pair "{" nil :post-handlers '(:add ("||\n[i]" "RET"))))
   (add-hook 'eval-expression-minibuffer-setup-hook #'smartparens-mode)
   (add-to-list 'sp-ignore-modes-list 'org-mode)
   (smartparens-global-mode))
@@ -73,7 +75,11 @@
 
 
 ;; Dired
-(with-eval-after-load 'dired
+(use-package
+  dired
+  :init
+  (setq dired-kill-when-opening-new-dired-buffer t)
+  :config
   (put 'dired-find-alternate-file 'disabled nil))
 
 (use-package 
@@ -256,6 +262,7 @@
 ;; Magit
 (use-package
   magit
+  :hook (git-commit-post-finish-hook . magit)
   :init
   (setq magit-display-buffer-function #'magit-display-buffer-same-window-except-diff-v1)
   )
@@ -313,7 +320,8 @@
 					 "~/priv/nextcloud")
         projectile-completion-system 'helm
         projectile-enable-caching t
-        projectile-indexing-method 'hybrid)
+        projectile-indexing-method 'hybrid
+	compilation-ask-about-save nil)
   (projectile-mode 1))
 
 ;; Symbols
@@ -368,6 +376,20 @@
 (use-package
   yasnippet
   :config
+  (yas-define-snippets 'org-mode
+		       '(("align"
+			  "\\begin{align*}
+$0
+\\end{align*}"
+			  "align block")
+			 ("half"
+			  "\\frac{1}{2}"
+			  "half fraction")
+			 ("math"
+			  "\\[
+$0
+\\]"
+			  "math block")))
   (yas-global-mode 1))
 
 
@@ -396,7 +418,12 @@
 				   ("" "circuitikz" t)
 				   ("" "pgfplots" t))
 	org-use-sub-superscripts '{}
-	org-startup-with-latex-preview t)
+	org-startup-with-latex-preview t
+
+	org-entities-user
+	'(("mathcalL" "\\mathcal{L}" t "𝓛" "𝓛" "𝓛" "𝓛")
+	  ("mathcalH" "\\mathcal{H}" t "𝓗" "𝓗" "𝓗" "𝓗")
+	  ("mathcalF" "\\mathcal{F}" t "𝓕" "𝓕" "𝓕" "𝓕")))
 
   :config
   (plist-put org-format-latex-options :scale

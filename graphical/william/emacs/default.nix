@@ -47,15 +47,16 @@ with lib; let
       lua-mode
       processing-mode
 
-      # TODO remove once it is fixed in upstream
-      (jupyter.overrideAttrs (old: {
-        patches = (old.patches or []) ++ [
-          (pkgs.fetchpatch {
-            url = "https://github.com/emacs-jupyter/jupyter/pull/618.patch";
-            hash = "sha256-tTSVjI6Od9+4fuTp5VL+00raO5ibfNH/AbM65w7AsSs=";
-          })
-        ];
-      }))
+      # EX how to patch emacs package
+      # (jupyter.overrideAttrs (old: {
+      #   patches = (old.patches or []) ++ [
+      #     (pkgs.fetchpatch {
+      #       url = "https://github.com/emacs-jupyter/jupyter/pull/618.patch";
+      #       hash = "sha256-tTSVjI6Od9+4fuTp5VL+00raO5ibfNH/AbM65w7AsSs=";
+      #     })
+      #   ];
+      # }))
+      jupyter
 
       auctex
       nix-mode
@@ -66,6 +67,7 @@ with lib; let
       undo-tree
       general
       evil
+      evil-textobj-tree-sitter
       evil-escape
       evil-surround
       evil-mc

@@ -11,6 +11,14 @@ in {
   boot.extraModulePackages = lib.mkBefore (with config.boot.kernelPackages; [
     vendor-reset
   ]);
+  boot.kernelPatches = [{
+    name = "acs-override";
+    # TODO Check if the kernel code for the PCI subsystem changed and update patch
+    patch = pkgs.fetchpatch {
+      url = "https://aur.archlinux.org/cgit/aur.git/plain/1001-6.14.0-add-acs-overrides.patch?h=linux-vfio";
+      hash = "sha256-EcUtm9+M2nac9zLgFA7J93ciKfFEH4V9bGYCwiq2SbQ=";
+    };
+  }];
   boot.initrd.kernelModules = ["vendor_reset"];
   system.activationScripts.vendor-reset.text = ''
     echo 'device_specific' > /sys/bus/pci/devices/0000:10:00.0/reset_method

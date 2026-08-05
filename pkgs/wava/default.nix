@@ -22,7 +22,7 @@ stdenv.mkDerivation {
   src = fetchgit {
     url = "https://github.com/markuz83/wava---Mirror-Archive";
     rev = "43710cbbd60b219325015196e36ace1b749ffd1f";
-    hash = "sha256-cr+VgSnHHCU3zGkWsaeb/7+V6wF92UNI9EYMwngKmxU=";
+    hash = "sha256-pvmRR5sHFgRJY2c+RFHPH4WdbruQUGmYqL8gjGv0ISc=";
     leaveDotGit = true;
   };
 

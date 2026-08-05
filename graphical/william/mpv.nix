@@ -83,7 +83,6 @@ in {
     scriptOpts = {
       uosc = {
         scale = 1.3;
-        ui_scale = 1.3;
         scale_fullscreen = 1.3;
         autoload = true;
         top_bar = "always";

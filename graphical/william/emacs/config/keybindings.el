@@ -23,6 +23,13 @@
   (evil-mode 1))
 
 (use-package
+  evil-textobj-tree-sitter
+  :after evil
+  :config
+  (define-key evil-outer-text-objects-map "f" (evil-textobj-tree-sitter-get-textobj "function.outer"))
+  (define-key evil-inner-text-objects-map "f" (evil-textobj-tree-sitter-get-textobj "function.inner")))
+
+(use-package
   evil-collection
   :after evil
   :config
@@ -86,12 +93,7 @@
     (general-define-key
      :states 'normal
      :keymaps 'dired-mode-map
-     "a" #'dired-find-file
-     "f" #'dired-create-empty-file
-     "RET" (lambda () (interactive)
-	     (if (f-directory? (dired-get-file-for-visit))
-		 (dired-find-alternate-file)
-	       (dired-find-file)))))
+     "f" #'dired-create-empty-file))
 
 
   ;; Misc
@@ -229,8 +231,9 @@ _c_: Capture   _a_: Abort   _r_: Refile   _f_: Finalize
   (defconst +hydra-org--desc
     '(( :foreign-keys run)
       "
-  _h_: ↑ heading   _l_: ↑ item  _b_: ↑ block   _<_: Demote    _m_: Mark       _i_: Insert   _x_: Execute   _u_: Undo     _n_: Narrow   _d_: Deadline
-  _H_: ↓ heading   _L_: ↓ item  _B_: ↓ block   _>_: Promote   _M_: Mark sub   _d_: Delete   _e_: Edit      _r_: Refile   _w_: Widen    _s_: Schedule
+  _h_: ↑ heading   _l_: ↑ item     _b_: ↑ block   _<_: Demote    _m_: Mark       _i_: Insert   _x_: Execute   _u_: Undo     _n_: Narrow
+  _H_: ↓ heading   _L_: ↓ item     _B_: ↓ block   _>_: Promote   _M_: Mark sub   _d_: Delete   _e_: Edit      _r_: Refile   _w_: Widen
+  _d_: Deadline    _s_: Schedule   _f_: Fold      _c_: Capture   
   "
       ("h" org-next-visible-heading)
       ("H" org-previous-visible-heading)
@@ -261,6 +264,7 @@ _c_: Capture   _a_: Abort   _r_: Refile   _f_: Finalize
       ("C" +hydra-org-capture/body)
       ("t" +hydra-org-table-oneshot/body)
       ("T" +hydra-org-table/body)
+      ("f" org-fold-hide-entry)
       ("r" org-refile)
       ("P" org-set-property)
       ("p" org-toggle-pretty-entities)
@@ -447,7 +451,10 @@ _l_: →   _k_: ↑   _L_: w -= 3   _K_: h -= 3   _s_: ==   _R_: ⟲   _i_: Isol
     :prefix "SPC f"
     :prefix-command 'file-prefix-map
     "e" '(epa-encrypt-file	:which-key "Encrypt with PGP")
-    "r" '(rename-visited-file	:which-key "Rename")
+    "m" '(rename-visited-file	:which-key "Rename")
+    "r" '(recover-file	        :which-key "Recover")
+    "R" '(recover-session	:which-key "Recover session")
+    "a" '(do-auto-save	        :which-key "Auto-save")
     "s" '((lambda () (interactive)
 	    (if (sops--is-sops-file)
 		(sops-edit-file)
@@ -476,6 +483,10 @@ _l_: →   _k_: ↑   _L_: w -= 3   _K_: h -= 3   _s_: ==   _R_: ⟲   _i_: Isol
     "h" '(lsp-toggle-symbol-highlight		:which-key "Hl symbols")
     "f" '(follow-mode				:which-key "Follow")
     "g" '(indent-bars-mode          :which-key "Indent bars")
+    "a" '((lambda () (interactive)
+	    (setq-local corfu-auto (not corfu-auto))
+	    (corfu-mode -1)
+	    (corfu-mode 1))                :which-key "Auto-completion")
     )
 
 ;; Code
@@ -528,7 +539,7 @@ _l_: →   _k_: ↑   _L_: w -= 3   _K_: h -= 3   _s_: ==   _R_: ⟲   _i_: Isol
   (define-normal-key
     :prefix "SPC p"
     :prefix-command 'project-prefix-map
-    "p" '(projectile-switch-project	:which-key "Switch")
+    "p" '(helm-projectile-switch-project	:which-key "Switch")
     "a" '(projectile-add-known-project	:which-key "Add")
     "f" '(helm-projectile-rg		:which-key "Find in")
     )
@@ -542,6 +553,7 @@ _l_: →   _k_: ↑   _L_: w -= 3   _K_: h -= 3   _s_: ==   _R_: ⟲   _i_: Isol
     "k" '(kill-current-buffer
 	  :which-key "Kill")
     "e" '(epa-encrypt-region		:which-key "Encrypt region")
+    "r" '(revert-buffer		        :which-key "Revert")
     "b" '((lambda () (interactive)
 	    (let ((helm-boring-buffer-regexp-list '()))
 	      (helm-buffers-list)))	:which-key "All buffers")

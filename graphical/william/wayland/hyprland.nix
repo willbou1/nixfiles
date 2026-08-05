@@ -146,11 +146,11 @@ in {
         "SVPManager"
         "element-desktop-nightly"
         "ytmdesktop"
-        "qutebrowser"
+        "qutebrowser --qt-flag disable-features=AcceleratedVideoDecodeLinuxGL"
         # Make sure to clean up after xorg session
         "${pkgs.dbus}/bin/dbus-update-activation-environment --systemd XAUTHORITY XDG_SESSION_ID"
       ];
-      windowrule = let fakeOpacity = toString (config.stylix.opacity.applications * 1.1); in [
+      windowrule = let fakeOpacity = toString (config.stylix.opacity.applications * 1.05); in [
         "idle_inhibit fullscreen,match:class .*"
 
         "opacity ${fakeOpacity} ${fakeOpacity} 1.0,match:class org.qutebrowser.qutebrowser"
