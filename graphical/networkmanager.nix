@@ -82,9 +82,8 @@ in {
       [802-1x]
       altsubject-matches=DNS:radius.usherbrooke.ca;
       anonymous-identity=anonymous657357@usherbrooke.ca
-      ca-cert=/cat_installer/ca.pem
       eap=peap;
-      identity=bouw1002
+      identity=bouw1002@usherbrooke.ca
       password=${config.sops.placeholder."wifi/udes"}
       phase2-auth=mschapv2
 

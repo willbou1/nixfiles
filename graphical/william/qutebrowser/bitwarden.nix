@@ -16,7 +16,7 @@
   '';
 in {
   home.packages = with pkgs; [
-    # bitwarden-desktop TODO renable this shit once the incompetent fucks in nixpkgs fix their stupid shit
+    bitwarden-desktop
     bitwarden-cli
     keyutils
   ];

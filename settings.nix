@@ -7,7 +7,7 @@
   # TODO Keep an eye on these packages closely in case something breaks.
   bleedingEdgePackages = [
     # kernels
-    #"linuxPackages_zen"
+    "linuxPackages_zen"
     #"linuxPackages_latest"
 
     # cli

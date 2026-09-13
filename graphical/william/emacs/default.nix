@@ -196,7 +196,7 @@ in rec {
   services = {
     # This is needed to hndle transparent decryption of matrix messages
     pantalaimon = {
-      enable = true;
+      enable = false;
       settings = {
         Default = {
           LogLevel = "Debug";
