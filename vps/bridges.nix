@@ -1,8 +1,6 @@
 {
   lib,
   config,
-  unstable,
-  pkgs,
   ...
 }:
 with lib; let
@@ -10,6 +8,9 @@ with lib; let
   suffix = config.networking.suffix;
   matrixAddress = "https://${matrixDomain}";
   matrixDomain = "${hostName}.${suffix}";
+  # database has moved to root
+  # encryption has moved to root
+  # double puppet is a section now
   commonMautrixSettings = mode: {
     homeserver = {
       domain = matrixDomain;
@@ -37,6 +38,27 @@ with lib; let
         "@mrnobody:${matrixDomain}" = "admin";
         "${matrixDomain}" = "user";
       };
+
+      encryption = {
+        # idk how it's not the default considering it's matrix we're talking about
+        allow = true;
+        default = true;
+        require = true;
+        delete_keys = {
+          dont_store_outbound = true;
+          ratchet_on_decrypt = true;
+          delete_fully_used_on_decrypt = true;
+          delete_prev_on_new_session = true;
+          delete_on_device_delete = true;
+          periodically_delete_expired = true;
+          delete_outdated_inbound = true;
+        };
+        verification_levels = {
+          receive = "cross-signed-tofu";
+          send = "cross-signed-tofu";
+          share = "cross-signed-tofu";
+        };
+      };
     };
     logging = {
       min_level = "error";
@@ -48,8 +70,9 @@ with lib; let
     };
   };
 in {
+  # EX importing a module from unstable
   imports = [
-    "${unstable}/nixos/modules/services/matrix/mautrix-discord.nix"
+    #"${unstable}/nixos/modules/services/matrix/mautrix-discord.nix"
   ];
 
   sops.templates = {
@@ -73,39 +96,74 @@ in {
       environmentFile = config.sops.templates."mautrix-discord-postgresql-connection".path;
       settings = recursiveUpdate (commonMautrixSettings "discord") {
         appservice.bot.username = "discordbot2";
-        bridge.encryption = {
-          # idk how it's not the default considering it's matrix we're talking about
-          allow = true;
-          default = true;
-          require = true;
-        };
       };
     };
     mautrix-meta.instances = {
       facebook = {
         enable = true;
+        registerToSynapse = true;
         environmentFile = config.sops.templates."mautrix-meta-facebook-postgresql-connection".path;
-        settings = recursiveUpdate (commonMautrixSettings "facebook") {
+        # TODO this will soon be the right way to configure discord too so keep an eye for that
+        settings = let 
+          legacy = commonMautrixSettings "facebook";
+        in recursiveUpdate legacy {
+          # 1. Clear out the legacy paths so they don't trip the validator
+          appservice.database = null;
+          bridge.username_template = null;
+          bridge.double_puppet_server_map = null;
+          bridge.login_shared_secret_map = null;
+          bridge.encryption = null;
+
+          # 2. Inject the brand new top-level blocks from the Go spec
           network.mode = "facebook";
-          encryption = {
-            # idk how it's not the default considering it's matrix we're talking about
-            allow = true;
-            default = true;
-            require = true;
+
+          appservice.username_template = legacy.bridge.username_template;
+
+          database = {
+            type = legacy.appservice.database.type;
+            uri = legacy.appservice.database.uri;
           };
+
+          double_puppet = {
+            servers = legacy.bridge.double_puppet_server_map;
+            secrets = legacy.bridge.login_shared_secret_map;
+            allow_discovery = legacy.bridge.double_puppet_allow_discovery or false;
+          };
+
+          encryption = legacy.bridge.encryption;
         };
       };
       instagram = {
         enable = true;
+        registerToSynapse = true;
         environmentFile = config.sops.templates."mautrix-meta-instagram-postgresql-connection".path;
-        settings = recursiveUpdate (commonMautrixSettings "instagram") {
+        settings = let 
+          legacy = commonMautrixSettings "instagram";
+        in recursiveUpdate legacy {
+          # 1. Clear out the legacy paths so they don't trip the validator
+          appservice.database = null;
+          bridge.username_template = null;
+          bridge.double_puppet_server_map = null;
+          bridge.login_shared_secret_map = null;
+          bridge.encryption = null;
+
+          # 2. Inject the brand new top-level blocks from the Go spec
           network.mode = "instagram";
-          encryption = {
-            # idk how it's not the default considering it's matrix we're talking about
-            allow = true;
-            default = true;
-            require = true;
+
+          appservice.username_template = legacy.bridge.username_template;
+
+          database = {
+            type = legacy.appservice.database.type;
+            uri = legacy.appservice.database.uri;
           };
+
+          double_puppet = {
+            servers = legacy.bridge.double_puppet_server_map;
+            secrets = legacy.bridge.login_shared_secret_map;
+            allow_discovery = legacy.bridge.double_puppet_allow_discovery or false;
+          };
+
+          encryption = legacy.bridge.encryption;
         };
       };
     };

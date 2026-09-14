@@ -40,46 +40,49 @@ in {
   boot.kernelParams = [(toKernelIPParam bootNetworkConfig)];
 
   boot.initrd = {
-    #luks.devices."main".device = MAIN_UUID; # not needed when using ssh
-    luks.forceLuksSupportInInitrd = true;
+    luks.devices."main".device = MAIN_UUID;
     availableKernelModules = ["ata_piix" "uhci_hcd" "virtio_pci" "sr_mod" "virtio_blk" "virtio_net"];
     network = {
       enable = true;
       ssh = {
         enable = true;
         port = head config.services.openssh.ports;
-        authorizedKeys = config.users.users.william.openssh.authorizedKeys.keys;
+        authorizedKeys = map (k: ''command="systemctl default" ${k}'')
+          config.users.users.william.openssh.authorizedKeys.keys;
         hostKeys = ["/etc/secrets/initrd/ssh_host_rsa_key"];
       };
-      postCommands = ''
-        echo 'cryptsetup luksOpen ${MAIN_UUID} main && echo > /tmp/continue || /bin/sh' >> /root/.profile
-        echo "Starting sshd"
-      '';
     };
-    postDeviceCommands = pkgs.lib.mkBefore ''
-      echo "Waiting for boot device to be opened..."
-      mkfifo /tmp/continue
-      cat /tmp/continue
-      # decryption done
+    systemd = {
+      services.rollback = {
+        description = "Rollback BTRFS root subvolume to a pristine state";
+        unitConfig.DefaultDependencies = "no";
+        serviceConfig.Type = "oneshot";
+        wantedBy = ["initrd.target"];
+        after = ["systemd-cryptsetup@main.service"];
+        before = ["sysroot.mount"];
 
-      mkdir -p /mnt
-      mount -o subvol=/ ${BTRFS_UUID} /mnt
+        script = ''
+          mkdir -p /mnt
+          mount -o subvol=/ ${BTRFS_UUID} /mnt
 
-      btrfs subvolume list -o /mnt/@root |
-      cut -f9 -d' ' |
-      while read subvolume; do
-          echo "deleting /$subvolume subvolume..."
-          btrfs subvolume delete "/mnt/$subvolume"
-      done &&
-      echo "deleting /root subvolume..." &&
-      btrfs subvolume delete /mnt/@root
+          btrfs subvolume list -o /mnt/@root |
+          cut -f9 -d' ' |
+          while read subvolume; do
+              echo "deleting /$subvolume subvolume..."
+              btrfs subvolume delete "/mnt/$subvolume"
+          done &&
+          echo "deleting /root subvolume..." &&
+          btrfs subvolume delete /mnt/@root
 
-      echo "restoring blank /@root subvolume..."
-      btrfs subvolume snapshot /mnt/@root-blank /mnt/@root
+          echo "restoring blank /@root subvolume..."
+          btrfs subvolume snapshot /mnt/@root-blank /mnt/@root
 
-      umount /mnt
-    '';
+          umount /mnt
+        '';
+      };
+    };
   };
+
   fileSystems = {
     "/" = {
       device = BTRFS_UUID;

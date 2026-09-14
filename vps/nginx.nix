@@ -27,6 +27,7 @@ in {
         acmeRoot = "/var/lib/acme/challenge-${hostName}-${suffix}";
         forceSSL = true;
         root = "/srv/pgp";
+        # TODO set up well-known path for key auto-discovery
       };
     };
   };

@@ -1,4 +1,5 @@
 {
+
   description = "All my NixOS systems including my tower, my laptop and my VPS";
 
   inputs = {
@@ -151,7 +152,7 @@
         nixpkgs.config.permittedInsecurePackages = settings.permittedInsecurePackages;
         nixpkgs.overlays = [
           (import ./pkgs).overlay
-          (import ./pkgs).nurOverlay
+          #(import ./pkgs).nurOverlay
           inputs.nur.overlays.default
           inputs.neovim-nightly-overlay.overlays.default
           inputs.emacs-overlay.overlays.default

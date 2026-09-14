@@ -36,6 +36,7 @@ in {
     };
   in {
     allowedUDPPortRanges = [range];
+    # TODO add non-tls ports in case of problems
     allowedUDPPorts = tlsPorts;
     allowedTCPPorts = tlsPorts;
   };

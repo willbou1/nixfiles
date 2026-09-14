@@ -1,4 +1,4 @@
-{config, ...}:
+{config, pkgs, ...}:
 with builtins; let
   users = map (u: u.name) config.services.postgresql.ensureUsers;
   passwordScript = user: let
@@ -19,6 +19,7 @@ with builtins; let
     "mautrix-meta-instagram"
     "mautrix-discord"
     "grafana"
+    "nextcloud"
   ];
 in {
   system.activationScripts.createPostgresqlDir.text = ''
@@ -41,6 +42,7 @@ in {
   };
   services.postgresql = {
     enable = true;
+    package = pkgs.postgresql_16; # UPGRADE
     dataDir = "/srv/postgresql/${config.services.postgresql.package.psqlSchema}";
     initdbArgs = [
       "--encoding=UTF8"

@@ -3,7 +3,6 @@ with builtins; let
   hostName = config.networking.hostName;
   suffix = config.networking.suffix;
   searxDomain = "search.${hostName}.${suffix}";
-  morty = config.services.morty;
 in {
   sops = {
     secrets = {
@@ -31,16 +30,6 @@ in {
         "/static/" = {
           alias = "${config.services.searx.package}/share/static/";
         };
-        "/morty/" = {
-          proxyPass = "http://${morty.listenAddress}:${toString morty.port}/";
-          extraConfig = ''
-            proxy_set_header   Host             $host;
-            proxy_set_header   Connection       $http_connection;
-            proxy_set_header   X-Real-IP        $remote_addr;
-            proxy_set_header   X-Forwarded-For  $proxy_add_x_forwarded_for;
-            proxy_set_header   X-Scheme         $scheme;
-          '';
-        };
       };
     };
   };
@@ -52,7 +41,7 @@ in {
   services = {
     searx = {
       enable = true;
-      runInUwsgi = true;
+      configureUwsgi = true;
       uwsgiConfig = {
         disable-logging = false;
         http = "";
@@ -117,15 +106,7 @@ in {
           public_instance = false;
           limiter = true;
         };
-        #result_proxy = {
-        #    url = "http://${morty.listenAddress}:${toString morty.port}/";
-        #};
       };
     };
-    #morty = {
-    #    enable = true;
-    #    listenAddress = "127.0.0.1";
-    #    port = 3000;
-    #};
   };
 }

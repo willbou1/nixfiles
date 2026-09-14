@@ -107,6 +107,21 @@ in {
       acmeRoot = "/var/lib/acme/challenge-${hostName}-${suffix}";
       forceSSL = true;
       locations = {
+        "= /.well-known/matrix/server" = {
+          extraConfig = ''
+            default_type application/json;
+            return 200 '{"m.server": "${matrixAddress}:443"}';
+          '';
+        };
+        "= /.well-known/matrix/client" = {
+          extraConfig = ''
+            default_type application/json;
+            add_header Access-Control-Allow-Origin *;
+            return 200 '{
+              "m.homeserver": { "base_url": "https://${matrixAddress}" }
+            }';
+          '';
+        };
         "~* ^(\/_matrix|\/_synapse\/client)" = {
           proxyPass = "http://localhost:8008";
           extraConfig = ''
@@ -178,6 +193,7 @@ in {
       auto_join_rooms = ["#help:${matrixAddress}"];
       enable_metrics = true;
       server_name = matrixAddress;
+      public_baseurl = "https://${matrixAddress}";
       web_client_location = "https://${elementAddress}";
       app_service_config_files = [config.sops.templates."double_puppet.yaml".path];
     };
